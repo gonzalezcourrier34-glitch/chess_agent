@@ -15,6 +15,7 @@ from math import isfinite
 
 from langchain_core.runnables import RunnableConfig
 
+from app.agent.progress import emit_progress
 from app.agent.state import ChessAnalysisState, StateUpdate, WorkflowContext
 from app.agent.utils.workflow_utils import append_completed_step, get_configured_service
 from app.core.constants import (
@@ -27,7 +28,6 @@ from app.core.constants import (
 from app.core.exceptions import RetrievalError
 from app.core.logging import get_logger
 from app.schemas.analysis.search import VectorSearchResult
-from app.agent.progress import emit_progress
 from app.schemas.common.enums import (
     AnalysisStatus,
     DocumentType,

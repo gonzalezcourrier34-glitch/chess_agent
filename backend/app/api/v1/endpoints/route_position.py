@@ -24,11 +24,11 @@ from __future__ import annotations
 
 from fastapi import APIRouter, status
 
+from app.api.responses import CHESS_ERROR_RESPONSES
 from app.api.v1.dependencies.services import (
     ChessServiceDependency,
     StockfishServiceDependency,
 )
-from app.api.responses import CHESS_ERROR_RESPONSES
 from app.schemas.analysis.evaluation import PositionEvaluation
 from app.schemas.chess.move import LegalMove
 from app.schemas.chess.position import BoardPosition, FenRequest

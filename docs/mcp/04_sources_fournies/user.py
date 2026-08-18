@@ -10,10 +10,8 @@ from __future__ import annotations
 
 from datetime import datetime
 
-from pydantic import BaseModel, ConfigDict, EmailStr, Field
-
 from app.schemas.enums import DifficultyLevel
-
+from pydantic import BaseModel, ConfigDict, EmailStr, Field
 
 # Utilisateur
 

@@ -13,6 +13,7 @@ from __future__ import annotations
 from langchain_core.runnables import RunnableConfig
 
 from app.adapters.lichess_service import LichessService
+from app.agent.progress import emit_progress
 from app.agent.state import ChessAnalysisState, StateUpdate
 from app.agent.utils.workflow_utils import append_completed_step, get_configured_service
 from app.core.constants import (
@@ -30,7 +31,6 @@ from app.schemas.chess.opening import (
     OpeningVariation,
 )
 from app.schemas.chess.position import FenRequest
-from app.agent.progress import emit_progress
 from app.schemas.common.enums import (
     AnalysisStatus,
     ServiceType,

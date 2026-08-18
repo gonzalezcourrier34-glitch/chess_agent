@@ -7,8 +7,6 @@ from unittest.mock import AsyncMock, MagicMock
 
 import chess
 import pytest
-from langchain_core.runnables import RunnableConfig
-
 from app.adapters.lichess_service import LichessService
 from app.agent.nodes.B_detect_theory import (
     LICHESS_SERVICE_KEY,
@@ -54,7 +52,7 @@ from app.schemas.common.error import (
     WorkflowError,
     WorkflowWarning,
 )
-
+from langchain_core.runnables import RunnableConfig
 
 # Configuration
 

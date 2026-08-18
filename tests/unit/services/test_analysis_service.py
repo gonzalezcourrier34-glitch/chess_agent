@@ -10,8 +10,6 @@ from unittest.mock import AsyncMock, MagicMock
 
 import chess
 import pytest
-from langchain_core.runnables import RunnableConfig
-
 from app.agent.graph import (
     ChessAnalysisGraph,
     GraphDependencies,
@@ -41,7 +39,7 @@ from app.schemas.common.enums import (
 )
 from app.schemas.common.error import WorkflowError
 from app.services.analysis_service import AnalysisService
-
+from langchain_core.runnables import RunnableConfig
 
 # Configuration
 

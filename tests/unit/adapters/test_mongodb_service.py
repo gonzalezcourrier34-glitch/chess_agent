@@ -8,16 +8,12 @@ from typing import cast
 from unittest.mock import AsyncMock, MagicMock
 
 import pytest
-from pymongo import ASCENDING, DESCENDING
-from pymongo.errors import PyMongoError
-
 from app.adapters.mongodb_service import (
     AnalysisCollection,
     MongoDBService,
 )
 from app.core.constants import (
     ANALYSES_COLLECTION,
-    CREATED_AT_FIELD,
     REQUEST_ID_FIELD,
     SAVED_AT_FIELD,
 )
@@ -33,7 +29,8 @@ from app.schemas.analysis.analysis import (
 from app.schemas.common.enums import (
     AnalysisStatus,
 )
-
+from pymongo import ASCENDING, DESCENDING
+from pymongo.errors import PyMongoError
 
 # Configuration
 

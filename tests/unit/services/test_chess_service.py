@@ -4,7 +4,6 @@ from __future__ import annotations
 
 import chess
 import pytest
-
 from app.core.exceptions import InvalidMoveError
 from app.schemas.chess.position import FenRequest
 from app.schemas.common.enums import (
@@ -12,7 +11,6 @@ from app.schemas.common.enums import (
     MoveNotation,
 )
 from app.services.chess_service import ChessService
-
 
 # Configuration
 

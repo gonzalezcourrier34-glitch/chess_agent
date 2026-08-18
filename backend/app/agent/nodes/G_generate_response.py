@@ -16,6 +16,7 @@ from textwrap import dedent
 from langchain_core.runnables import RunnableConfig
 
 from app.adapters.llm_service import LLMService
+from app.agent.progress import emit_progress
 from app.agent.state import ChessAnalysisState, StateUpdate, WorkflowContext
 from app.agent.utils.workflow_utils import append_completed_step, get_configured_service
 from app.core.constants import (
@@ -25,7 +26,6 @@ from app.core.constants import (
 )
 from app.core.logging import get_logger
 from app.schemas.analysis.evaluation import EngineAnalysis
-from app.agent.progress import emit_progress
 from app.schemas.common.enums import (
     AnalysisStatus,
     ServiceType,

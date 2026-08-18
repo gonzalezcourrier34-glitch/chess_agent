@@ -7,8 +7,6 @@ from typing import Any, cast
 from unittest.mock import AsyncMock, MagicMock
 
 import pytest
-from fastapi import FastAPI
-
 from app.core.container import ApplicationContainer
 from app.core.exceptions import (
     ResourceHealthError,
@@ -25,8 +23,8 @@ from app.core.lifespan import (
     initialize_mongodb,
     initialize_stockfish,
     initialize_workflow,
-    lifespan,
     lichess_health,
+    lifespan,
     llm_health,
     milvus_health,
     mongodb_health,
@@ -44,7 +42,7 @@ from app.core.lifespan import (
     workflow_health,
     youtube_health,
 )
-
+from fastapi import FastAPI
 
 # Helpers
 

@@ -9,10 +9,8 @@ pour enrichir une analyse d'échecs.
 
 from __future__ import annotations
 
-from pydantic import BaseModel, ConfigDict, Field
-
 from app.schemas.enums import DocumentType
-
+from pydantic import BaseModel, ConfigDict, Field
 
 # Métadonnées
 

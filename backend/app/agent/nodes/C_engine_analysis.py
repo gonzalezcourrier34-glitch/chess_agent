@@ -13,6 +13,7 @@ from __future__ import annotations
 from langchain_core.runnables import RunnableConfig
 
 from app.adapters.stockfish_service import StockfishService
+from app.agent.progress import emit_progress
 from app.agent.state import ChessAnalysisState, StateUpdate
 from app.agent.utils.workflow_utils import append_completed_step, get_configured_service
 from app.core.constants import ERROR_CONFIGURATION, ERROR_UNEXPECTED
@@ -20,7 +21,6 @@ from app.core.exceptions import StockfishError
 from app.core.logging import get_logger
 from app.schemas.analysis.evaluation import PositionEvaluation
 from app.schemas.chess.position import FenRequest
-from app.agent.progress import emit_progress
 from app.schemas.common.enums import (
     AnalysisStatus,
     EvaluationType,

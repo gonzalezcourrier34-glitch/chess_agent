@@ -6,7 +6,6 @@ import os
 
 import pytest
 
-
 # Configuration
 
 DEFAULT_BACKEND_URL = "http://localhost:8000"

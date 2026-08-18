@@ -10,11 +10,9 @@ réponses FastAPI.
 
 from __future__ import annotations
 
-from pydantic import BaseModel, ConfigDict, Field
-
 from app.schemas.enums import EvaluationType
 from app.schemas.move import BestMove
-
+from pydantic import BaseModel, ConfigDict, Field
 
 # Evaluation
 

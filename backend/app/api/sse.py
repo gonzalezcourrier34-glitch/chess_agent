@@ -6,7 +6,6 @@ Server-Sent Events compatibles avec les clients HTTP.
 
 from __future__ import annotations
 
-
 # Sérialisation
 
 

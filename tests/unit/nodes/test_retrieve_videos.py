@@ -8,8 +8,6 @@ from unittest.mock import AsyncMock, MagicMock
 
 import chess
 import pytest
-from langchain_core.runnables import RunnableConfig
-
 from app.adapters.youtube_service import YoutubeService
 from app.agent.nodes.F_retrieve_videos import (
     SEARCH_SOURCE_LICHESS,
@@ -68,7 +66,7 @@ from app.schemas.media.video import (
     VideoSearchRequest,
 )
 from app.schemas.rag.document import RetrievalContext
-
+from langchain_core.runnables import RunnableConfig
 
 # Configuration
 

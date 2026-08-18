@@ -5,7 +5,6 @@ from __future__ import annotations
 from unittest.mock import AsyncMock, MagicMock
 
 import pytest
-
 from app.adapters.embedding_service import (
     EmbeddingService,
 )
@@ -14,7 +13,6 @@ from app.core.exceptions import (
     EmbeddingGenerationError,
     EmbeddingModelUnavailableError,
 )
-
 
 # Constantes
 

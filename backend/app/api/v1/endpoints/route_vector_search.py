@@ -21,8 +21,8 @@ from __future__ import annotations
 
 from fastapi import APIRouter, status
 
-from app.api.v1.dependencies.services import VectorSearchServiceDependency
 from app.api.responses import VECTOR_SEARCH_ERROR_RESPONSES
+from app.api.v1.dependencies.services import VectorSearchServiceDependency
 from app.schemas.analysis.search import (
     VectorSearchRequest,
     VectorSearchResponse,

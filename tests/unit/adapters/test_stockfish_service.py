@@ -10,7 +10,6 @@ from unittest.mock import AsyncMock, MagicMock
 import chess
 import chess.engine
 import pytest
-
 from app.adapters.stockfish_service import (
     MINIMUM_DEPTH,
     SERVICE_NAME,
@@ -26,7 +25,6 @@ from app.core.exceptions import (
 )
 from app.schemas.chess.position import FenRequest
 from app.schemas.common.enums import EvaluationType
-
 
 # Configuration
 

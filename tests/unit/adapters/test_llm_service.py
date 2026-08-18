@@ -7,11 +7,10 @@ from unittest.mock import AsyncMock, MagicMock
 
 import httpx
 import pytest
-
 from app.adapters.llm_service import (
+    OLLAMA_PROVIDER,
     JsonObject,
     LLMService,
-    OLLAMA_PROVIDER,
     OllamaChatPayload,
 )
 from app.core.constants import (
@@ -28,7 +27,6 @@ from app.core.exceptions import (
     OllamaResponseError,
     OllamaTimeoutError,
 )
-
 
 # Configuration
 

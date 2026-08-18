@@ -13,14 +13,12 @@ from __future__ import annotations
 
 from typing import Literal
 
-from pydantic import BaseModel, Field
-
 from app.schemas.document import Document
 from app.schemas.evaluation import PositionEvaluation
 from app.schemas.move import BestMove
 from app.schemas.opening import OpeningDetails
 from app.schemas.video import Video
-
+from pydantic import BaseModel, Field
 
 # Types
 

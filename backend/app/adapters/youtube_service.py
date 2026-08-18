@@ -105,8 +105,6 @@ class YoutubeVideoDetails(TypedDict):
 
 SERVICE_NAME = "youtube"
 
-HEALTHCHECK_QUERY = "chess"
-
 MIN_SEARCH_RESULTS = 1
 MAX_SEARCH_RESULTS = 20
 
@@ -350,8 +348,9 @@ class YoutubeService:
                     endpoint,
                     params=params,
                 )
-
+                
                 if self._should_retry_status(
+                    endpoint=endpoint,
                     status_code=response.status_code,
                     attempt=attempt,
                     total_attempts=total_attempts,
@@ -498,7 +497,10 @@ class YoutubeService:
         )
 
         if (
-            status_code == 403
+            status_code in {
+                403,
+                429,
+            }
             and any(
                 marker.casefold()
                 in normalized_reason
@@ -613,14 +615,18 @@ class YoutubeService:
     def _should_retry_status(
         self,
         *,
+        endpoint: str,
         status_code: int,
         attempt: int,
         total_attempts: int,
     ) -> bool:
-        """Indique si un statut autorise une nouvelle tentative."""
+        """Indique si une requête peut être retentée."""
+
+        if endpoint == YOUTUBE_SEARCH_ENDPOINT:
+            return False
+
         return (
-            status_code
-            in YOUTUBE_RETRYABLE_STATUS_CODES
+            status_code in YOUTUBE_RETRYABLE_STATUS_CODES
             and attempt < total_attempts
         )
 
@@ -1598,8 +1604,11 @@ class YoutubeService:
     # Santé
 
     async def ping(self) -> bool:
-        """Vérifie que l'API YouTube est disponible."""
-        if self._client.is_closed:
+        """Vérifie que le service YouTube est prêt à être utilisé."""
+        if (
+            self._closing
+            or self._client.is_closed
+        ):
             logger.error(
                 "Le client HTTP YouTube est fermé."
             )
@@ -1612,38 +1621,6 @@ class YoutubeService:
             logger.info(
                 "Aucune clé API YouTube configurée. "
                 "Le service est désactivé."
-            )
-            return False
-
-        try:
-            async with self._operation(
-                "ping"
-            ):
-                await self._request(
-                    YOUTUBE_SEARCH_ENDPOINT,
-                    params={
-                        "part": (
-                            YOUTUBE_SEARCH_PART
-                        ),
-                        "q": (
-                            HEALTHCHECK_QUERY
-                        ),
-                        "type": (
-                            YOUTUBE_SEARCH_TYPE
-                        ),
-                        "maxResults": 1,
-                    },
-                )
-
-        except YoutubeError:
-            logger.exception(
-                "Le service YouTube est indisponible."
-            )
-            return False
-
-        except Exception:
-            logger.exception(
-                "Erreur inattendue lors du test YouTube."
             )
             return False
 

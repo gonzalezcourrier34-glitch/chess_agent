@@ -7,8 +7,6 @@ from typing import cast
 from unittest.mock import AsyncMock, MagicMock
 
 import pytest
-from pymilvus import MilvusClient
-
 from app.adapters.milvus_service import (
     JsonObject,
     MilvusService,
@@ -24,18 +22,18 @@ from app.core.constants import (
     MILVUS_MAX_SOURCE_LENGTH,
     MILVUS_METADATA_FIELD,
     MILVUS_SOURCE_FIELD,
-    MILVUS_VECTOR_FIELD,
 )
 from app.core.exceptions import (
     ConfigurationError,
     ErrorContext,
+    MilvusConnectionError,
     MilvusDeletionError,
     MilvusInsertionError,
     MilvusOperationError,
     MilvusSearchError,
     MilvusValidationError,
 )
-
+from pymilvus import MilvusClient
 
 # Configuration
 
@@ -295,7 +293,7 @@ async def test_start_resets_state_on_unexpected_error(
         close_after_failure,
     )
 
-    with pytest.raises(Exception):
+    with pytest.raises(MilvusConnectionError):
         await service.start()
 
     assert service._client is None
@@ -436,7 +434,7 @@ def test_get_client_rejects_uninitialized_service(
 ) -> None:
     """Vérifie l'absence de client."""
 
-    with pytest.raises(Exception):
+    with pytest.raises(MilvusConnectionError):
         service._get_client()
 
 

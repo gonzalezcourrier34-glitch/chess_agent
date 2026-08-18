@@ -20,7 +20,6 @@ from app.schemas.analysis.healthcheck import (
     HealthcheckResponse,
 )
 
-
 # Routeur
 
 router = APIRouter()

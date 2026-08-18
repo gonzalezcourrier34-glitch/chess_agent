@@ -9,14 +9,9 @@ Les modèles restent indépendants de python-chess afin de faciliter les
 
 from __future__ import annotations
 
-from pydantic import BaseModel, ConfigDict, Field
-
 from app.schemas.enums import ChessColor
-from app.schemas.move import (
-    LegalMove,
-    PlayedMove
-)
-
+from app.schemas.move import LegalMove, PlayedMove
+from pydantic import BaseModel, ConfigDict, Field
 
 # Requête
 

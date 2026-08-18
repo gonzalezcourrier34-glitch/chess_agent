@@ -1,0 +1,20 @@
+{
+  "include": [
+    "backend/app",
+    "tests"
+  ],
+  "exclude": [
+    ".venv",
+    ".pytest_cache",
+    ".ruff_cache",
+    "docs",
+    "frontend",
+    "livrables",
+    "perso",
+    "data",
+    "**/__pycache__"
+  ],
+  "extraPaths": [
+    "backend"
+  ]
+}

@@ -19,13 +19,13 @@ from langchain_core.runnables import RunnableConfig
 from pydantic import BaseModel, JsonValue, TypeAdapter, ValidationError
 
 from app.adapters.mongodb_service import MongoDBService
+from app.agent.progress import emit_progress
 from app.agent.state import ChessAnalysisState, StateUpdate
 from app.agent.utils.workflow_utils import append_completed_step, get_configured_service
 from app.core.constants import ERROR_CONFIGURATION, ERROR_UNEXPECTED
 from app.core.exceptions import DatabaseError
 from app.core.logging import get_logger
 from app.schemas.analysis.analysis import AnalysisRecord, AnalysisSaveResult
-from app.agent.progress import emit_progress
 from app.schemas.common.enums import (
     AnalysisStatus,
     ServiceType,

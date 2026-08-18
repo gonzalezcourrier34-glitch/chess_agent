@@ -7,8 +7,6 @@ from unittest.mock import AsyncMock, MagicMock
 
 import chess
 import pytest
-from langchain_core.runnables import RunnableConfig
-
 from app.agent.nodes.E_retrieve_context import (
     CHESS_SERVICE_KEY,
     DEFAULT_DOCUMENT_SOURCE,
@@ -78,7 +76,7 @@ from app.schemas.common.enums import (
 from app.schemas.common.error import WorkflowWarning
 from app.services.chess_service import ChessService
 from app.services.vector_search_service import VectorSearchService
-
+from langchain_core.runnables import RunnableConfig
 
 # Configuration
 

@@ -11,8 +11,8 @@ from __future__ import annotations
 
 from fastapi import APIRouter, status
 
-from app.api.v1.dependencies.services import HealthcheckServiceDependency
 from app.api.responses import SERVER_ERROR_RESPONSES
+from app.api.v1.dependencies.services import HealthcheckServiceDependency
 from app.schemas.common.service import ServicesStatus
 
 # Routeur

@@ -29,12 +29,12 @@ from app.adapters.mongodb_service import MongoDBService
 from app.adapters.stockfish_service import StockfishService
 from app.adapters.youtube_service import YoutubeService
 from app.core.config import settings
+from app.core.exceptions import ApplicationNotReadyError
 from app.core.logging import get_logger
 from app.schemas.analysis.healthcheck import HealthcheckResponse
 from app.schemas.common.enums import ServiceStatus
 from app.schemas.common.service import ServiceHealth, ServicesStatus
 from app.services.analysis_service import AnalysisService
-from app.core.exceptions import ApplicationNotReadyError
 
 logger = get_logger(__name__)
 

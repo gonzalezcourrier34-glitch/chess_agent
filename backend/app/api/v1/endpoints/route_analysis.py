@@ -18,18 +18,11 @@ from collections.abc import AsyncIterator
 from fastapi import APIRouter, Request, status
 from fastapi.responses import StreamingResponse
 
-from app.api.v1.dependencies.services import AnalysisServiceDependency
 from app.api.responses import COMMON_ERROR_RESPONSES
 from app.api.sse import format_sse_event
-from app.schemas.analysis.analysis import (
-    AnalysisRequest,
-    AnalysisResponse
-)
-from app.schemas.analysis.progress import (
-    AnalysisCompletedEvent,
-    AnalysisProgressEvent
-)
-
+from app.api.v1.dependencies.services import AnalysisServiceDependency
+from app.schemas.analysis.analysis import AnalysisRequest, AnalysisResponse
+from app.schemas.analysis.progress import AnalysisCompletedEvent, AnalysisProgressEvent
 
 # Routeur
 

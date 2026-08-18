@@ -6,7 +6,6 @@ from typing import Any, cast
 from unittest.mock import AsyncMock, MagicMock
 
 import pytest
-
 from app.adapters.embedding_service import EmbeddingService
 from app.adapters.milvus_service import MilvusService
 from app.core.config import settings
@@ -33,7 +32,6 @@ from app.services.vector_search_service import (
     RESULT_SOURCE_FIELD,
     VectorSearchService,
 )
-
 
 # Helpers
 

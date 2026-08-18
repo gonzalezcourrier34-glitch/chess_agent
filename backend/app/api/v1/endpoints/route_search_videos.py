@@ -21,7 +21,6 @@ from app.schemas.media.video import (
     VideoSearchRequest,
 )
 
-
 # Routeur
 
 router = APIRouter()

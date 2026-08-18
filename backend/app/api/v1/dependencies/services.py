@@ -32,7 +32,6 @@ from app.services.chess_service import ChessService
 from app.services.healthcheck_service import HealthcheckService
 from app.services.vector_search_service import VectorSearchService
 
-
 # Conteneur
 
 def get_application_container(

@@ -2,46 +2,35 @@
 
 from __future__ import annotations
 
-from typing import cast
 from unittest.mock import AsyncMock, MagicMock
 
 import httpx
 import pytest
-from pydantic import SecretStr
-
 from app.adapters.youtube_service import (
-    HEALTHCHECK_QUERY,
     MAX_SEARCH_RESULTS,
-    MIN_RELEVANCE_SCORE,
     MIN_SEARCH_RESULTS,
-    REQUIRED_CHESS_TERMS,
     SERVICE_NAME,
-    YoutubePayload,
     YoutubeParams,
+    YoutubePayload,
     YoutubeService,
-    YoutubeVideoDetails,
 )
 from app.core.constants import (
     YOUTUBE_SEARCH_ENDPOINT,
-    YOUTUBE_SEARCH_PART,
-    YOUTUBE_SEARCH_TYPE,
     YOUTUBE_VIDEOS_ENDPOINT,
 )
 from app.core.exceptions import (
     ErrorContext,
     InvalidRequestError,
     YoutubeConfigurationError,
-    YoutubeError,
     YoutubeQuotaError,
     YoutubeResponseError,
     YoutubeTimeoutError,
     YoutubeUnavailableError,
 )
-from app.schemas.common.enums import VideoPlatform
 from app.schemas.media.video import (
     VideoSearchRequest,
 )
-
+from pydantic import SecretStr
 
 # Configuration
 

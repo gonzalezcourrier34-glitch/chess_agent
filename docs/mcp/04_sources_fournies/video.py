@@ -9,10 +9,8 @@ l'évolution du projet vers d'autres plateformes.
 
 from __future__ import annotations
 
-from pydantic import BaseModel, ConfigDict, Field
-
 from app.schemas.enums import VideoPlatform
-
+from pydantic import BaseModel, ConfigDict, Field
 
 # Chaîne
 

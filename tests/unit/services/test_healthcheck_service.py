@@ -6,7 +6,6 @@ from typing import Any, cast
 from unittest.mock import AsyncMock, MagicMock
 
 import pytest
-
 from app.adapters.embedding_service import EmbeddingService
 from app.adapters.lichess_service import LichessService
 from app.adapters.llm_service import LLMService
@@ -23,7 +22,6 @@ from app.services.healthcheck_service import (
     HEALTHY_STATUS,
     HealthcheckService,
 )
-
 
 # Types
 

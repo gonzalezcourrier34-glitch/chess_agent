@@ -3,16 +3,13 @@
 from __future__ import annotations
 
 from typing import cast
-from unittest.mock import call, MagicMock
+from unittest.mock import MagicMock, call
 
 import chess
 import pytest
-from langchain_core.runnables import RunnableConfig
-
 from app.agent.nodes.A_validate_position import (
     CHESS_SERVICE_KEY,
     _build_error_update,
-    _build_invalid_fen_update,
     _build_missing_service_update,
     _build_position_summary,
     _build_success_update,
@@ -30,18 +27,15 @@ from app.schemas.chess.position import (
     BoardPosition,
     FenRequest,
 )
-from unittest.mock import call
-
 from app.schemas.common.enums import (
     AnalysisStatus,
     ServiceType,
     WorkflowStep,
     WorkflowStepStatus,
 )
-
 from app.schemas.common.error import WorkflowError
 from app.services.chess_service import ChessService
-
+from langchain_core.runnables import RunnableConfig
 
 # Configuration
 

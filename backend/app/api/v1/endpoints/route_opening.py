@@ -14,8 +14,8 @@ from __future__ import annotations
 
 from fastapi import APIRouter, status
 
-from app.api.v1.dependencies.services import LichessServiceDependency
 from app.api.responses import LICHESS_ERROR_RESPONSES
+from app.api.v1.dependencies.services import LichessServiceDependency
 from app.schemas.chess.opening import OpeningDetails
 from app.schemas.chess.position import FenRequest
 

@@ -6,8 +6,6 @@ from typing import cast
 
 import chess
 import pytest
-from langchain_core.runnables import RunnableConfig
-
 from app.agent.nodes.D_unknown_position_analysis import (
     _append_alternatives,
     _append_best_move,
@@ -35,7 +33,7 @@ from app.schemas.common.enums import (
     EvaluationType,
     WorkflowStep,
 )
-
+from langchain_core.runnables import RunnableConfig
 
 # Configuration
 

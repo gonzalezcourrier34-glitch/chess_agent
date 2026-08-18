@@ -16,8 +16,8 @@ from __future__ import annotations
 
 from fastapi import APIRouter, status
 
-from app.api.v1.dependencies.services import StockfishServiceDependency
 from app.api.responses import STOCKFISH_ERROR_RESPONSES
+from app.api.v1.dependencies.services import StockfishServiceDependency
 from app.schemas.analysis.evaluation import PositionEvaluation
 from app.schemas.chess.position import FenRequest
 

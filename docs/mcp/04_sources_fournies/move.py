@@ -9,10 +9,8 @@ le frontend Angular.
 
 from __future__ import annotations
 
-from pydantic import BaseModel, ConfigDict, Field
-
 from app.schemas.enums import EvaluationType
-
+from pydantic import BaseModel, ConfigDict, Field
 
 # Coup
 

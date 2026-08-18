@@ -9,10 +9,8 @@ MongoDB et les réponses de l'API.
 
 from __future__ import annotations
 
-from pydantic import BaseModel, ConfigDict, Field
-
 from app.schemas.enums import DifficultyLevel
-
+from pydantic import BaseModel, ConfigDict, Field
 
 # Ouverture
 

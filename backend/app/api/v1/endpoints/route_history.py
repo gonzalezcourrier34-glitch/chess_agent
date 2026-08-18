@@ -22,12 +22,12 @@ from typing import Annotated
 
 from fastapi import APIRouter, Path, Response, status
 
-from app.api.v1.dependencies.pagination import PaginationDependency
-from app.api.v1.dependencies.services import MongoDBServiceDependency
 from app.api.responses import (
     DATABASE_ERROR_RESPONSES,
     DATABASE_RESOURCE_ERROR_RESPONSES,
 )
+from app.api.v1.dependencies.pagination import PaginationDependency
+from app.api.v1.dependencies.services import MongoDBServiceDependency
 from app.schemas.analysis.analysis import (
     AnalysisRecord,
     AnalysisSummary,

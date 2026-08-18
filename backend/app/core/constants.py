@@ -185,7 +185,6 @@ YOUTUBE_SEARCH_VIDEO_DURATION = "medium"
 YOUTUBE_RETRYABLE_STATUS_CODES = frozenset({
     408,
     425,
-    429,
     500,
     502,
     503,

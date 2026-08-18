@@ -8,9 +8,6 @@ from unittest.mock import AsyncMock, MagicMock
 
 import chess
 import pytest
-from langchain_core.runnables import RunnableConfig
-from pydantic import BaseModel, ConfigDict
-
 from app.adapters.mongodb_service import MongoDBService
 from app.agent.nodes.H_save_analysis import (
     ANALYSIS_IDENTIFIER_NAMESPACE,
@@ -50,7 +47,8 @@ from app.schemas.common.enums import (
     WorkflowStep,
 )
 from app.schemas.common.error import WorkflowWarning
-
+from langchain_core.runnables import RunnableConfig
+from pydantic import BaseModel, ConfigDict
 
 # Configuration
 

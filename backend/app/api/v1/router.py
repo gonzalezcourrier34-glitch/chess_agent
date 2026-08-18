@@ -22,9 +22,9 @@ from app.api.v1.endpoints.route_healthcheck import router as healthcheck_router
 from app.api.v1.endpoints.route_history import router as history_router
 from app.api.v1.endpoints.route_opening import router as opening_router
 from app.api.v1.endpoints.route_position import router as position_router
-from app.api.v1.endpoints.route_vector_search import router as search_documents_router
 from app.api.v1.endpoints.route_search_videos import router as search_videos_router
 from app.api.v1.endpoints.route_services import router as services_router
+from app.api.v1.endpoints.route_vector_search import router as search_documents_router
 
 # Tags
 

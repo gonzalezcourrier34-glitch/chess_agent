@@ -6,14 +6,11 @@ from unittest.mock import AsyncMock, MagicMock
 
 import httpx
 import pytest
-from pydantic import SecretStr
-
 from app.adapters.lichess_service import (
+    RETRYABLE_STATUS_CODES,
     LichessPayload,
     LichessService,
-    RETRYABLE_STATUS_CODES,
 )
-
 from app.core.constants import (
     DEFAULT_STARTING_FEN,
     MASTER_DATABASE_ENDPOINT,
@@ -27,7 +24,7 @@ from app.core.exceptions import (
     OpeningNotFoundError,
 )
 from app.schemas.chess.position import FenRequest
-
+from pydantic import SecretStr
 
 # Constantes
 

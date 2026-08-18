@@ -6,7 +6,6 @@ from typing import Any, cast
 from unittest.mock import AsyncMock, MagicMock
 
 import pytest
-
 from app.adapters.embedding_service import EmbeddingService
 from app.adapters.lichess_service import LichessService
 from app.adapters.llm_service import LLMService
@@ -24,7 +23,6 @@ from app.services.analysis_service import AnalysisService
 from app.services.chess_service import ChessService
 from app.services.healthcheck_service import HealthcheckService
 from app.services.vector_search_service import VectorSearchService
-
 
 # Helpers
 

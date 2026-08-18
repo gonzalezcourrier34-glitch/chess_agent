@@ -7,8 +7,6 @@ from unittest.mock import AsyncMock, MagicMock
 
 import chess
 import pytest
-from langchain_core.runnables import RunnableConfig
-
 from app.adapters.stockfish_service import StockfishService
 from app.agent.nodes.C_engine_analysis import (
     STOCKFISH_SERVICE_KEY,
@@ -49,7 +47,7 @@ from app.schemas.common.enums import (
 from app.schemas.common.error import (
     WorkflowError,
 )
-
+from langchain_core.runnables import RunnableConfig
 
 # Configuration
 

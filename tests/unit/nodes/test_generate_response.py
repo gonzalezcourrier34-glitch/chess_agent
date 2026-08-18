@@ -8,8 +8,6 @@ from unittest.mock import AsyncMock, MagicMock
 
 import chess
 import pytest
-from langchain_core.runnables import RunnableConfig
-
 from app.adapters.llm_service import LLMService
 from app.agent.nodes.G_generate_response import (
     GENERAL_RULES,
@@ -78,10 +76,10 @@ from app.schemas.common.enums import (
 )
 from app.schemas.common.error import WorkflowWarning
 from app.schemas.rag.document import (
-    RetrievedDocument,
     RetrievalContext,
+    RetrievedDocument,
 )
-
+from langchain_core.runnables import RunnableConfig
 
 # Configuration
 

@@ -17,6 +17,7 @@ from dataclasses import dataclass
 from langchain_core.runnables import RunnableConfig
 
 from app.adapters.youtube_service import YoutubeService
+from app.agent.progress import emit_progress
 from app.agent.state import ChessAnalysisState, StateUpdate, WorkflowContext
 from app.agent.utils.workflow_utils import append_completed_step, get_configured_service
 from app.core.config import settings
@@ -27,7 +28,6 @@ from app.core.constants import (
 )
 from app.core.exceptions import YoutubeError
 from app.core.logging import get_logger
-from app.agent.progress import emit_progress
 from app.schemas.common.enums import (
     AnalysisStatus,
     ServiceType,
