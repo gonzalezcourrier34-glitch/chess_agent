@@ -1,0 +1,47 @@
+{
+  "slug": "london-system",
+  "title": "Système de Londres",
+  "wikichess_title": "Queen's pawn game",
+  "eco": "A46",
+  "moves": [
+    "d4",
+    "d5",
+    "Nf3",
+    "Nf6",
+    "Bf4"
+  ],
+  "position_after": "Bf4",
+  "source_url": "https://ficgs.com/wikichess_5568.html",
+  "language": "en",
+  "retrieved_at": "2026-08-17T13:14:55.946222+00:00",
+  "contributors": [
+    "Kevin O Flaherty"
+  ],
+  "content": "White should keep with the london system now.",
+  "next_moves": [
+    {
+      "move": "g6",
+      "source_url": "https://ficgs.com/wikichess_182548.html"
+    },
+    {
+      "move": "e6",
+      "source_url": "https://ficgs.com/wikichess_52374.html"
+    },
+    {
+      "move": "Nc6",
+      "source_url": "https://ficgs.com/wikichess_209971.html"
+    },
+    {
+      "move": "Bg4",
+      "source_url": "https://ficgs.com/wikichess_192032.html"
+    },
+    {
+      "move": "Bf5",
+      "source_url": "https://ficgs.com/wikichess_9512.html"
+    },
+    {
+      "move": "c5",
+      "source_url": "https://ficgs.com/wikichess_19150.html"
+    }
+  ]
+}

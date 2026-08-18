@@ -1,0 +1,99 @@
+{
+  "slug": "english-opening",
+  "title": "Ouverture anglaise",
+  "wikichess_title": "English Opening",
+  "eco": "A10",
+  "moves": [
+    "c4"
+  ],
+  "position_after": "c4",
+  "source_url": "https://ficgs.com/wikichess_29.html",
+  "language": "en",
+  "retrieved_at": "2026-08-17T13:13:07.503442+00:00",
+  "contributors": [
+    "Thibault de Vassal"
+  ],
+  "content": "The English Opening is the fourth most popular opening move in chess. White begins the fight for the center by staking a claim to the d5 square. Common responses are 1...e5 (which can lead to positions similar to the Sicilian Defence but with opposite colors), 1...c5 (the Symmetrical Variation), and 1...Nf6. Also perfectly playable are 1...e6 (often leading to a Queen's Gambit Declined after 2.d4 d5) and 1...c6 (often leading to a Slav Defence after 2.d4 d5, a Caro-Kann Defence after 2.e4 d5, or a Reti Opening after 2.Nf3 d5 3.b3).\nThe English is a very flexible opening. Although many lines of the English have a distinct character, it often transposes into other openings. If White plays an early d4, the game will usually transpose into either the Queen's Gambit or an Indian defence.\nThe English derives its name from the English (unofficial) world champion, Howard Staunton, who played it during his 1843 match with Amant. It fell out of favor (the opening was notably disdained by Morphy), but is now recognized as a solid opening that may be used to reach both classical and hypermodern positions. Botvinnik, Karpov, and Kasparov all employed it during their world championship matches. Bobby Fischer created a stir when he switched to it from the King's Pawn against Boris Spassky in 1972.",
+  "next_moves": [
+    {
+      "move": "Nf6",
+      "source_url": "https://ficgs.com/wikichess_134.html"
+    },
+    {
+      "move": "b5",
+      "source_url": "https://ficgs.com/wikichess_3937.html"
+    },
+    {
+      "move": "e5",
+      "source_url": "https://ficgs.com/wikichess_156.html"
+    },
+    {
+      "move": "a5",
+      "source_url": "https://ficgs.com/wikichess_175537.html"
+    },
+    {
+      "move": "c5",
+      "source_url": "https://ficgs.com/wikichess_232.html"
+    },
+    {
+      "move": "f6",
+      "source_url": "https://ficgs.com/wikichess_183916.html"
+    },
+    {
+      "move": "h5",
+      "source_url": "https://ficgs.com/wikichess_61210.html"
+    },
+    {
+      "move": "a6",
+      "source_url": "https://ficgs.com/wikichess_123091.html"
+    },
+    {
+      "move": "h6",
+      "source_url": "https://ficgs.com/wikichess_224311.html"
+    },
+    {
+      "move": "d6",
+      "source_url": "https://ficgs.com/wikichess_17685.html"
+    },
+    {
+      "move": "Nh6",
+      "source_url": "https://ficgs.com/wikichess_171920.html"
+    },
+    {
+      "move": "e6",
+      "source_url": "https://ficgs.com/wikichess_2894.html"
+    },
+    {
+      "move": "c6",
+      "source_url": "https://ficgs.com/wikichess_2904.html"
+    },
+    {
+      "move": "f5",
+      "source_url": "https://ficgs.com/wikichess_10078.html"
+    },
+    {
+      "move": "Nc6",
+      "source_url": "https://ficgs.com/wikichess_5943.html"
+    },
+    {
+      "move": "g5",
+      "source_url": "https://ficgs.com/wikichess_8935.html"
+    },
+    {
+      "move": "b6",
+      "source_url": "https://ficgs.com/wikichess_8616.html"
+    },
+    {
+      "move": "g6",
+      "source_url": "https://ficgs.com/wikichess_3363.html"
+    },
+    {
+      "move": "d5",
+      "source_url": "https://ficgs.com/wikichess_18387.html"
+    },
+    {
+      "move": "Na6",
+      "source_url": "https://ficgs.com/wikichess_19515.html"
+    }
+  ]
+}

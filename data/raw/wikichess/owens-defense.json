@@ -1,0 +1,61 @@
+{
+  "slug": "owens-defense",
+  "title": "Défense Owen",
+  "wikichess_title": "Owen defense",
+  "eco": "B00",
+  "moves": [
+    "e4",
+    "b6"
+  ],
+  "position_after": "b6",
+  "source_url": "https://ficgs.com/wikichess_894.html",
+  "language": "en",
+  "retrieved_at": "2026-08-17T13:13:39.580677+00:00",
+  "contributors": [
+    "Dirk Jan Van Dijl",
+    "Normajean Yates"
+  ],
+  "content": "Owen's defence.",
+  "next_moves": [
+    {
+      "move": "g3",
+      "source_url": "https://ficgs.com/wikichess_231014.html"
+    },
+    {
+      "move": "f4",
+      "source_url": "https://ficgs.com/wikichess_56585.html"
+    },
+    {
+      "move": "d3",
+      "source_url": "https://ficgs.com/wikichess_128271.html"
+    },
+    {
+      "move": "d4",
+      "source_url": "https://ficgs.com/wikichess_895.html"
+    },
+    {
+      "move": "Bc4",
+      "source_url": "https://ficgs.com/wikichess_111951.html"
+    },
+    {
+      "move": "c4",
+      "source_url": "https://ficgs.com/wikichess_112920.html"
+    },
+    {
+      "move": "c3",
+      "source_url": "https://ficgs.com/wikichess_112933.html"
+    },
+    {
+      "move": "f3",
+      "source_url": "https://ficgs.com/wikichess_110856.html"
+    },
+    {
+      "move": "Nf3",
+      "source_url": "https://ficgs.com/wikichess_53539.html"
+    },
+    {
+      "move": "Nc3",
+      "source_url": "https://ficgs.com/wikichess_54167.html"
+    }
+  ]
+}

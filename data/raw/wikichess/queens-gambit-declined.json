@@ -1,0 +1,66 @@
+{
+  "slug": "queens-gambit-declined",
+  "title": "Gambit dame refusé",
+  "wikichess_title": "Queen's gambit declined",
+  "eco": "D30",
+  "moves": [
+    "d4",
+    "d5",
+    "c4",
+    "e6"
+  ],
+  "position_after": "e6",
+  "source_url": "https://ficgs.com/wikichess_872.html",
+  "language": "en",
+  "retrieved_at": "2026-08-17T13:16:49.414747+00:00",
+  "contributors": [
+    "Dirk Jan Van Dijl"
+  ],
+  "content": "",
+  "next_moves": [
+    {
+      "move": "g3",
+      "source_url": "https://ficgs.com/wikichess_33820.html"
+    },
+    {
+      "move": "g4",
+      "source_url": "https://ficgs.com/wikichess_252373.html"
+    },
+    {
+      "move": "e3",
+      "source_url": "https://ficgs.com/wikichess_23751.html"
+    },
+    {
+      "move": "Nf3",
+      "source_url": "https://ficgs.com/wikichess_6990.html"
+    },
+    {
+      "move": "f3",
+      "source_url": "https://ficgs.com/wikichess_159869.html"
+    },
+    {
+      "move": "cxd5",
+      "source_url": "https://ficgs.com/wikichess_3374.html"
+    },
+    {
+      "move": "Nc3",
+      "source_url": "https://ficgs.com/wikichess_873.html"
+    },
+    {
+      "move": "c5",
+      "source_url": "https://ficgs.com/wikichess_81096.html"
+    },
+    {
+      "move": "Bf4",
+      "source_url": "https://ficgs.com/wikichess_38558.html"
+    },
+    {
+      "move": "Qc2",
+      "source_url": "https://ficgs.com/wikichess_72755.html"
+    },
+    {
+      "move": "a3",
+      "source_url": "https://ficgs.com/wikichess_24342.html"
+    }
+  ]
+}

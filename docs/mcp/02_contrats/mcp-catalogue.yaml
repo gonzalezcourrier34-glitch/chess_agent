@@ -1,0 +1,225 @@
+catalogue_version: "1.0.0-draft"
+protocol_target: "2026-07-28"
+status: conception
+server:
+  name: chess-agent
+  description: >-
+    Serveur MCP pour valider et analyser des positions d'échecs,
+    retrouver des contenus pédagogiques et rechercher des passages vidéo autorisés.
+  transports:
+    local: stdio
+    remote: streamable-http
+  remote_path: /mcp
+  stateless: true
+
+tools:
+  - name: chess.validate_fen
+    effect: read
+    scopes: [chess:read]
+    input:
+      type: object
+      additionalProperties: false
+      required: [fen]
+      properties:
+        fen:
+          type: string
+          minLength: 10
+          maxLength: 120
+    output_ref: "#/schemas/FenValidationResult"
+
+  - name: chess.identify_opening
+    effect: read
+    scopes: [chess:read]
+    input:
+      type: object
+      additionalProperties: false
+      required: [fen]
+      properties:
+        fen:
+          type: string
+        include_variations:
+          type: boolean
+          default: true
+    output_ref: "#/schemas/OpeningMatch"
+
+  - name: chess.recommend_moves
+    effect: compute
+    scopes: [chess:read]
+    input:
+      type: object
+      additionalProperties: false
+      required: [fen]
+      properties:
+        fen:
+          type: string
+        max_moves:
+          type: integer
+          minimum: 1
+          maximum: 5
+          default: 3
+        engine_time_ms:
+          type: integer
+          minimum: 100
+          maximum: 10000
+          default: 2000
+    output_ref: "#/schemas/MoveRecommendationResult"
+
+  - name: chess.analyze_position
+    effect: compute
+    scopes: [chess:read]
+    input:
+      type: object
+      additionalProperties: false
+      required: [request_id, fen]
+      properties:
+        request_id:
+          type: string
+          minLength: 8
+          maxLength: 100
+        fen:
+          type: string
+        language:
+          type: string
+          enum: [fr, en]
+          default: fr
+        difficulty:
+          type: string
+          enum: [beginner, intermediate, advanced, master]
+          default: intermediate
+        include_videos:
+          type: boolean
+          default: true
+    output_ref: "#/schemas/AnalysisResult"
+
+  - name: video.search_position
+    effect: read
+    scopes: [video:read]
+    input:
+      type: object
+      additionalProperties: false
+      required: [fen]
+      properties:
+        fen:
+          type: string
+        max_results:
+          type: integer
+          minimum: 1
+          maximum: 20
+          default: 5
+        min_confidence:
+          type: number
+          minimum: 0
+          maximum: 1
+          default: 0.8
+        language:
+          type: string
+    output_ref: "#/schemas/VideoPositionSearchResult"
+
+  - name: video.start_indexing
+    effect: write
+    scopes: [video:index]
+    confirmation: required_for_remote_asset
+    input:
+      type: object
+      additionalProperties: false
+      required: [asset_id, rights_attestation]
+      properties:
+        asset_id:
+          type: string
+        rights_attestation:
+          type: string
+          minLength: 10
+          maxLength: 500
+        known_initial_fen:
+          type: [string, "null"]
+    output_ref: "#/schemas/VideoIndexJobAccepted"
+
+  - name: video.get_indexing_status
+    effect: read
+    scopes: [video:read]
+    input:
+      type: object
+      additionalProperties: false
+      required: [job_id]
+      properties:
+        job_id:
+          type: string
+    output_ref: "#/schemas/VideoIndexJobStatus"
+
+  - name: video.cancel_indexing
+    effect: destructive
+    scopes: [video:cancel]
+    confirmation: required
+    input:
+      type: object
+      additionalProperties: false
+      required: [job_id, reason]
+      properties:
+        job_id:
+          type: string
+        reason:
+          type: string
+          minLength: 3
+          maxLength: 300
+    output_ref: "#/schemas/VideoIndexJobStatus"
+
+resources:
+  - uri_template: "chess://openings/{eco}"
+    scopes: [chess:read]
+    description: Théorie, variantes, statistiques et provenance d'une ouverture.
+    cache_policy: versioned-long
+  - uri_template: "chess://positions/{position_key}"
+    scopes: [chess:read]
+    description: Analyse structurée mise en cache pour une position.
+    cache_policy: short
+  - uri_template: "chess://videos/{video_id}/timeline"
+    scopes: [video:read]
+    description: Segments position/timestamp d'une vidéo autorisée.
+    cache_policy: versioned
+  - uri: "chess://schemas/analysis-response"
+    scopes: [chess:read]
+    description: Contrat de la réponse d'analyse.
+    cache_policy: versioned-long
+  - uri: "chess://policies/video-ingestion"
+    scopes: [video:read]
+    description: Politique de provenance, droits, rétention et retrait.
+    cache_policy: versioned-long
+
+prompts:
+  - name: explain_opening
+    arguments: [opening, language, difficulty]
+    description: Présente une ouverture à partir de données sourcées.
+  - name: compare_candidate_moves
+    arguments: [fen, candidate_moves, language, difficulty]
+    description: Compare uniquement des coups déjà validés comme légaux.
+  - name: build_training_plan
+    arguments: [profile, target_openings, duration_weeks]
+    description: Organise un programme à partir du profil et du corpus disponible.
+
+schemas:
+  FenValidationResult:
+    required: [valid, normalized_fen]
+  OpeningMatch:
+    required: [matched, confidence]
+  MoveRecommendationResult:
+    required: [mode, moves, sources]
+  AnalysisResult:
+    required: [request_id, status, fen, sources]
+  VideoPositionSearchResult:
+    required: [query_position, matches]
+  VideoIndexJobAccepted:
+    required: [job_id, status]
+  VideoIndexJobStatus:
+    required: [job_id, status, progress]
+
+errors:
+  - INVALID_FEN
+  - OPENING_NOT_FOUND
+  - LICHESS_RATE_LIMITED
+  - ENGINE_TIMEOUT
+  - RAG_UNAVAILABLE
+  - NO_VIDEO_MATCH
+  - RIGHTS_NOT_VERIFIED
+  - JOB_NOT_FOUND
+  - LOW_CONFIDENCE_POSITION
+  - INTERNAL_ERROR

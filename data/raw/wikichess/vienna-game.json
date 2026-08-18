@@ -1,0 +1,65 @@
+{
+  "slug": "vienna-game",
+  "title": "Partie viennoise",
+  "wikichess_title": "Vienna game",
+  "eco": "C25",
+  "moves": [
+    "e4",
+    "e5",
+    "Nc3"
+  ],
+  "position_after": "Nc3",
+  "source_url": "https://ficgs.com/wikichess_34.html",
+  "language": "en",
+  "retrieved_at": "2026-08-17T13:13:57.692934+00:00",
+  "contributors": [
+    "Thibault de Vassal"
+  ],
+  "content": "The Vienna Game. White's second move is in contrast to the more usual 2.Nf3, which can lead to the Ruy Lopez, Giuoco Piano, Scotch Game and other openings. The original idea behind 2.Nc3 was to play a kind of delayed King's Gambit with an eventual f4, but in modern play White often takes much quieter paths.\nAccording to Chessbase, white chances are about 56%",
+  "next_moves": [
+    {
+      "move": "Nf6",
+      "source_url": "https://ficgs.com/wikichess_6060.html"
+    },
+    {
+      "move": "Bc5",
+      "source_url": "https://ficgs.com/wikichess_40239.html"
+    },
+    {
+      "move": "Nc6",
+      "source_url": "https://ficgs.com/wikichess_8304.html"
+    },
+    {
+      "move": "d6",
+      "source_url": "https://ficgs.com/wikichess_43409.html"
+    },
+    {
+      "move": "c5",
+      "source_url": "https://ficgs.com/wikichess_153454.html"
+    },
+    {
+      "move": "Bb4",
+      "source_url": "https://ficgs.com/wikichess_19128.html"
+    },
+    {
+      "move": "c6",
+      "source_url": "https://ficgs.com/wikichess_19828.html"
+    },
+    {
+      "move": "Qf6",
+      "source_url": "https://ficgs.com/wikichess_116184.html"
+    },
+    {
+      "move": "f5",
+      "source_url": "https://ficgs.com/wikichess_67922.html"
+    },
+    {
+      "move": "b6",
+      "source_url": "https://ficgs.com/wikichess_68103.html"
+    },
+    {
+      "move": "a6",
+      "source_url": "https://ficgs.com/wikichess_147737.html"
+    }
+  ]
+}

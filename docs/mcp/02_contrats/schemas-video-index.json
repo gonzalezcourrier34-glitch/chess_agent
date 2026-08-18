@@ -1,0 +1,139 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/chess-agent/video-index.schema.json",
+  "title": "Chess Agent Video Index Contracts",
+  "type": "object",
+  "$defs": {
+    "rightsMetadata": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["basis", "evidence_ref", "verified_at"],
+      "properties": {
+        "basis": {
+          "type": "string",
+          "enum": ["owned", "licensed", "partner", "user_attested"]
+        },
+        "evidence_ref": {"type": "string", "minLength": 1},
+        "verified_at": {"type": "string", "format": "date-time"},
+        "expires_at": {"type": ["string", "null"], "format": "date-time"}
+      }
+    },
+    "videoAsset": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["asset_id", "source_type", "sha256", "rights", "retention_until"],
+      "properties": {
+        "asset_id": {"type": "string", "minLength": 8},
+        "source_type": {
+          "type": "string",
+          "enum": ["upload", "owned", "licensed", "partner"]
+        },
+        "sha256": {"type": "string", "pattern": "^[a-f0-9]{64}$"},
+        "youtube_video_id": {"type": ["string", "null"]},
+        "rights": {"$ref": "#/$defs/rightsMetadata"},
+        "retention_until": {"type": "string", "format": "date-time"},
+        "known_initial_fen": {"type": ["string", "null"]}
+      }
+    },
+    "detectedPosition": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "position_kind",
+        "piece_placement",
+        "position_key",
+        "confidence",
+        "model_version"
+      ],
+      "properties": {
+        "position_kind": {
+          "type": "string",
+          "enum": ["piece_placement_only", "partial_fen", "full_fen"]
+        },
+        "piece_placement": {"type": "string"},
+        "fen": {"type": ["string", "null"]},
+        "unknown_fields": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": [
+              "active_color",
+              "castling_rights",
+              "en_passant",
+              "halfmove_clock",
+              "fullmove_number"
+            ]
+          },
+          "uniqueItems": true
+        },
+        "position_key": {"type": "string"},
+        "confidence": {"type": "number", "minimum": 0, "maximum": 1},
+        "model_version": {"type": "string"}
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {"position_kind": {"const": "full_fen"}},
+            "required": ["position_kind"]
+          },
+          "then": {
+            "required": ["fen"],
+            "properties": {
+              "fen": {"type": "string"},
+              "unknown_fields": {"maxItems": 0}
+            }
+          }
+        }
+      ]
+    },
+    "videoPositionSegment": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "asset_id",
+        "video_id",
+        "position",
+        "start_ms",
+        "end_ms",
+        "best_frame_ms",
+        "index_version"
+      ],
+      "properties": {
+        "asset_id": {"type": "string"},
+        "video_id": {"type": "string"},
+        "position": {"$ref": "#/$defs/detectedPosition"},
+        "start_ms": {"type": "integer", "minimum": 0},
+        "end_ms": {"type": "integer", "minimum": 0},
+        "best_frame_ms": {"type": "integer", "minimum": 0},
+        "timestamp_url": {"type": ["string", "null"], "format": "uri"},
+        "index_version": {"type": "string"}
+      }
+    },
+    "videoIndexJob": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["job_id", "asset_id", "status", "progress", "created_at"],
+      "properties": {
+        "job_id": {"type": "string"},
+        "asset_id": {"type": "string"},
+        "status": {
+          "type": "string",
+          "enum": ["queued", "running", "completed", "failed", "cancelled"]
+        },
+        "progress": {"type": "number", "minimum": 0, "maximum": 1},
+        "created_at": {"type": "string", "format": "date-time"},
+        "updated_at": {"type": ["string", "null"], "format": "date-time"},
+        "metrics": {"type": "object"},
+        "error": {"type": ["object", "null"]}
+      }
+    }
+  },
+  "properties": {
+    "asset": {"$ref": "#/$defs/videoAsset"},
+    "job": {"$ref": "#/$defs/videoIndexJob"},
+    "segments": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/videoPositionSegment"}
+    }
+  }
+}

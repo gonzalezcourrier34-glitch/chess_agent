@@ -1,0 +1,96 @@
+{
+  "slug": "dutch-defense",
+  "title": "Défense hollandaise",
+  "wikichess_title": "Dutch",
+  "eco": "A80",
+  "moves": [
+    "d4",
+    "f5"
+  ],
+  "position_after": "f5",
+  "source_url": "https://ficgs.com/wikichess_530.html",
+  "language": "en",
+  "retrieved_at": "2026-08-17T13:16:18.184948+00:00",
+  "contributors": [
+    "Thibault de Vassal"
+  ],
+  "content": "The dutch defense.\nBlack's ...f5 stakes a serious claim to the e4 square and looks towards an attack on White's kingside in the middlegame. However, it weakens Black's own kingside somewhat, and does nothing to contribute to Black's development. As of 2005, the defence is unpopular in top-level play. The Dutch has never been one of the main lines against 1.d4, though in the past a number of top players, including Alexander Alekhine, Bent Larsen and Paul Morphy, have used it with success. Perhaps its high-water mark occurred in 1951, when both world champion Mikhail Botvinnik and his challenger, David Bronstein, played it in their championship match.",
+  "next_moves": [
+    {
+      "move": "e4",
+      "source_url": "https://ficgs.com/wikichess_531.html"
+    },
+    {
+      "move": "Nh3",
+      "source_url": "https://ficgs.com/wikichess_241131.html"
+    },
+    {
+      "move": "b3",
+      "source_url": "https://ficgs.com/wikichess_179845.html"
+    },
+    {
+      "move": "h3",
+      "source_url": "https://ficgs.com/wikichess_1791.html"
+    },
+    {
+      "move": "g4",
+      "source_url": "https://ficgs.com/wikichess_1800.html"
+    },
+    {
+      "move": "Nc3",
+      "source_url": "https://ficgs.com/wikichess_4326.html"
+    },
+    {
+      "move": "h4",
+      "source_url": "https://ficgs.com/wikichess_55038.html"
+    },
+    {
+      "move": "Qd3",
+      "source_url": "https://ficgs.com/wikichess_208047.html"
+    },
+    {
+      "move": "g3",
+      "source_url": "https://ficgs.com/wikichess_5605.html"
+    },
+    {
+      "move": "c4",
+      "source_url": "https://ficgs.com/wikichess_1531.html"
+    },
+    {
+      "move": "d5",
+      "source_url": "https://ficgs.com/wikichess_103927.html"
+    },
+    {
+      "move": "Bg5",
+      "source_url": "https://ficgs.com/wikichess_9314.html"
+    },
+    {
+      "move": "Nf3",
+      "source_url": "https://ficgs.com/wikichess_9373.html"
+    },
+    {
+      "move": "e3",
+      "source_url": "https://ficgs.com/wikichess_58214.html"
+    },
+    {
+      "move": "c3",
+      "source_url": "https://ficgs.com/wikichess_123087.html"
+    },
+    {
+      "move": "Nd2",
+      "source_url": "https://ficgs.com/wikichess_117425.html"
+    },
+    {
+      "move": "Bf4",
+      "source_url": "https://ficgs.com/wikichess_70903.html"
+    },
+    {
+      "move": "f4",
+      "source_url": "https://ficgs.com/wikichess_75397.html"
+    },
+    {
+      "move": "f3",
+      "source_url": "https://ficgs.com/wikichess_50867.html"
+    }
+  ]
+}

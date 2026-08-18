@@ -1,0 +1,84 @@
+{
+  "slug": "sokolsky-opening",
+  "title": "Ouverture Sokolsky",
+  "wikichess_title": "Polish (Sokolsky) opening",
+  "eco": "A00",
+  "moves": [
+    "b4"
+  ],
+  "position_after": "b4",
+  "source_url": "https://ficgs.com/wikichess_1694.html",
+  "language": "en",
+  "retrieved_at": "2026-08-17T13:17:15.521832+00:00",
+  "contributors": [
+    "Gary Gruw",
+    "Ilmars Cirulis"
+  ],
+  "content": "Sokolsky opening.\nIt was named as 'Orangutan opening' by Tartakover.",
+  "next_moves": [
+    {
+      "move": "d5",
+      "source_url": "https://ficgs.com/wikichess_1812.html"
+    },
+    {
+      "move": "e5",
+      "source_url": "https://ficgs.com/wikichess_1699.html"
+    },
+    {
+      "move": "b5",
+      "source_url": "https://ficgs.com/wikichess_15203.html"
+    },
+    {
+      "move": "b6",
+      "source_url": "https://ficgs.com/wikichess_10163.html"
+    },
+    {
+      "move": "c5",
+      "source_url": "https://ficgs.com/wikichess_10256.html"
+    },
+    {
+      "move": "h6",
+      "source_url": "https://ficgs.com/wikichess_101121.html"
+    },
+    {
+      "move": "Nc6",
+      "source_url": "https://ficgs.com/wikichess_101122.html"
+    },
+    {
+      "move": "f5",
+      "source_url": "https://ficgs.com/wikichess_84064.html"
+    },
+    {
+      "move": "f6",
+      "source_url": "https://ficgs.com/wikichess_98785.html"
+    },
+    {
+      "move": "g6",
+      "source_url": "https://ficgs.com/wikichess_1815.html"
+    },
+    {
+      "move": "a5",
+      "source_url": "https://ficgs.com/wikichess_7783.html"
+    },
+    {
+      "move": "c6",
+      "source_url": "https://ficgs.com/wikichess_7794.html"
+    },
+    {
+      "move": "Nf6",
+      "source_url": "https://ficgs.com/wikichess_1811.html"
+    },
+    {
+      "move": "e6",
+      "source_url": "https://ficgs.com/wikichess_1813.html"
+    },
+    {
+      "move": "a6",
+      "source_url": "https://ficgs.com/wikichess_1814.html"
+    },
+    {
+      "move": "d6",
+      "source_url": "https://ficgs.com/wikichess_53603.html"
+    }
+  ]
+}

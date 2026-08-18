@@ -1,0 +1,46 @@
+{
+  "slug": "benoni-defense",
+  "title": "Défense Benoni",
+  "wikichess_title": "Benoni defense",
+  "eco": "A56",
+  "moves": [
+    "d4",
+    "Nf6",
+    "c4",
+    "c5"
+  ],
+  "position_after": "c5",
+  "source_url": "https://ficgs.com/wikichess_87.html",
+  "language": "en",
+  "retrieved_at": "2026-08-17T13:15:57.084234+00:00",
+  "contributors": [
+    "David Grosdemange"
+  ],
+  "content": "here begins the benoni defense . c5 can also be played at first .\nblack attacks the white d4-pawn , and \"force\" d5 , then this pawn is the black's target ( with Cf6 , e6 for example ) .",
+  "next_moves": [
+    {
+      "move": "Nf3",
+      "source_url": "https://ficgs.com/wikichess_5935.html"
+    },
+    {
+      "move": "e3",
+      "source_url": "https://ficgs.com/wikichess_5936.html"
+    },
+    {
+      "move": "d5",
+      "source_url": "https://ficgs.com/wikichess_88.html"
+    },
+    {
+      "move": "Bf4",
+      "source_url": "https://ficgs.com/wikichess_260976.html"
+    },
+    {
+      "move": "dxc5",
+      "source_url": "https://ficgs.com/wikichess_74613.html"
+    },
+    {
+      "move": "Nc3",
+      "source_url": "https://ficgs.com/wikichess_61007.html"
+    }
+  ]
+}

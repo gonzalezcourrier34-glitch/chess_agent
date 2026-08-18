@@ -1,0 +1,48 @@
+{
+  "slug": "danish-gambit",
+  "title": "Gambit danois",
+  "wikichess_title": "Danish gambit",
+  "eco": "C21",
+  "moves": [
+    "e4",
+    "e5",
+    "d4",
+    "exd4",
+    "c3"
+  ],
+  "position_after": "c3",
+  "source_url": "https://ficgs.com/wikichess_1517.html",
+  "language": "en",
+  "retrieved_at": "2026-08-17T13:14:40.500966+00:00",
+  "contributors": [
+    "Dirk Jan Van Dijl",
+    "Ron Keyston"
+  ],
+  "content": "The Danish Gambit",
+  "next_moves": [
+    {
+      "move": "d5",
+      "source_url": "https://ficgs.com/wikichess_83408.html"
+    },
+    {
+      "move": "dxc3",
+      "source_url": "https://ficgs.com/wikichess_1518.html"
+    },
+    {
+      "move": "d3",
+      "source_url": "https://ficgs.com/wikichess_1691.html"
+    },
+    {
+      "move": "Nc6",
+      "source_url": "https://ficgs.com/wikichess_101028.html"
+    },
+    {
+      "move": "Qe7",
+      "source_url": "https://ficgs.com/wikichess_132769.html"
+    },
+    {
+      "move": "d6",
+      "source_url": "https://ficgs.com/wikichess_170608.html"
+    }
+  ]
+}

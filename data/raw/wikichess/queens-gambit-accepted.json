@@ -1,0 +1,42 @@
+{
+  "slug": "queens-gambit-accepted",
+  "title": "Gambit dame accepté",
+  "wikichess_title": "Queen's gambit accepted",
+  "eco": "D20",
+  "moves": [
+    "d4",
+    "d5",
+    "c4",
+    "dxc4"
+  ],
+  "position_after": "dxc4",
+  "source_url": "https://ficgs.com/wikichess_881.html",
+  "language": "en",
+  "retrieved_at": "2026-08-17T13:16:42.867024+00:00",
+  "contributors": [
+    "Dirk Jan Van Dijl"
+  ],
+  "content": "",
+  "next_moves": [
+    {
+      "move": "e4",
+      "source_url": "https://ficgs.com/wikichess_9482.html"
+    },
+    {
+      "move": "Nc3",
+      "source_url": "https://ficgs.com/wikichess_3864.html"
+    },
+    {
+      "move": "Nf3",
+      "source_url": "https://ficgs.com/wikichess_882.html"
+    },
+    {
+      "move": "e3",
+      "source_url": "https://ficgs.com/wikichess_10326.html"
+    },
+    {
+      "move": "Qa4",
+      "source_url": "https://ficgs.com/wikichess_36678.html"
+    }
+  ]
+}

@@ -1,0 +1,46 @@
+{
+  "slug": "center-game",
+  "title": "Partie du centre",
+  "wikichess_title": "Centre game",
+  "eco": "C21",
+  "moves": [
+    "e4",
+    "e5",
+    "d4",
+    "exd4"
+  ],
+  "position_after": "exd4",
+  "source_url": "https://ficgs.com/wikichess_1516.html",
+  "language": "en",
+  "retrieved_at": "2026-08-17T13:14:32.193436+00:00",
+  "contributors": [
+    "Dirk Jan Van Dijl"
+  ],
+  "content": "",
+  "next_moves": [
+    {
+      "move": "Qxd4",
+      "source_url": "https://ficgs.com/wikichess_2034.html"
+    },
+    {
+      "move": "Bc4",
+      "source_url": "https://ficgs.com/wikichess_53176.html"
+    },
+    {
+      "move": "Nf3",
+      "source_url": "https://ficgs.com/wikichess_50974.html"
+    },
+    {
+      "move": "f4",
+      "source_url": "https://ficgs.com/wikichess_92937.html"
+    },
+    {
+      "move": "c3",
+      "source_url": "https://ficgs.com/wikichess_1517.html"
+    },
+    {
+      "move": "Bd3",
+      "source_url": "https://ficgs.com/wikichess_46921.html"
+    }
+  ]
+}

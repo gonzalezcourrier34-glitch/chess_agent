@@ -1,0 +1,3187 @@
+{
+  "source": "wikichess",
+  "base_url": "https://ficgs.com/",
+  "start_url": "https://ficgs.com/wikichess.html",
+  "generated_at": "2026-08-17T13:17:29.562272+00:00",
+  "requested_count": 50,
+  "downloaded_count": 50,
+  "failed_count": 0,
+  "duration_ms": 300786.38,
+  "articles": [
+    {
+      "slug": "italian-game",
+      "title": "Partie italienne",
+      "wikichess_title": "King's pawn game",
+      "eco": "C50",
+      "moves": [
+        "e4",
+        "e5",
+        "Nf3",
+        "Nc6",
+        "Bc4"
+      ],
+      "position_after": "Bc4",
+      "source_url": "https://ficgs.com/wikichess_45.html",
+      "language": "en",
+      "retrieved_at": "2026-08-17T13:12:36.224425+00:00",
+      "contributors": [
+        "Thibault de Vassal"
+      ],
+      "next_moves": [
+        {
+          "move": "Bc5",
+          "source_url": "https://ficgs.com/wikichess_48.html"
+        },
+        {
+          "move": "Nh6",
+          "source_url": "https://ficgs.com/wikichess_19565.html"
+        },
+        {
+          "move": "f5",
+          "source_url": "https://ficgs.com/wikichess_45904.html"
+        },
+        {
+          "move": "Bb4",
+          "source_url": "https://ficgs.com/wikichess_46669.html"
+        },
+        {
+          "move": "Be7",
+          "source_url": "https://ficgs.com/wikichess_16432.html"
+        },
+        {
+          "move": "h6",
+          "source_url": "https://ficgs.com/wikichess_8043.html"
+        },
+        {
+          "move": "b6",
+          "source_url": "https://ficgs.com/wikichess_48235.html"
+        },
+        {
+          "move": "Nf6",
+          "source_url": "https://ficgs.com/wikichess_296.html"
+        },
+        {
+          "move": "g6",
+          "source_url": "https://ficgs.com/wikichess_198333.html"
+        },
+        {
+          "move": "Qe7",
+          "source_url": "https://ficgs.com/wikichess_166801.html"
+        },
+        {
+          "move": "a6",
+          "source_url": "https://ficgs.com/wikichess_132795.html"
+        },
+        {
+          "move": "Nb4",
+          "source_url": "https://ficgs.com/wikichess_78958.html"
+        },
+        {
+          "move": "f6",
+          "source_url": "https://ficgs.com/wikichess_72741.html"
+        },
+        {
+          "move": "Nd4",
+          "source_url": "https://ficgs.com/wikichess_52978.html"
+        },
+        {
+          "move": "d6",
+          "source_url": "https://ficgs.com/wikichess_30323.html"
+        },
+        {
+          "move": "d5",
+          "source_url": "https://ficgs.com/wikichess_46757.html"
+        },
+        {
+          "move": "Qf6",
+          "source_url": "https://ficgs.com/wikichess_47459.html"
+        }
+      ]
+    },
+    {
+      "slug": "ruy-lopez",
+      "title": "Partie espagnole",
+      "wikichess_title": "Ruy Lopez (Spanish Opening)",
+      "eco": "C60",
+      "moves": [
+        "e4",
+        "e5",
+        "Nf3",
+        "Nc6",
+        "Bb5"
+      ],
+      "position_after": "Bb5",
+      "source_url": "https://ficgs.com/wikichess_12.html",
+      "language": "en",
+      "retrieved_at": "2026-08-17T13:12:44.365785+00:00",
+      "contributors": [
+        "Thibault de Vassal"
+      ],
+      "next_moves": [
+        {
+          "move": "a6",
+          "source_url": "https://ficgs.com/wikichess_297.html"
+        },
+        {
+          "move": "Nf6",
+          "source_url": "https://ficgs.com/wikichess_376.html"
+        },
+        {
+          "move": "g6",
+          "source_url": "https://ficgs.com/wikichess_1856.html"
+        },
+        {
+          "move": "f5",
+          "source_url": "https://ficgs.com/wikichess_1692.html"
+        },
+        {
+          "move": "Nb4",
+          "source_url": "https://ficgs.com/wikichess_128964.html"
+        },
+        {
+          "move": "Bd6",
+          "source_url": "https://ficgs.com/wikichess_12464.html"
+        },
+        {
+          "move": "Be7",
+          "source_url": "https://ficgs.com/wikichess_13307.html"
+        },
+        {
+          "move": "Na5",
+          "source_url": "https://ficgs.com/wikichess_229711.html"
+        },
+        {
+          "move": "Bc5",
+          "source_url": "https://ficgs.com/wikichess_2975.html"
+        },
+        {
+          "move": "Bb4",
+          "source_url": "https://ficgs.com/wikichess_10345.html"
+        },
+        {
+          "move": "h6",
+          "source_url": "https://ficgs.com/wikichess_260685.html"
+        },
+        {
+          "move": "g5",
+          "source_url": "https://ficgs.com/wikichess_145968.html"
+        },
+        {
+          "move": "Nge7",
+          "source_url": "https://ficgs.com/wikichess_9054.html"
+        },
+        {
+          "move": "f6",
+          "source_url": "https://ficgs.com/wikichess_49227.html"
+        },
+        {
+          "move": "Nd4",
+          "source_url": "https://ficgs.com/wikichess_1430.html"
+        },
+        {
+          "move": "Qf6",
+          "source_url": "https://ficgs.com/wikichess_83893.html"
+        },
+        {
+          "move": "d5",
+          "source_url": "https://ficgs.com/wikichess_82721.html"
+        },
+        {
+          "move": "d6",
+          "source_url": "https://ficgs.com/wikichess_488.html"
+        },
+        {
+          "move": "Nce7",
+          "source_url": "https://ficgs.com/wikichess_72162.html"
+        }
+      ]
+    },
+    {
+      "slug": "sicilian-defense",
+      "title": "Défense sicilienne",
+      "wikichess_title": "Sicilian defense",
+      "eco": "B20",
+      "moves": [
+        "e4",
+        "c5"
+      ],
+      "position_after": "c5",
+      "source_url": "https://ficgs.com/wikichess_3.html",
+      "language": "en",
+      "retrieved_at": "2026-08-17T13:12:48.050612+00:00",
+      "contributors": [
+        "Thibault de Vassal"
+      ],
+      "next_moves": [
+        {
+          "move": "Nf3",
+          "source_url": "https://ficgs.com/wikichess_6.html"
+        },
+        {
+          "move": "Nc3",
+          "source_url": "https://ficgs.com/wikichess_7.html"
+        },
+        {
+          "move": "c3",
+          "source_url": "https://ficgs.com/wikichess_79.html"
+        },
+        {
+          "move": "d4",
+          "source_url": "https://ficgs.com/wikichess_80.html"
+        },
+        {
+          "move": "f4",
+          "source_url": "https://ficgs.com/wikichess_153.html"
+        },
+        {
+          "move": "b4",
+          "source_url": "https://ficgs.com/wikichess_154.html"
+        },
+        {
+          "move": "Qh5",
+          "source_url": "https://ficgs.com/wikichess_655.html"
+        },
+        {
+          "move": "h4",
+          "source_url": "https://ficgs.com/wikichess_204080.html"
+        },
+        {
+          "move": "g4",
+          "source_url": "https://ficgs.com/wikichess_138801.html"
+        },
+        {
+          "move": "d3",
+          "source_url": "https://ficgs.com/wikichess_21896.html"
+        },
+        {
+          "move": "c4",
+          "source_url": "https://ficgs.com/wikichess_1638.html"
+        },
+        {
+          "move": "a3",
+          "source_url": "https://ficgs.com/wikichess_14513.html"
+        },
+        {
+          "move": "h3",
+          "source_url": "https://ficgs.com/wikichess_9727.html"
+        },
+        {
+          "move": "Bc4",
+          "source_url": "https://ficgs.com/wikichess_2756.html"
+        },
+        {
+          "move": "a4",
+          "source_url": "https://ficgs.com/wikichess_192804.html"
+        },
+        {
+          "move": "Bb5",
+          "source_url": "https://ficgs.com/wikichess_14429.html"
+        },
+        {
+          "move": "b3",
+          "source_url": "https://ficgs.com/wikichess_2936.html"
+        },
+        {
+          "move": "Ne2",
+          "source_url": "https://ficgs.com/wikichess_8373.html"
+        },
+        {
+          "move": "g3",
+          "source_url": "https://ficgs.com/wikichess_10112.html"
+        },
+        {
+          "move": "e5",
+          "source_url": "https://ficgs.com/wikichess_31765.html"
+        },
+        {
+          "move": "Be2",
+          "source_url": "https://ficgs.com/wikichess_36082.html"
+        },
+        {
+          "move": "Qf3",
+          "source_url": "https://ficgs.com/wikichess_28425.html"
+        },
+        {
+          "move": "Bd3",
+          "source_url": "https://ficgs.com/wikichess_76060.html"
+        },
+        {
+          "move": "Na3",
+          "source_url": "https://ficgs.com/wikichess_16576.html"
+        }
+      ]
+    },
+    {
+      "slug": "french-defense",
+      "title": "Défense française",
+      "wikichess_title": "French defense",
+      "eco": "C00",
+      "moves": [
+        "e4",
+        "e6"
+      ],
+      "position_after": "e6",
+      "source_url": "https://ficgs.com/wikichess_21.html",
+      "language": "en",
+      "retrieved_at": "2026-08-17T13:12:51.632722+00:00",
+      "contributors": [
+        "Thibault de Vassal",
+        "Toncho Tenev"
+      ],
+      "next_moves": [
+        {
+          "move": "d4",
+          "source_url": "https://ficgs.com/wikichess_51.html"
+        },
+        {
+          "move": "c3",
+          "source_url": "https://ficgs.com/wikichess_23517.html"
+        },
+        {
+          "move": "Qe2",
+          "source_url": "https://ficgs.com/wikichess_9155.html"
+        },
+        {
+          "move": "Qh5",
+          "source_url": "https://ficgs.com/wikichess_87619.html"
+        },
+        {
+          "move": "Bc4",
+          "source_url": "https://ficgs.com/wikichess_26327.html"
+        },
+        {
+          "move": "c4",
+          "source_url": "https://ficgs.com/wikichess_1560.html"
+        },
+        {
+          "move": "g3",
+          "source_url": "https://ficgs.com/wikichess_27235.html"
+        },
+        {
+          "move": "Nc3",
+          "source_url": "https://ficgs.com/wikichess_4465.html"
+        },
+        {
+          "move": "d3",
+          "source_url": "https://ficgs.com/wikichess_10725.html"
+        },
+        {
+          "move": "a3",
+          "source_url": "https://ficgs.com/wikichess_108638.html"
+        },
+        {
+          "move": "Nf3",
+          "source_url": "https://ficgs.com/wikichess_3986.html"
+        },
+        {
+          "move": "e5",
+          "source_url": "https://ficgs.com/wikichess_10125.html"
+        },
+        {
+          "move": "f4",
+          "source_url": "https://ficgs.com/wikichess_10150.html"
+        },
+        {
+          "move": "Bd3",
+          "source_url": "https://ficgs.com/wikichess_248150.html"
+        },
+        {
+          "move": "b3",
+          "source_url": "https://ficgs.com/wikichess_8936.html"
+        },
+        {
+          "move": "Qf3",
+          "source_url": "https://ficgs.com/wikichess_50151.html"
+        }
+      ]
+    },
+    {
+      "slug": "caro-kann-defense",
+      "title": "Défense Caro-Kann",
+      "wikichess_title": "Caro-Kann defense",
+      "eco": "B10",
+      "moves": [
+        "e4",
+        "c6"
+      ],
+      "position_after": "c6",
+      "source_url": "https://ficgs.com/wikichess_22.html",
+      "language": "en",
+      "retrieved_at": "2026-08-17T13:12:55.027745+00:00",
+      "contributors": [
+        "Thibault de Vassal",
+        "Sebastien Marez"
+      ],
+      "next_moves": [
+        {
+          "move": "d4",
+          "source_url": "https://ficgs.com/wikichess_129.html"
+        },
+        {
+          "move": "d3",
+          "source_url": "https://ficgs.com/wikichess_19437.html"
+        },
+        {
+          "move": "c3",
+          "source_url": "https://ficgs.com/wikichess_10572.html"
+        },
+        {
+          "move": "b3",
+          "source_url": "https://ficgs.com/wikichess_64599.html"
+        },
+        {
+          "move": "Ne2",
+          "source_url": "https://ficgs.com/wikichess_45117.html"
+        },
+        {
+          "move": "c4",
+          "source_url": "https://ficgs.com/wikichess_6965.html"
+        },
+        {
+          "move": "g3",
+          "source_url": "https://ficgs.com/wikichess_155581.html"
+        },
+        {
+          "move": "f3",
+          "source_url": "https://ficgs.com/wikichess_172518.html"
+        },
+        {
+          "move": "b4",
+          "source_url": "https://ficgs.com/wikichess_26690.html"
+        },
+        {
+          "move": "Nc3",
+          "source_url": "https://ficgs.com/wikichess_8464.html"
+        },
+        {
+          "move": "Bc4",
+          "source_url": "https://ficgs.com/wikichess_26677.html"
+        },
+        {
+          "move": "Be2",
+          "source_url": "https://ficgs.com/wikichess_119097.html"
+        },
+        {
+          "move": "Qf3",
+          "source_url": "https://ficgs.com/wikichess_118064.html"
+        },
+        {
+          "move": "e5",
+          "source_url": "https://ficgs.com/wikichess_34513.html"
+        },
+        {
+          "move": "f4",
+          "source_url": "https://ficgs.com/wikichess_4759.html"
+        },
+        {
+          "move": "Nf3",
+          "source_url": "https://ficgs.com/wikichess_2083.html"
+        },
+        {
+          "move": "Qh5",
+          "source_url": "https://ficgs.com/wikichess_53604.html"
+        }
+      ]
+    },
+    {
+      "slug": "queens-gambit",
+      "title": "Gambit dame",
+      "wikichess_title": "Queen's Gambit",
+      "eco": "D06",
+      "moves": [
+        "d4",
+        "d5",
+        "c4"
+      ],
+      "position_after": "c4",
+      "source_url": "https://ficgs.com/wikichess_16.html",
+      "language": "en",
+      "retrieved_at": "2026-08-17T13:12:59.624888+00:00",
+      "contributors": [
+        "Thibault de Vassal"
+      ],
+      "next_moves": [
+        {
+          "move": "c6",
+          "source_url": "https://ficgs.com/wikichess_17.html"
+        },
+        {
+          "move": "h5",
+          "source_url": "https://ficgs.com/wikichess_205712.html"
+        },
+        {
+          "move": "Qd7",
+          "source_url": "https://ficgs.com/wikichess_221251.html"
+        },
+        {
+          "move": "Nc6",
+          "source_url": "https://ficgs.com/wikichess_743.html"
+        },
+        {
+          "move": "Nf6",
+          "source_url": "https://ficgs.com/wikichess_8886.html"
+        },
+        {
+          "move": "e5",
+          "source_url": "https://ficgs.com/wikichess_1896.html"
+        },
+        {
+          "move": "e6",
+          "source_url": "https://ficgs.com/wikichess_872.html"
+        },
+        {
+          "move": "dxc4",
+          "source_url": "https://ficgs.com/wikichess_881.html"
+        },
+        {
+          "move": "Bf5",
+          "source_url": "https://ficgs.com/wikichess_52999.html"
+        },
+        {
+          "move": "b6",
+          "source_url": "https://ficgs.com/wikichess_67904.html"
+        },
+        {
+          "move": "Be6",
+          "source_url": "https://ficgs.com/wikichess_34097.html"
+        },
+        {
+          "move": "f6",
+          "source_url": "https://ficgs.com/wikichess_16902.html"
+        },
+        {
+          "move": "c5",
+          "source_url": "https://ficgs.com/wikichess_16628.html"
+        },
+        {
+          "move": "h6",
+          "source_url": "https://ficgs.com/wikichess_24747.html"
+        }
+      ]
+    },
+    {
+      "slug": "kings-indian-defense",
+      "title": "Défense est-indienne",
+      "wikichess_title": "King's Indian defense",
+      "eco": "E60",
+      "moves": [
+        "d4",
+        "Nf6",
+        "c4",
+        "g6"
+      ],
+      "position_after": "g6",
+      "source_url": "https://ficgs.com/wikichess_44.html",
+      "language": "en",
+      "retrieved_at": "2026-08-17T13:13:05.763485+00:00",
+      "contributors": [
+        "Thibault de Vassal"
+      ],
+      "next_moves": [
+        {
+          "move": "Nc3",
+          "source_url": "https://ficgs.com/wikichess_142.html"
+        },
+        {
+          "move": "h4",
+          "source_url": "https://ficgs.com/wikichess_193826.html"
+        },
+        {
+          "move": "f3",
+          "source_url": "https://ficgs.com/wikichess_18909.html"
+        },
+        {
+          "move": "g3",
+          "source_url": "https://ficgs.com/wikichess_11984.html"
+        },
+        {
+          "move": "Bg5",
+          "source_url": "https://ficgs.com/wikichess_152340.html"
+        },
+        {
+          "move": "Nf3",
+          "source_url": "https://ficgs.com/wikichess_4349.html"
+        },
+        {
+          "move": "e3",
+          "source_url": "https://ficgs.com/wikichess_166331.html"
+        }
+      ]
+    },
+    {
+      "slug": "english-opening",
+      "title": "Ouverture anglaise",
+      "wikichess_title": "English Opening",
+      "eco": "A10",
+      "moves": [
+        "c4"
+      ],
+      "position_after": "c4",
+      "source_url": "https://ficgs.com/wikichess_29.html",
+      "language": "en",
+      "retrieved_at": "2026-08-17T13:13:07.503442+00:00",
+      "contributors": [
+        "Thibault de Vassal"
+      ],
+      "next_moves": [
+        {
+          "move": "Nf6",
+          "source_url": "https://ficgs.com/wikichess_134.html"
+        },
+        {
+          "move": "b5",
+          "source_url": "https://ficgs.com/wikichess_3937.html"
+        },
+        {
+          "move": "e5",
+          "source_url": "https://ficgs.com/wikichess_156.html"
+        },
+        {
+          "move": "a5",
+          "source_url": "https://ficgs.com/wikichess_175537.html"
+        },
+        {
+          "move": "c5",
+          "source_url": "https://ficgs.com/wikichess_232.html"
+        },
+        {
+          "move": "f6",
+          "source_url": "https://ficgs.com/wikichess_183916.html"
+        },
+        {
+          "move": "h5",
+          "source_url": "https://ficgs.com/wikichess_61210.html"
+        },
+        {
+          "move": "a6",
+          "source_url": "https://ficgs.com/wikichess_123091.html"
+        },
+        {
+          "move": "h6",
+          "source_url": "https://ficgs.com/wikichess_224311.html"
+        },
+        {
+          "move": "d6",
+          "source_url": "https://ficgs.com/wikichess_17685.html"
+        },
+        {
+          "move": "Nh6",
+          "source_url": "https://ficgs.com/wikichess_171920.html"
+        },
+        {
+          "move": "e6",
+          "source_url": "https://ficgs.com/wikichess_2894.html"
+        },
+        {
+          "move": "c6",
+          "source_url": "https://ficgs.com/wikichess_2904.html"
+        },
+        {
+          "move": "f5",
+          "source_url": "https://ficgs.com/wikichess_10078.html"
+        },
+        {
+          "move": "Nc6",
+          "source_url": "https://ficgs.com/wikichess_5943.html"
+        },
+        {
+          "move": "g5",
+          "source_url": "https://ficgs.com/wikichess_8935.html"
+        },
+        {
+          "move": "b6",
+          "source_url": "https://ficgs.com/wikichess_8616.html"
+        },
+        {
+          "move": "g6",
+          "source_url": "https://ficgs.com/wikichess_3363.html"
+        },
+        {
+          "move": "d5",
+          "source_url": "https://ficgs.com/wikichess_18387.html"
+        },
+        {
+          "move": "Na6",
+          "source_url": "https://ficgs.com/wikichess_19515.html"
+        }
+      ]
+    },
+    {
+      "slug": "scandinavian-defense",
+      "title": "Défense scandinave",
+      "wikichess_title": "Scandinavian (centre counter) defense",
+      "eco": "B01",
+      "moves": [
+        "e4",
+        "d5"
+      ],
+      "position_after": "d5",
+      "source_url": "https://ficgs.com/wikichess_502.html",
+      "language": "en",
+      "retrieved_at": "2026-08-17T13:13:11.096954+00:00",
+      "contributors": [
+        "Adam Domurad",
+        "Sandor Porkolab"
+      ],
+      "next_moves": [
+        {
+          "move": "Nf3",
+          "source_url": "https://ficgs.com/wikichess_48418.html"
+        },
+        {
+          "move": "d4",
+          "source_url": "https://ficgs.com/wikichess_4169.html"
+        },
+        {
+          "move": "Qg4",
+          "source_url": "https://ficgs.com/wikichess_96413.html"
+        },
+        {
+          "move": "g4",
+          "source_url": "https://ficgs.com/wikichess_133678.html"
+        },
+        {
+          "move": "d3",
+          "source_url": "https://ficgs.com/wikichess_60789.html"
+        },
+        {
+          "move": "Nc3",
+          "source_url": "https://ficgs.com/wikichess_58074.html"
+        },
+        {
+          "move": "exd5",
+          "source_url": "https://ficgs.com/wikichess_503.html"
+        },
+        {
+          "move": "c3",
+          "source_url": "https://ficgs.com/wikichess_222404.html"
+        },
+        {
+          "move": "Qf3",
+          "source_url": "https://ficgs.com/wikichess_126051.html"
+        },
+        {
+          "move": "Qh5",
+          "source_url": "https://ficgs.com/wikichess_120713.html"
+        },
+        {
+          "move": "Bd3",
+          "source_url": "https://ficgs.com/wikichess_143455.html"
+        },
+        {
+          "move": "e5",
+          "source_url": "https://ficgs.com/wikichess_46756.html"
+        },
+        {
+          "move": "Qe2",
+          "source_url": "https://ficgs.com/wikichess_11916.html"
+        }
+      ]
+    },
+    {
+      "slug": "nimzo-indian-defense",
+      "title": "Défense nimzo-indienne",
+      "wikichess_title": "Nimzo-Indian defense",
+      "eco": "E20",
+      "moves": [
+        "d4",
+        "Nf6",
+        "c4",
+        "e6",
+        "Nc3",
+        "Bb4"
+      ],
+      "position_after": "Bb4",
+      "source_url": "https://ficgs.com/wikichess_38.html",
+      "language": "en",
+      "retrieved_at": "2026-08-17T13:13:20.002833+00:00",
+      "contributors": [
+        "Thibault de Vassal"
+      ],
+      "next_moves": [
+        {
+          "move": "e3",
+          "source_url": "https://ficgs.com/wikichess_39.html"
+        },
+        {
+          "move": "Bf4",
+          "source_url": "https://ficgs.com/wikichess_209051.html"
+        },
+        {
+          "move": "f3",
+          "source_url": "https://ficgs.com/wikichess_8109.html"
+        },
+        {
+          "move": "a3",
+          "source_url": "https://ficgs.com/wikichess_7980.html"
+        },
+        {
+          "move": "Qa4",
+          "source_url": "https://ficgs.com/wikichess_222246.html"
+        },
+        {
+          "move": "Qb3",
+          "source_url": "https://ficgs.com/wikichess_42971.html"
+        },
+        {
+          "move": "Bd2",
+          "source_url": "https://ficgs.com/wikichess_9978.html"
+        },
+        {
+          "move": "g3",
+          "source_url": "https://ficgs.com/wikichess_10005.html"
+        },
+        {
+          "move": "Nf3",
+          "source_url": "https://ficgs.com/wikichess_5566.html"
+        },
+        {
+          "move": "Qc2",
+          "source_url": "https://ficgs.com/wikichess_1379.html"
+        },
+        {
+          "move": "Bg5",
+          "source_url": "https://ficgs.com/wikichess_5346.html"
+        },
+        {
+          "move": "Qd3",
+          "source_url": "https://ficgs.com/wikichess_60036.html"
+        }
+      ]
+    },
+    {
+      "slug": "alekhine-defense",
+      "title": "Défense Alekhine",
+      "wikichess_title": "Alekhine's defense",
+      "eco": "B02",
+      "moves": [
+        "e4",
+        "Nf6"
+      ],
+      "position_after": "Nf6",
+      "source_url": "https://ficgs.com/wikichess_33.html",
+      "language": "en",
+      "retrieved_at": "2026-08-17T13:13:23.383216+00:00",
+      "contributors": [
+        "Thibault de Vassal"
+      ],
+      "next_moves": [
+        {
+          "move": "d3",
+          "source_url": "https://ficgs.com/wikichess_11625.html"
+        },
+        {
+          "move": "e5",
+          "source_url": "https://ficgs.com/wikichess_85.html"
+        },
+        {
+          "move": "Nc3",
+          "source_url": "https://ficgs.com/wikichess_289.html"
+        },
+        {
+          "move": "Bc4",
+          "source_url": "https://ficgs.com/wikichess_107767.html"
+        },
+        {
+          "move": "d4",
+          "source_url": "https://ficgs.com/wikichess_128767.html"
+        },
+        {
+          "move": "Qf3",
+          "source_url": "https://ficgs.com/wikichess_126659.html"
+        },
+        {
+          "move": "f3",
+          "source_url": "https://ficgs.com/wikichess_60533.html"
+        }
+      ]
+    },
+    {
+      "slug": "pirc-defense",
+      "title": "Défense Pirc",
+      "wikichess_title": "Pirc defense",
+      "eco": "B07",
+      "moves": [
+        "e4",
+        "d6",
+        "d4",
+        "Nf6",
+        "Nc3",
+        "g6"
+      ],
+      "position_after": "g6",
+      "source_url": "https://ficgs.com/wikichess_1077.html",
+      "language": "en",
+      "retrieved_at": "2026-08-17T13:13:32.598551+00:00",
+      "contributors": [
+        "Dirk Jan Van Dijl"
+      ],
+      "next_moves": [
+        {
+          "move": "Bf4",
+          "source_url": "https://ficgs.com/wikichess_22498.html"
+        },
+        {
+          "move": "Bg5",
+          "source_url": "https://ficgs.com/wikichess_3244.html"
+        },
+        {
+          "move": "g3",
+          "source_url": "https://ficgs.com/wikichess_58352.html"
+        },
+        {
+          "move": "Nf3",
+          "source_url": "https://ficgs.com/wikichess_1078.html"
+        },
+        {
+          "move": "f4",
+          "source_url": "https://ficgs.com/wikichess_5627.html"
+        },
+        {
+          "move": "f3",
+          "source_url": "https://ficgs.com/wikichess_118731.html"
+        },
+        {
+          "move": "Bc4",
+          "source_url": "https://ficgs.com/wikichess_49980.html"
+        },
+        {
+          "move": "Bb5",
+          "source_url": "https://ficgs.com/wikichess_51492.html"
+        },
+        {
+          "move": "h3",
+          "source_url": "https://ficgs.com/wikichess_51718.html"
+        },
+        {
+          "move": "e5",
+          "source_url": "https://ficgs.com/wikichess_53066.html"
+        },
+        {
+          "move": "d5",
+          "source_url": "https://ficgs.com/wikichess_44203.html"
+        },
+        {
+          "move": "Be3",
+          "source_url": "https://ficgs.com/wikichess_10776.html"
+        },
+        {
+          "move": "Be2",
+          "source_url": "https://ficgs.com/wikichess_33088.html"
+        }
+      ]
+    },
+    {
+      "slug": "modern-defense",
+      "title": "Défense moderne",
+      "wikichess_title": "Robatsch (Modern) defense",
+      "eco": "B06",
+      "moves": [
+        "e4",
+        "g6"
+      ],
+      "position_after": "g6",
+      "source_url": "https://ficgs.com/wikichess_891.html",
+      "language": "en",
+      "retrieved_at": "2026-08-17T13:13:36.079969+00:00",
+      "contributors": [
+        "Dirk Jan Van Dijl"
+      ],
+      "next_moves": [
+        {
+          "move": "f4",
+          "source_url": "https://ficgs.com/wikichess_104325.html"
+        },
+        {
+          "move": "h4",
+          "source_url": "https://ficgs.com/wikichess_104327.html"
+        },
+        {
+          "move": "c3",
+          "source_url": "https://ficgs.com/wikichess_58450.html"
+        },
+        {
+          "move": "d3",
+          "source_url": "https://ficgs.com/wikichess_230993.html"
+        },
+        {
+          "move": "Bc4",
+          "source_url": "https://ficgs.com/wikichess_70335.html"
+        },
+        {
+          "move": "d4",
+          "source_url": "https://ficgs.com/wikichess_892.html"
+        },
+        {
+          "move": "a4",
+          "source_url": "https://ficgs.com/wikichess_76706.html"
+        },
+        {
+          "move": "Nf3",
+          "source_url": "https://ficgs.com/wikichess_10518.html"
+        },
+        {
+          "move": "Nc3",
+          "source_url": "https://ficgs.com/wikichess_17179.html"
+        }
+      ]
+    },
+    {
+      "slug": "owens-defense",
+      "title": "Défense Owen",
+      "wikichess_title": "Owen defense",
+      "eco": "B00",
+      "moves": [
+        "e4",
+        "b6"
+      ],
+      "position_after": "b6",
+      "source_url": "https://ficgs.com/wikichess_894.html",
+      "language": "en",
+      "retrieved_at": "2026-08-17T13:13:39.580677+00:00",
+      "contributors": [
+        "Dirk Jan Van Dijl",
+        "Normajean Yates"
+      ],
+      "next_moves": [
+        {
+          "move": "g3",
+          "source_url": "https://ficgs.com/wikichess_231014.html"
+        },
+        {
+          "move": "f4",
+          "source_url": "https://ficgs.com/wikichess_56585.html"
+        },
+        {
+          "move": "d3",
+          "source_url": "https://ficgs.com/wikichess_128271.html"
+        },
+        {
+          "move": "d4",
+          "source_url": "https://ficgs.com/wikichess_895.html"
+        },
+        {
+          "move": "Bc4",
+          "source_url": "https://ficgs.com/wikichess_111951.html"
+        },
+        {
+          "move": "c4",
+          "source_url": "https://ficgs.com/wikichess_112920.html"
+        },
+        {
+          "move": "c3",
+          "source_url": "https://ficgs.com/wikichess_112933.html"
+        },
+        {
+          "move": "f3",
+          "source_url": "https://ficgs.com/wikichess_110856.html"
+        },
+        {
+          "move": "Nf3",
+          "source_url": "https://ficgs.com/wikichess_53539.html"
+        },
+        {
+          "move": "Nc3",
+          "source_url": "https://ficgs.com/wikichess_54167.html"
+        }
+      ]
+    },
+    {
+      "slug": "philidor-defense",
+      "title": "Défense Philidor",
+      "wikichess_title": "Philidor's defense",
+      "eco": "C41",
+      "moves": [
+        "e4",
+        "e5",
+        "Nf3",
+        "d6"
+      ],
+      "position_after": "d6",
+      "source_url": "https://ficgs.com/wikichess_1184.html",
+      "language": "en",
+      "retrieved_at": "2026-08-17T13:13:46.115804+00:00",
+      "contributors": [
+        "Dirk Jan Van Dijl"
+      ],
+      "next_moves": [
+        {
+          "move": "c4",
+          "source_url": "https://ficgs.com/wikichess_10442.html"
+        },
+        {
+          "move": "g3",
+          "source_url": "https://ficgs.com/wikichess_10726.html"
+        },
+        {
+          "move": "h4",
+          "source_url": "https://ficgs.com/wikichess_218143.html"
+        },
+        {
+          "move": "c3",
+          "source_url": "https://ficgs.com/wikichess_10381.html"
+        },
+        {
+          "move": "Nc3",
+          "source_url": "https://ficgs.com/wikichess_10317.html"
+        },
+        {
+          "move": "Bc4",
+          "source_url": "https://ficgs.com/wikichess_1185.html"
+        },
+        {
+          "move": "Bb5",
+          "source_url": "https://ficgs.com/wikichess_58398.html"
+        },
+        {
+          "move": "d4",
+          "source_url": "https://ficgs.com/wikichess_1204.html"
+        },
+        {
+          "move": "Be2",
+          "source_url": "https://ficgs.com/wikichess_25090.html"
+        },
+        {
+          "move": "h3",
+          "source_url": "https://ficgs.com/wikichess_20808.html"
+        }
+      ]
+    },
+    {
+      "slug": "petrov-defense",
+      "title": "Défense Petrov",
+      "wikichess_title": "Petrov's defense",
+      "eco": "C42",
+      "moves": [
+        "e4",
+        "e5",
+        "Nf3",
+        "Nf6"
+      ],
+      "position_after": "Nf6",
+      "source_url": "https://ficgs.com/wikichess_13.html",
+      "language": "en",
+      "retrieved_at": "2026-08-17T13:13:52.608183+00:00",
+      "contributors": [
+        "Thibault de Vassal"
+      ],
+      "next_moves": [
+        {
+          "move": "Qe2",
+          "source_url": "https://ficgs.com/wikichess_261227.html"
+        },
+        {
+          "move": "Bd3",
+          "source_url": "https://ficgs.com/wikichess_194448.html"
+        },
+        {
+          "move": "Nxe5",
+          "source_url": "https://ficgs.com/wikichess_74.html"
+        },
+        {
+          "move": "d3",
+          "source_url": "https://ficgs.com/wikichess_235.html"
+        },
+        {
+          "move": "Nc3",
+          "source_url": "https://ficgs.com/wikichess_10008.html"
+        },
+        {
+          "move": "Bc4",
+          "source_url": "https://ficgs.com/wikichess_1365.html"
+        },
+        {
+          "move": "Bb5",
+          "source_url": "https://ficgs.com/wikichess_100346.html"
+        },
+        {
+          "move": "d4",
+          "source_url": "https://ficgs.com/wikichess_1056.html"
+        },
+        {
+          "move": "a3",
+          "source_url": "https://ficgs.com/wikichess_69970.html"
+        },
+        {
+          "move": "h3",
+          "source_url": "https://ficgs.com/wikichess_77403.html"
+        },
+        {
+          "move": "Be2",
+          "source_url": "https://ficgs.com/wikichess_43184.html"
+        }
+      ]
+    },
+    {
+      "slug": "vienna-game",
+      "title": "Partie viennoise",
+      "wikichess_title": "Vienna game",
+      "eco": "C25",
+      "moves": [
+        "e4",
+        "e5",
+        "Nc3"
+      ],
+      "position_after": "Nc3",
+      "source_url": "https://ficgs.com/wikichess_34.html",
+      "language": "en",
+      "retrieved_at": "2026-08-17T13:13:57.692934+00:00",
+      "contributors": [
+        "Thibault de Vassal"
+      ],
+      "next_moves": [
+        {
+          "move": "Nf6",
+          "source_url": "https://ficgs.com/wikichess_6060.html"
+        },
+        {
+          "move": "Bc5",
+          "source_url": "https://ficgs.com/wikichess_40239.html"
+        },
+        {
+          "move": "Nc6",
+          "source_url": "https://ficgs.com/wikichess_8304.html"
+        },
+        {
+          "move": "d6",
+          "source_url": "https://ficgs.com/wikichess_43409.html"
+        },
+        {
+          "move": "c5",
+          "source_url": "https://ficgs.com/wikichess_153454.html"
+        },
+        {
+          "move": "Bb4",
+          "source_url": "https://ficgs.com/wikichess_19128.html"
+        },
+        {
+          "move": "c6",
+          "source_url": "https://ficgs.com/wikichess_19828.html"
+        },
+        {
+          "move": "Qf6",
+          "source_url": "https://ficgs.com/wikichess_116184.html"
+        },
+        {
+          "move": "f5",
+          "source_url": "https://ficgs.com/wikichess_67922.html"
+        },
+        {
+          "move": "b6",
+          "source_url": "https://ficgs.com/wikichess_68103.html"
+        },
+        {
+          "move": "a6",
+          "source_url": "https://ficgs.com/wikichess_147737.html"
+        }
+      ]
+    },
+    {
+      "slug": "kings-gambit",
+      "title": "Gambit du roi",
+      "wikichess_title": "King's gambit",
+      "eco": "C30",
+      "moves": [
+        "e4",
+        "e5",
+        "f4"
+      ],
+      "position_after": "f4",
+      "source_url": "https://ficgs.com/wikichess_10.html",
+      "language": "en",
+      "retrieved_at": "2026-08-17T13:14:02.703893+00:00",
+      "contributors": [
+        "Thibault de Vassal"
+      ],
+      "next_moves": [
+        {
+          "move": "exf4",
+          "source_url": "https://ficgs.com/wikichess_20.html"
+        },
+        {
+          "move": "Bc5",
+          "source_url": "https://ficgs.com/wikichess_362.html"
+        },
+        {
+          "move": "Nf6",
+          "source_url": "https://ficgs.com/wikichess_3866.html"
+        },
+        {
+          "move": "Qh4",
+          "source_url": "https://ficgs.com/wikichess_7814.html"
+        },
+        {
+          "move": "Ne7",
+          "source_url": "https://ficgs.com/wikichess_177648.html"
+        },
+        {
+          "move": "d5",
+          "source_url": "https://ficgs.com/wikichess_19.html"
+        },
+        {
+          "move": "d6",
+          "source_url": "https://ficgs.com/wikichess_363.html"
+        },
+        {
+          "move": "Be7",
+          "source_url": "https://ficgs.com/wikichess_171133.html"
+        },
+        {
+          "move": "c5",
+          "source_url": "https://ficgs.com/wikichess_3865.html"
+        },
+        {
+          "move": "Qf6",
+          "source_url": "https://ficgs.com/wikichess_3867.html"
+        },
+        {
+          "move": "f5",
+          "source_url": "https://ficgs.com/wikichess_153548.html"
+        },
+        {
+          "move": "Bd6",
+          "source_url": "https://ficgs.com/wikichess_149690.html"
+        },
+        {
+          "move": "Qe7",
+          "source_url": "https://ficgs.com/wikichess_86836.html"
+        },
+        {
+          "move": "h5",
+          "source_url": "https://ficgs.com/wikichess_167326.html"
+        },
+        {
+          "move": "f6",
+          "source_url": "https://ficgs.com/wikichess_7989.html"
+        },
+        {
+          "move": "a6",
+          "source_url": "https://ficgs.com/wikichess_31393.html"
+        },
+        {
+          "move": "Nc6",
+          "source_url": "https://ficgs.com/wikichess_5942.html"
+        }
+      ]
+    },
+    {
+      "slug": "scotch-game",
+      "title": "Partie écossaise",
+      "wikichess_title": "Scotch Opening",
+      "eco": "C44",
+      "moves": [
+        "e4",
+        "e5",
+        "Nf3",
+        "Nc6",
+        "d4"
+      ],
+      "position_after": "d4",
+      "source_url": "https://ficgs.com/wikichess_46.html",
+      "language": "en",
+      "retrieved_at": "2026-08-17T13:14:10.993606+00:00",
+      "contributors": [
+        "Thibault de Vassal"
+      ],
+      "next_moves": [
+        {
+          "move": "Be7",
+          "source_url": "https://ficgs.com/wikichess_238407.html"
+        },
+        {
+          "move": "exd4",
+          "source_url": "https://ficgs.com/wikichess_353.html"
+        },
+        {
+          "move": "f6",
+          "source_url": "https://ficgs.com/wikichess_165943.html"
+        },
+        {
+          "move": "Qf6",
+          "source_url": "https://ficgs.com/wikichess_84306.html"
+        },
+        {
+          "move": "d6",
+          "source_url": "https://ficgs.com/wikichess_14193.html"
+        },
+        {
+          "move": "Nf6",
+          "source_url": "https://ficgs.com/wikichess_20508.html"
+        },
+        {
+          "move": "Qe7",
+          "source_url": "https://ficgs.com/wikichess_57697.html"
+        },
+        {
+          "move": "Bd6",
+          "source_url": "https://ficgs.com/wikichess_58514.html"
+        },
+        {
+          "move": "d5",
+          "source_url": "https://ficgs.com/wikichess_17232.html"
+        },
+        {
+          "move": "a6",
+          "source_url": "https://ficgs.com/wikichess_84616.html"
+        },
+        {
+          "move": "Nxd4",
+          "source_url": "https://ficgs.com/wikichess_76154.html"
+        },
+        {
+          "move": "h6",
+          "source_url": "https://ficgs.com/wikichess_87350.html"
+        },
+        {
+          "move": "Bb4",
+          "source_url": "https://ficgs.com/wikichess_50103.html"
+        }
+      ]
+    },
+    {
+      "slug": "four-knights-game",
+      "title": "Partie des quatre cavaliers",
+      "wikichess_title": "Four knights game",
+      "eco": "C46",
+      "moves": [
+        "e4",
+        "e5",
+        "Nf3",
+        "Nc6",
+        "Nc3",
+        "Nf6"
+      ],
+      "position_after": "Nf6",
+      "source_url": "https://ficgs.com/wikichess_1382.html",
+      "language": "en",
+      "retrieved_at": "2026-08-17T13:14:20.514312+00:00",
+      "contributors": [
+        "Dirk Jan Van Dijl"
+      ],
+      "next_moves": [
+        {
+          "move": "g3",
+          "source_url": "https://ficgs.com/wikichess_28559.html"
+        },
+        {
+          "move": "h3",
+          "source_url": "https://ficgs.com/wikichess_96603.html"
+        },
+        {
+          "move": "a3",
+          "source_url": "https://ficgs.com/wikichess_38980.html"
+        },
+        {
+          "move": "d4",
+          "source_url": "https://ficgs.com/wikichess_15791.html"
+        },
+        {
+          "move": "Bd3",
+          "source_url": "https://ficgs.com/wikichess_208071.html"
+        },
+        {
+          "move": "d3",
+          "source_url": "https://ficgs.com/wikichess_10685.html"
+        },
+        {
+          "move": "Be2",
+          "source_url": "https://ficgs.com/wikichess_16831.html"
+        },
+        {
+          "move": "b3",
+          "source_url": "https://ficgs.com/wikichess_67699.html"
+        },
+        {
+          "move": "Bc4",
+          "source_url": "https://ficgs.com/wikichess_8937.html"
+        },
+        {
+          "move": "Bb5",
+          "source_url": "https://ficgs.com/wikichess_1383.html"
+        },
+        {
+          "move": "Nxe5",
+          "source_url": "https://ficgs.com/wikichess_8071.html"
+        },
+        {
+          "move": "Nd5",
+          "source_url": "https://ficgs.com/wikichess_67465.html"
+        }
+      ]
+    },
+    {
+      "slug": "bishops-opening",
+      "title": "Ouverture du fou",
+      "wikichess_title": "Bishop's Opening",
+      "eco": "C23",
+      "moves": [
+        "e4",
+        "e5",
+        "Bc4"
+      ],
+      "position_after": "Bc4",
+      "source_url": "https://ficgs.com/wikichess_9.html",
+      "language": "en",
+      "retrieved_at": "2026-08-17T13:14:25.431323+00:00",
+      "contributors": [
+        "Thibault de Vassal"
+      ],
+      "next_moves": [
+        {
+          "move": "c6",
+          "source_url": "https://ficgs.com/wikichess_169774.html"
+        },
+        {
+          "move": "a6",
+          "source_url": "https://ficgs.com/wikichess_80276.html"
+        },
+        {
+          "move": "c5",
+          "source_url": "https://ficgs.com/wikichess_196354.html"
+        },
+        {
+          "move": "Be7",
+          "source_url": "https://ficgs.com/wikichess_96324.html"
+        },
+        {
+          "move": "Bc5",
+          "source_url": "https://ficgs.com/wikichess_6424.html"
+        },
+        {
+          "move": "Qf6",
+          "source_url": "https://ficgs.com/wikichess_195588.html"
+        },
+        {
+          "move": "Nc6",
+          "source_url": "https://ficgs.com/wikichess_10353.html"
+        },
+        {
+          "move": "f5",
+          "source_url": "https://ficgs.com/wikichess_3923.html"
+        },
+        {
+          "move": "Nf6",
+          "source_url": "https://ficgs.com/wikichess_3924.html"
+        },
+        {
+          "move": "b5",
+          "source_url": "https://ficgs.com/wikichess_3925.html"
+        },
+        {
+          "move": "h6",
+          "source_url": "https://ficgs.com/wikichess_75166.html"
+        },
+        {
+          "move": "Qg5",
+          "source_url": "https://ficgs.com/wikichess_50351.html"
+        },
+        {
+          "move": "Qh4",
+          "source_url": "https://ficgs.com/wikichess_134537.html"
+        },
+        {
+          "move": "d5",
+          "source_url": "https://ficgs.com/wikichess_79879.html"
+        },
+        {
+          "move": "d6",
+          "source_url": "https://ficgs.com/wikichess_26155.html"
+        }
+      ]
+    },
+    {
+      "slug": "center-game",
+      "title": "Partie du centre",
+      "wikichess_title": "Centre game",
+      "eco": "C21",
+      "moves": [
+        "e4",
+        "e5",
+        "d4",
+        "exd4"
+      ],
+      "position_after": "exd4",
+      "source_url": "https://ficgs.com/wikichess_1516.html",
+      "language": "en",
+      "retrieved_at": "2026-08-17T13:14:32.193436+00:00",
+      "contributors": [
+        "Dirk Jan Van Dijl"
+      ],
+      "next_moves": [
+        {
+          "move": "Qxd4",
+          "source_url": "https://ficgs.com/wikichess_2034.html"
+        },
+        {
+          "move": "Bc4",
+          "source_url": "https://ficgs.com/wikichess_53176.html"
+        },
+        {
+          "move": "Nf3",
+          "source_url": "https://ficgs.com/wikichess_50974.html"
+        },
+        {
+          "move": "f4",
+          "source_url": "https://ficgs.com/wikichess_92937.html"
+        },
+        {
+          "move": "c3",
+          "source_url": "https://ficgs.com/wikichess_1517.html"
+        },
+        {
+          "move": "Bd3",
+          "source_url": "https://ficgs.com/wikichess_46921.html"
+        }
+      ]
+    },
+    {
+      "slug": "danish-gambit",
+      "title": "Gambit danois",
+      "wikichess_title": "Danish gambit",
+      "eco": "C21",
+      "moves": [
+        "e4",
+        "e5",
+        "d4",
+        "exd4",
+        "c3"
+      ],
+      "position_after": "c3",
+      "source_url": "https://ficgs.com/wikichess_1517.html",
+      "language": "en",
+      "retrieved_at": "2026-08-17T13:14:40.500966+00:00",
+      "contributors": [
+        "Dirk Jan Van Dijl",
+        "Ron Keyston"
+      ],
+      "next_moves": [
+        {
+          "move": "d5",
+          "source_url": "https://ficgs.com/wikichess_83408.html"
+        },
+        {
+          "move": "dxc3",
+          "source_url": "https://ficgs.com/wikichess_1518.html"
+        },
+        {
+          "move": "d3",
+          "source_url": "https://ficgs.com/wikichess_1691.html"
+        },
+        {
+          "move": "Nc6",
+          "source_url": "https://ficgs.com/wikichess_101028.html"
+        },
+        {
+          "move": "Qe7",
+          "source_url": "https://ficgs.com/wikichess_132769.html"
+        },
+        {
+          "move": "d6",
+          "source_url": "https://ficgs.com/wikichess_170608.html"
+        }
+      ]
+    },
+    {
+      "slug": "ponziani-opening",
+      "title": "Ouverture Ponziani",
+      "wikichess_title": "Ponziani Opening",
+      "eco": "C44",
+      "moves": [
+        "e4",
+        "e5",
+        "Nf3",
+        "Nc6",
+        "c3"
+      ],
+      "position_after": "c3",
+      "source_url": "https://ficgs.com/wikichess_1315.html",
+      "language": "en",
+      "retrieved_at": "2026-08-17T13:14:48.488284+00:00",
+      "contributors": [
+        "Dirk Jan Van Dijl",
+        "Kieran Child"
+      ],
+      "next_moves": [
+        {
+          "move": "a6",
+          "source_url": "https://ficgs.com/wikichess_96156.html"
+        },
+        {
+          "move": "Be7",
+          "source_url": "https://ficgs.com/wikichess_217132.html"
+        },
+        {
+          "move": "d5",
+          "source_url": "https://ficgs.com/wikichess_1341.html"
+        },
+        {
+          "move": "Nf6",
+          "source_url": "https://ficgs.com/wikichess_1316.html"
+        },
+        {
+          "move": "f5",
+          "source_url": "https://ficgs.com/wikichess_6798.html"
+        },
+        {
+          "move": "Bc5",
+          "source_url": "https://ficgs.com/wikichess_69651.html"
+        },
+        {
+          "move": "h6",
+          "source_url": "https://ficgs.com/wikichess_72658.html"
+        },
+        {
+          "move": "d6",
+          "source_url": "https://ficgs.com/wikichess_17227.html"
+        }
+      ]
+    },
+    {
+      "slug": "london-system",
+      "title": "Système de Londres",
+      "wikichess_title": "Queen's pawn game",
+      "eco": "A46",
+      "moves": [
+        "d4",
+        "d5",
+        "Nf3",
+        "Nf6",
+        "Bf4"
+      ],
+      "position_after": "Bf4",
+      "source_url": "https://ficgs.com/wikichess_5568.html",
+      "language": "en",
+      "retrieved_at": "2026-08-17T13:14:55.946222+00:00",
+      "contributors": [
+        "Kevin O Flaherty"
+      ],
+      "next_moves": [
+        {
+          "move": "g6",
+          "source_url": "https://ficgs.com/wikichess_182548.html"
+        },
+        {
+          "move": "e6",
+          "source_url": "https://ficgs.com/wikichess_52374.html"
+        },
+        {
+          "move": "Nc6",
+          "source_url": "https://ficgs.com/wikichess_209971.html"
+        },
+        {
+          "move": "Bg4",
+          "source_url": "https://ficgs.com/wikichess_192032.html"
+        },
+        {
+          "move": "Bf5",
+          "source_url": "https://ficgs.com/wikichess_9512.html"
+        },
+        {
+          "move": "c5",
+          "source_url": "https://ficgs.com/wikichess_19150.html"
+        }
+      ]
+    },
+    {
+      "slug": "colle-system",
+      "title": "Système Colle",
+      "wikichess_title": "Queen's pawn game",
+      "eco": "A46",
+      "moves": [
+        "d4",
+        "d5",
+        "Nf3",
+        "Nf6",
+        "e3"
+      ],
+      "position_after": "e3",
+      "source_url": "https://ficgs.com/wikichess_3966.html",
+      "language": "en",
+      "retrieved_at": "2026-08-17T13:15:03.501394+00:00",
+      "contributors": [
+        "Paul K�nig"
+      ],
+      "next_moves": [
+        {
+          "move": "e6",
+          "source_url": "https://ficgs.com/wikichess_3967.html"
+        },
+        {
+          "move": "b6",
+          "source_url": "https://ficgs.com/wikichess_165139.html"
+        },
+        {
+          "move": "g6",
+          "source_url": "https://ficgs.com/wikichess_60260.html"
+        },
+        {
+          "move": "c6",
+          "source_url": "https://ficgs.com/wikichess_102363.html"
+        },
+        {
+          "move": "Bf5",
+          "source_url": "https://ficgs.com/wikichess_24563.html"
+        },
+        {
+          "move": "c5",
+          "source_url": "https://ficgs.com/wikichess_6926.html"
+        },
+        {
+          "move": "Bg4",
+          "source_url": "https://ficgs.com/wikichess_119239.html"
+        }
+      ]
+    },
+    {
+      "slug": "trompowsky-attack",
+      "title": "Attaque Trompowsky",
+      "wikichess_title": "Trompowsky attack (Ruth, Opovcensky Opening)",
+      "eco": "A45",
+      "moves": [
+        "d4",
+        "Nf6",
+        "Bg5"
+      ],
+      "position_after": "Bg5",
+      "source_url": "https://ficgs.com/wikichess_155.html",
+      "language": "en",
+      "retrieved_at": "2026-08-17T13:15:08.237147+00:00",
+      "contributors": [
+        "Thibault de Vassal"
+      ],
+      "next_moves": [
+        {
+          "move": "Ne4",
+          "source_url": "https://ficgs.com/wikichess_184.html"
+        },
+        {
+          "move": "d5",
+          "source_url": "https://ficgs.com/wikichess_15483.html"
+        },
+        {
+          "move": "g6",
+          "source_url": "https://ficgs.com/wikichess_102081.html"
+        },
+        {
+          "move": "c5",
+          "source_url": "https://ficgs.com/wikichess_22527.html"
+        },
+        {
+          "move": "h6",
+          "source_url": "https://ficgs.com/wikichess_19896.html"
+        },
+        {
+          "move": "c6",
+          "source_url": "https://ficgs.com/wikichess_39104.html"
+        },
+        {
+          "move": "e6",
+          "source_url": "https://ficgs.com/wikichess_183.html"
+        },
+        {
+          "move": "d6",
+          "source_url": "https://ficgs.com/wikichess_112573.html"
+        }
+      ]
+    },
+    {
+      "slug": "torre-attack",
+      "title": "Attaque Torre",
+      "wikichess_title": "Queen's pawn",
+      "eco": "A46",
+      "moves": [
+        "d4",
+        "Nf6",
+        "Nf3",
+        "e6",
+        "Bg5"
+      ],
+      "position_after": "Bg5",
+      "source_url": "https://ficgs.com/wikichess_9640.html",
+      "language": "en",
+      "retrieved_at": "2026-08-17T13:15:16.013794+00:00",
+      "contributors": [
+        "Gregory Kohut"
+      ],
+      "next_moves": [
+        {
+          "move": "d5",
+          "source_url": "https://ficgs.com/wikichess_9641.html"
+        },
+        {
+          "move": "c5",
+          "source_url": "https://ficgs.com/wikichess_9707.html"
+        },
+        {
+          "move": "h6",
+          "source_url": "https://ficgs.com/wikichess_9708.html"
+        },
+        {
+          "move": "Be7",
+          "source_url": "https://ficgs.com/wikichess_9710.html"
+        }
+      ]
+    },
+    {
+      "slug": "catalan-opening",
+      "title": "Ouverture catalane",
+      "wikichess_title": "Catalan Opening",
+      "eco": "E00",
+      "moves": [
+        "d4",
+        "Nf6",
+        "c4",
+        "e6",
+        "g3"
+      ],
+      "position_after": "g3",
+      "source_url": "https://ficgs.com/wikichess_1385.html",
+      "language": "en",
+      "retrieved_at": "2026-08-17T13:15:23.486776+00:00",
+      "contributors": [
+        "Dirk Jan Van Dijl",
+        "Normajean Yates"
+      ],
+      "next_moves": [
+        {
+          "move": "Be7",
+          "source_url": "https://ficgs.com/wikichess_87810.html"
+        },
+        {
+          "move": "Bb4",
+          "source_url": "https://ficgs.com/wikichess_11963.html"
+        },
+        {
+          "move": "Nc6",
+          "source_url": "https://ficgs.com/wikichess_61028.html"
+        },
+        {
+          "move": "g6",
+          "source_url": "https://ficgs.com/wikichess_84664.html"
+        },
+        {
+          "move": "a6",
+          "source_url": "https://ficgs.com/wikichess_28478.html"
+        },
+        {
+          "move": "c5",
+          "source_url": "https://ficgs.com/wikichess_5672.html"
+        },
+        {
+          "move": "e5",
+          "source_url": "https://ficgs.com/wikichess_61272.html"
+        },
+        {
+          "move": "d5",
+          "source_url": "https://ficgs.com/wikichess_1386.html"
+        }
+      ]
+    },
+    {
+      "slug": "queens-indian-defense",
+      "title": "Défense ouest-indienne",
+      "wikichess_title": "Queen's Indian defense",
+      "eco": "E12",
+      "moves": [
+        "d4",
+        "Nf6",
+        "c4",
+        "e6",
+        "Nf3",
+        "b6"
+      ],
+      "position_after": "b6",
+      "source_url": "https://ficgs.com/wikichess_41.html",
+      "language": "en",
+      "retrieved_at": "2026-08-17T13:15:32.415281+00:00",
+      "contributors": [
+        "Thibault de Vassal"
+      ],
+      "next_moves": [
+        {
+          "move": "Bf4",
+          "source_url": "https://ficgs.com/wikichess_117375.html"
+        },
+        {
+          "move": "Bg5",
+          "source_url": "https://ficgs.com/wikichess_10029.html"
+        },
+        {
+          "move": "g3",
+          "source_url": "https://ficgs.com/wikichess_519.html"
+        },
+        {
+          "move": "a3",
+          "source_url": "https://ficgs.com/wikichess_6721.html"
+        },
+        {
+          "move": "Nc3",
+          "source_url": "https://ficgs.com/wikichess_6722.html"
+        },
+        {
+          "move": "e3",
+          "source_url": "https://ficgs.com/wikichess_6723.html"
+        }
+      ]
+    },
+    {
+      "slug": "bogo-indian-defense",
+      "title": "Défense Bogo-indienne",
+      "wikichess_title": "Bogo-Indian defense",
+      "eco": "E11",
+      "moves": [
+        "d4",
+        "Nf6",
+        "c4",
+        "e6",
+        "Nf3",
+        "Bb4+"
+      ],
+      "position_after": "Bb4+",
+      "source_url": "https://ficgs.com/wikichess_43.html",
+      "language": "en",
+      "retrieved_at": "2026-08-17T13:15:41.508173+00:00",
+      "contributors": [
+        "Thibault de Vassal"
+      ],
+      "next_moves": [
+        {
+          "move": "Bd2",
+          "source_url": "https://ficgs.com/wikichess_6075.html"
+        },
+        {
+          "move": "Nbd2",
+          "source_url": "https://ficgs.com/wikichess_10030.html"
+        },
+        {
+          "move": "Nc3",
+          "source_url": "https://ficgs.com/wikichess_8938.html"
+        }
+      ]
+    },
+    {
+      "slug": "grunfeld-defense",
+      "title": "Défense Grünfeld",
+      "wikichess_title": "Gruenfeld defense",
+      "eco": "D80",
+      "moves": [
+        "d4",
+        "Nf6",
+        "c4",
+        "g6",
+        "Nc3",
+        "d5"
+      ],
+      "position_after": "d5",
+      "source_url": "https://ficgs.com/wikichess_143.html",
+      "language": "en",
+      "retrieved_at": "2026-08-17T13:15:50.722768+00:00",
+      "contributors": [
+        "Thibault de Vassal"
+      ],
+      "next_moves": [
+        {
+          "move": "Bf4",
+          "source_url": "https://ficgs.com/wikichess_28204.html"
+        },
+        {
+          "move": "h3",
+          "source_url": "https://ficgs.com/wikichess_223281.html"
+        },
+        {
+          "move": "g3",
+          "source_url": "https://ficgs.com/wikichess_15238.html"
+        },
+        {
+          "move": "f3",
+          "source_url": "https://ficgs.com/wikichess_127202.html"
+        },
+        {
+          "move": "e3",
+          "source_url": "https://ficgs.com/wikichess_21957.html"
+        },
+        {
+          "move": "b3",
+          "source_url": "https://ficgs.com/wikichess_142953.html"
+        },
+        {
+          "move": "Bg5",
+          "source_url": "https://ficgs.com/wikichess_49522.html"
+        },
+        {
+          "move": "Qb3",
+          "source_url": "https://ficgs.com/wikichess_909.html"
+        },
+        {
+          "move": "Nf3",
+          "source_url": "https://ficgs.com/wikichess_912.html"
+        },
+        {
+          "move": "cxd5",
+          "source_url": "https://ficgs.com/wikichess_5072.html"
+        },
+        {
+          "move": "Qd3",
+          "source_url": "https://ficgs.com/wikichess_69190.html"
+        }
+      ]
+    },
+    {
+      "slug": "benoni-defense",
+      "title": "Défense Benoni",
+      "wikichess_title": "Benoni defense",
+      "eco": "A56",
+      "moves": [
+        "d4",
+        "Nf6",
+        "c4",
+        "c5"
+      ],
+      "position_after": "c5",
+      "source_url": "https://ficgs.com/wikichess_87.html",
+      "language": "en",
+      "retrieved_at": "2026-08-17T13:15:57.084234+00:00",
+      "contributors": [
+        "David Grosdemange"
+      ],
+      "next_moves": [
+        {
+          "move": "Nf3",
+          "source_url": "https://ficgs.com/wikichess_5935.html"
+        },
+        {
+          "move": "e3",
+          "source_url": "https://ficgs.com/wikichess_5936.html"
+        },
+        {
+          "move": "d5",
+          "source_url": "https://ficgs.com/wikichess_88.html"
+        },
+        {
+          "move": "Bf4",
+          "source_url": "https://ficgs.com/wikichess_260976.html"
+        },
+        {
+          "move": "dxc5",
+          "source_url": "https://ficgs.com/wikichess_74613.html"
+        },
+        {
+          "move": "Nc3",
+          "source_url": "https://ficgs.com/wikichess_61007.html"
+        }
+      ]
+    },
+    {
+      "slug": "modern-benoni",
+      "title": "Défense Benoni moderne",
+      "wikichess_title": "Benoni defense",
+      "eco": "A60",
+      "moves": [
+        "d4",
+        "Nf6",
+        "c4",
+        "c5",
+        "d5",
+        "e6"
+      ],
+      "position_after": "e6",
+      "source_url": "https://ficgs.com/wikichess_237.html",
+      "language": "en",
+      "retrieved_at": "2026-08-17T13:16:05.990465+00:00",
+      "contributors": [
+        "Larry Wolfley"
+      ],
+      "next_moves": [
+        {
+          "move": "Nf3",
+          "source_url": "https://ficgs.com/wikichess_41966.html"
+        },
+        {
+          "move": "Nc3",
+          "source_url": "https://ficgs.com/wikichess_238.html"
+        }
+      ]
+    },
+    {
+      "slug": "benko-gambit",
+      "title": "Gambit Benko",
+      "wikichess_title": "Benko gambit",
+      "eco": "A57",
+      "moves": [
+        "d4",
+        "Nf6",
+        "c4",
+        "c5",
+        "d5",
+        "b5"
+      ],
+      "position_after": "b5",
+      "source_url": "https://ficgs.com/wikichess_92.html",
+      "language": "en",
+      "retrieved_at": "2026-08-17T13:16:15.004270+00:00",
+      "contributors": [
+        "David Grosdemange"
+      ],
+      "next_moves": [
+        {
+          "move": "a4",
+          "source_url": "https://ficgs.com/wikichess_171.html"
+        },
+        {
+          "move": "Qc2",
+          "source_url": "https://ficgs.com/wikichess_173.html"
+        },
+        {
+          "move": "Nc3",
+          "source_url": "https://ficgs.com/wikichess_154533.html"
+        },
+        {
+          "move": "cxb5",
+          "source_url": "https://ficgs.com/wikichess_93.html"
+        },
+        {
+          "move": "Nf3",
+          "source_url": "https://ficgs.com/wikichess_6033.html"
+        },
+        {
+          "move": "f3",
+          "source_url": "https://ficgs.com/wikichess_6058.html"
+        },
+        {
+          "move": "Bg5",
+          "source_url": "https://ficgs.com/wikichess_11085.html"
+        },
+        {
+          "move": "e3",
+          "source_url": "https://ficgs.com/wikichess_84345.html"
+        },
+        {
+          "move": "b3",
+          "source_url": "https://ficgs.com/wikichess_55975.html"
+        }
+      ]
+    },
+    {
+      "slug": "dutch-defense",
+      "title": "Défense hollandaise",
+      "wikichess_title": "Dutch",
+      "eco": "A80",
+      "moves": [
+        "d4",
+        "f5"
+      ],
+      "position_after": "f5",
+      "source_url": "https://ficgs.com/wikichess_530.html",
+      "language": "en",
+      "retrieved_at": "2026-08-17T13:16:18.184948+00:00",
+      "contributors": [
+        "Thibault de Vassal"
+      ],
+      "next_moves": [
+        {
+          "move": "e4",
+          "source_url": "https://ficgs.com/wikichess_531.html"
+        },
+        {
+          "move": "Nh3",
+          "source_url": "https://ficgs.com/wikichess_241131.html"
+        },
+        {
+          "move": "b3",
+          "source_url": "https://ficgs.com/wikichess_179845.html"
+        },
+        {
+          "move": "h3",
+          "source_url": "https://ficgs.com/wikichess_1791.html"
+        },
+        {
+          "move": "g4",
+          "source_url": "https://ficgs.com/wikichess_1800.html"
+        },
+        {
+          "move": "Nc3",
+          "source_url": "https://ficgs.com/wikichess_4326.html"
+        },
+        {
+          "move": "h4",
+          "source_url": "https://ficgs.com/wikichess_55038.html"
+        },
+        {
+          "move": "Qd3",
+          "source_url": "https://ficgs.com/wikichess_208047.html"
+        },
+        {
+          "move": "g3",
+          "source_url": "https://ficgs.com/wikichess_5605.html"
+        },
+        {
+          "move": "c4",
+          "source_url": "https://ficgs.com/wikichess_1531.html"
+        },
+        {
+          "move": "d5",
+          "source_url": "https://ficgs.com/wikichess_103927.html"
+        },
+        {
+          "move": "Bg5",
+          "source_url": "https://ficgs.com/wikichess_9314.html"
+        },
+        {
+          "move": "Nf3",
+          "source_url": "https://ficgs.com/wikichess_9373.html"
+        },
+        {
+          "move": "e3",
+          "source_url": "https://ficgs.com/wikichess_58214.html"
+        },
+        {
+          "move": "c3",
+          "source_url": "https://ficgs.com/wikichess_123087.html"
+        },
+        {
+          "move": "Nd2",
+          "source_url": "https://ficgs.com/wikichess_117425.html"
+        },
+        {
+          "move": "Bf4",
+          "source_url": "https://ficgs.com/wikichess_70903.html"
+        },
+        {
+          "move": "f4",
+          "source_url": "https://ficgs.com/wikichess_75397.html"
+        },
+        {
+          "move": "f3",
+          "source_url": "https://ficgs.com/wikichess_50867.html"
+        }
+      ]
+    },
+    {
+      "slug": "slav-defense",
+      "title": "Défense slave",
+      "wikichess_title": "QGD Slav defense",
+      "eco": "D10",
+      "moves": [
+        "d4",
+        "d5",
+        "c4",
+        "c6"
+      ],
+      "position_after": "c6",
+      "source_url": "https://ficgs.com/wikichess_17.html",
+      "language": "en",
+      "retrieved_at": "2026-08-17T13:16:24.626977+00:00",
+      "contributors": [
+        "Thibault de Vassal",
+        "Sebastien Marez"
+      ],
+      "next_moves": [
+        {
+          "move": "Bg5",
+          "source_url": "https://ficgs.com/wikichess_158162.html"
+        },
+        {
+          "move": "Qc2",
+          "source_url": "https://ficgs.com/wikichess_153098.html"
+        },
+        {
+          "move": "Bf4",
+          "source_url": "https://ficgs.com/wikichess_60257.html"
+        },
+        {
+          "move": "Nf3",
+          "source_url": "https://ficgs.com/wikichess_3206.html"
+        },
+        {
+          "move": "Nd2",
+          "source_url": "https://ficgs.com/wikichess_25391.html"
+        },
+        {
+          "move": "e3",
+          "source_url": "https://ficgs.com/wikichess_17879.html"
+        },
+        {
+          "move": "a3",
+          "source_url": "https://ficgs.com/wikichess_269286.html"
+        },
+        {
+          "move": "g3",
+          "source_url": "https://ficgs.com/wikichess_91594.html"
+        },
+        {
+          "move": "Nc3",
+          "source_url": "https://ficgs.com/wikichess_6871.html"
+        },
+        {
+          "move": "h3",
+          "source_url": "https://ficgs.com/wikichess_118771.html"
+        },
+        {
+          "move": "cxd5",
+          "source_url": "https://ficgs.com/wikichess_8593.html"
+        },
+        {
+          "move": "c5",
+          "source_url": "https://ficgs.com/wikichess_67924.html"
+        }
+      ]
+    },
+    {
+      "slug": "semi-slav-defense",
+      "title": "Défense semi-slave",
+      "wikichess_title": "QGD Slav",
+      "eco": "D11",
+      "moves": [
+        "d4",
+        "d5",
+        "c4",
+        "c6",
+        "Nf3",
+        "Nf6",
+        "e3",
+        "e6"
+      ],
+      "position_after": "e6",
+      "source_url": "https://ficgs.com/wikichess_7872.html",
+      "language": "en",
+      "retrieved_at": "2026-08-17T13:16:36.608033+00:00",
+      "contributors": [
+        "Andrew Stephenson"
+      ],
+      "next_moves": [
+        {
+          "move": "Bd3",
+          "source_url": "https://ficgs.com/wikichess_7873.html"
+        },
+        {
+          "move": "Nc3",
+          "source_url": "https://ficgs.com/wikichess_10452.html"
+        },
+        {
+          "move": "b3",
+          "source_url": "https://ficgs.com/wikichess_19720.html"
+        },
+        {
+          "move": "cxd5",
+          "source_url": "https://ficgs.com/wikichess_29580.html"
+        },
+        {
+          "move": "Nbd2",
+          "source_url": "https://ficgs.com/wikichess_64062.html"
+        },
+        {
+          "move": "Be2",
+          "source_url": "https://ficgs.com/wikichess_22155.html"
+        }
+      ]
+    },
+    {
+      "slug": "queens-gambit-accepted",
+      "title": "Gambit dame accepté",
+      "wikichess_title": "Queen's gambit accepted",
+      "eco": "D20",
+      "moves": [
+        "d4",
+        "d5",
+        "c4",
+        "dxc4"
+      ],
+      "position_after": "dxc4",
+      "source_url": "https://ficgs.com/wikichess_881.html",
+      "language": "en",
+      "retrieved_at": "2026-08-17T13:16:42.867024+00:00",
+      "contributors": [
+        "Dirk Jan Van Dijl"
+      ],
+      "next_moves": [
+        {
+          "move": "e4",
+          "source_url": "https://ficgs.com/wikichess_9482.html"
+        },
+        {
+          "move": "Nc3",
+          "source_url": "https://ficgs.com/wikichess_3864.html"
+        },
+        {
+          "move": "Nf3",
+          "source_url": "https://ficgs.com/wikichess_882.html"
+        },
+        {
+          "move": "e3",
+          "source_url": "https://ficgs.com/wikichess_10326.html"
+        },
+        {
+          "move": "Qa4",
+          "source_url": "https://ficgs.com/wikichess_36678.html"
+        }
+      ]
+    },
+    {
+      "slug": "queens-gambit-declined",
+      "title": "Gambit dame refusé",
+      "wikichess_title": "Queen's gambit declined",
+      "eco": "D30",
+      "moves": [
+        "d4",
+        "d5",
+        "c4",
+        "e6"
+      ],
+      "position_after": "e6",
+      "source_url": "https://ficgs.com/wikichess_872.html",
+      "language": "en",
+      "retrieved_at": "2026-08-17T13:16:49.414747+00:00",
+      "contributors": [
+        "Dirk Jan Van Dijl"
+      ],
+      "next_moves": [
+        {
+          "move": "g3",
+          "source_url": "https://ficgs.com/wikichess_33820.html"
+        },
+        {
+          "move": "g4",
+          "source_url": "https://ficgs.com/wikichess_252373.html"
+        },
+        {
+          "move": "e3",
+          "source_url": "https://ficgs.com/wikichess_23751.html"
+        },
+        {
+          "move": "Nf3",
+          "source_url": "https://ficgs.com/wikichess_6990.html"
+        },
+        {
+          "move": "f3",
+          "source_url": "https://ficgs.com/wikichess_159869.html"
+        },
+        {
+          "move": "cxd5",
+          "source_url": "https://ficgs.com/wikichess_3374.html"
+        },
+        {
+          "move": "Nc3",
+          "source_url": "https://ficgs.com/wikichess_873.html"
+        },
+        {
+          "move": "c5",
+          "source_url": "https://ficgs.com/wikichess_81096.html"
+        },
+        {
+          "move": "Bf4",
+          "source_url": "https://ficgs.com/wikichess_38558.html"
+        },
+        {
+          "move": "Qc2",
+          "source_url": "https://ficgs.com/wikichess_72755.html"
+        },
+        {
+          "move": "a3",
+          "source_url": "https://ficgs.com/wikichess_24342.html"
+        }
+      ]
+    },
+    {
+      "slug": "chigorin-defense",
+      "title": "Défense Tchigorine",
+      "wikichess_title": "QGD",
+      "eco": "D07",
+      "moves": [
+        "d4",
+        "d5",
+        "c4",
+        "Nc6"
+      ],
+      "position_after": "Nc6",
+      "source_url": "https://ficgs.com/wikichess_743.html",
+      "language": "en",
+      "retrieved_at": "2026-08-17T13:16:55.457276+00:00",
+      "contributors": [
+        "Christophe Sengez"
+      ],
+      "next_moves": [
+        {
+          "move": "c5",
+          "source_url": "https://ficgs.com/wikichess_9747.html"
+        },
+        {
+          "move": "Nf3",
+          "source_url": "https://ficgs.com/wikichess_9496.html"
+        },
+        {
+          "move": "Bf4",
+          "source_url": "https://ficgs.com/wikichess_9497.html"
+        },
+        {
+          "move": "e3",
+          "source_url": "https://ficgs.com/wikichess_9498.html"
+        },
+        {
+          "move": "Nc3",
+          "source_url": "https://ficgs.com/wikichess_9045.html"
+        },
+        {
+          "move": "cxd5",
+          "source_url": "https://ficgs.com/wikichess_784.html"
+        },
+        {
+          "move": "g3",
+          "source_url": "https://ficgs.com/wikichess_222333.html"
+        }
+      ]
+    },
+    {
+      "slug": "albin-countergambit",
+      "title": "Contre-gambit Albin",
+      "wikichess_title": "QGD",
+      "eco": "D08",
+      "moves": [
+        "d4",
+        "d5",
+        "c4",
+        "e5"
+      ],
+      "position_after": "e5",
+      "source_url": "https://ficgs.com/wikichess_1896.html",
+      "language": "en",
+      "retrieved_at": "2026-08-17T13:17:01.484510+00:00",
+      "contributors": [
+        "Ron Keyston"
+      ],
+      "next_moves": [
+        {
+          "move": "cxd5",
+          "source_url": "https://ficgs.com/wikichess_74023.html"
+        },
+        {
+          "move": "dxe5",
+          "source_url": "https://ficgs.com/wikichess_1897.html"
+        },
+        {
+          "move": "a3",
+          "source_url": "https://ficgs.com/wikichess_104509.html"
+        },
+        {
+          "move": "Nc3",
+          "source_url": "https://ficgs.com/wikichess_70349.html"
+        },
+        {
+          "move": "e3",
+          "source_url": "https://ficgs.com/wikichess_32032.html"
+        }
+      ]
+    },
+    {
+      "slug": "reti-opening",
+      "title": "Ouverture Réti",
+      "wikichess_title": "Reti Opening",
+      "eco": "A09",
+      "moves": [
+        "Nf3",
+        "d5",
+        "c4"
+      ],
+      "position_after": "c4",
+      "source_url": "https://ficgs.com/wikichess_2117.html",
+      "language": "en",
+      "retrieved_at": "2026-08-17T13:17:05.891615+00:00",
+      "contributors": [
+        "James Stripes",
+        "Yra Detchin [Событие \" FICGS__CHESS__RAPID_C__000287 \"]"
+      ],
+      "next_moves": [
+        {
+          "move": "e6",
+          "source_url": "https://ficgs.com/wikichess_11025.html"
+        },
+        {
+          "move": "d4",
+          "source_url": "https://ficgs.com/wikichess_14805.html"
+        },
+        {
+          "move": "dxc4",
+          "source_url": "https://ficgs.com/wikichess_10454.html"
+        },
+        {
+          "move": "e5",
+          "source_url": "https://ficgs.com/wikichess_59493.html"
+        },
+        {
+          "move": "c6",
+          "source_url": "https://ficgs.com/wikichess_18252.html"
+        },
+        {
+          "move": "Nc6",
+          "source_url": "https://ficgs.com/wikichess_173147.html"
+        },
+        {
+          "move": "Nf6",
+          "source_url": "https://ficgs.com/wikichess_15958.html"
+        }
+      ]
+    },
+    {
+      "slug": "birds-opening",
+      "title": "Ouverture Bird",
+      "wikichess_title": "Bird's Opening",
+      "eco": "A02",
+      "moves": [
+        "f4"
+      ],
+      "position_after": "f4",
+      "source_url": "https://ficgs.com/wikichess_30.html",
+      "language": "en",
+      "retrieved_at": "2026-08-17T13:17:07.640429+00:00",
+      "contributors": [
+        "Thibault de Vassal"
+      ],
+      "next_moves": [
+        {
+          "move": "e5",
+          "source_url": "https://ficgs.com/wikichess_31.html"
+        },
+        {
+          "move": "h6",
+          "source_url": "https://ficgs.com/wikichess_28822.html"
+        },
+        {
+          "move": "b6",
+          "source_url": "https://ficgs.com/wikichess_58284.html"
+        },
+        {
+          "move": "g5",
+          "source_url": "https://ficgs.com/wikichess_16798.html"
+        },
+        {
+          "move": "e6",
+          "source_url": "https://ficgs.com/wikichess_493.html"
+        },
+        {
+          "move": "f5",
+          "source_url": "https://ficgs.com/wikichess_2928.html"
+        },
+        {
+          "move": "c5",
+          "source_url": "https://ficgs.com/wikichess_2930.html"
+        },
+        {
+          "move": "Nf6",
+          "source_url": "https://ficgs.com/wikichess_5151.html"
+        },
+        {
+          "move": "c6",
+          "source_url": "https://ficgs.com/wikichess_111502.html"
+        },
+        {
+          "move": "b5",
+          "source_url": "https://ficgs.com/wikichess_111504.html"
+        },
+        {
+          "move": "f6",
+          "source_url": "https://ficgs.com/wikichess_169894.html"
+        },
+        {
+          "move": "g6",
+          "source_url": "https://ficgs.com/wikichess_9893.html"
+        },
+        {
+          "move": "d6",
+          "source_url": "https://ficgs.com/wikichess_8335.html"
+        },
+        {
+          "move": "d5",
+          "source_url": "https://ficgs.com/wikichess_2888.html"
+        },
+        {
+          "move": "Nc6",
+          "source_url": "https://ficgs.com/wikichess_19799.html"
+        },
+        {
+          "move": "Nh6",
+          "source_url": "https://ficgs.com/wikichess_16788.html"
+        }
+      ]
+    },
+    {
+      "slug": "kings-indian-attack",
+      "title": "Attaque est-indienne",
+      "wikichess_title": "Benko's Opening",
+      "eco": "A00",
+      "moves": [
+        "Nf3",
+        "d5",
+        "g3"
+      ],
+      "position_after": "Nf3",
+      "source_url": "https://ficgs.com/wikichess_9557.html",
+      "language": "en",
+      "retrieved_at": "2026-08-17T13:17:12.131045+00:00",
+      "contributors": [
+        "Mark Carroll"
+      ],
+      "next_moves": [
+        {
+          "move": "c6",
+          "source_url": "https://ficgs.com/wikichess_212303.html"
+        },
+        {
+          "move": "f6",
+          "source_url": "https://ficgs.com/wikichess_260916.html"
+        },
+        {
+          "move": "e6",
+          "source_url": "https://ficgs.com/wikichess_58301.html"
+        },
+        {
+          "move": "Bg4",
+          "source_url": "https://ficgs.com/wikichess_66358.html"
+        },
+        {
+          "move": "g6",
+          "source_url": "https://ficgs.com/wikichess_209365.html"
+        },
+        {
+          "move": "c5",
+          "source_url": "https://ficgs.com/wikichess_77889.html"
+        },
+        {
+          "move": "f5",
+          "source_url": "https://ficgs.com/wikichess_208410.html"
+        },
+        {
+          "move": "Nf6",
+          "source_url": "https://ficgs.com/wikichess_1600.html"
+        }
+      ]
+    },
+    {
+      "slug": "polish-opening",
+      "title": "Ouverture polonaise",
+      "wikichess_title": "Polish (Sokolsky) opening",
+      "eco": "A00",
+      "moves": [
+        "b4"
+      ],
+      "position_after": "b4",
+      "source_url": "https://ficgs.com/wikichess_1694.html",
+      "language": "en",
+      "retrieved_at": "2026-08-17T13:17:13.895406+00:00",
+      "contributors": [
+        "Gary Gruw",
+        "Ilmars Cirulis"
+      ],
+      "next_moves": [
+        {
+          "move": "d5",
+          "source_url": "https://ficgs.com/wikichess_1812.html"
+        },
+        {
+          "move": "e5",
+          "source_url": "https://ficgs.com/wikichess_1699.html"
+        },
+        {
+          "move": "b5",
+          "source_url": "https://ficgs.com/wikichess_15203.html"
+        },
+        {
+          "move": "b6",
+          "source_url": "https://ficgs.com/wikichess_10163.html"
+        },
+        {
+          "move": "c5",
+          "source_url": "https://ficgs.com/wikichess_10256.html"
+        },
+        {
+          "move": "h6",
+          "source_url": "https://ficgs.com/wikichess_101121.html"
+        },
+        {
+          "move": "Nc6",
+          "source_url": "https://ficgs.com/wikichess_101122.html"
+        },
+        {
+          "move": "f5",
+          "source_url": "https://ficgs.com/wikichess_84064.html"
+        },
+        {
+          "move": "f6",
+          "source_url": "https://ficgs.com/wikichess_98785.html"
+        },
+        {
+          "move": "g6",
+          "source_url": "https://ficgs.com/wikichess_1815.html"
+        },
+        {
+          "move": "a5",
+          "source_url": "https://ficgs.com/wikichess_7783.html"
+        },
+        {
+          "move": "c6",
+          "source_url": "https://ficgs.com/wikichess_7794.html"
+        },
+        {
+          "move": "Nf6",
+          "source_url": "https://ficgs.com/wikichess_1811.html"
+        },
+        {
+          "move": "e6",
+          "source_url": "https://ficgs.com/wikichess_1813.html"
+        },
+        {
+          "move": "a6",
+          "source_url": "https://ficgs.com/wikichess_1814.html"
+        },
+        {
+          "move": "d6",
+          "source_url": "https://ficgs.com/wikichess_53603.html"
+        }
+      ]
+    },
+    {
+      "slug": "sokolsky-opening",
+      "title": "Ouverture Sokolsky",
+      "wikichess_title": "Polish (Sokolsky) opening",
+      "eco": "A00",
+      "moves": [
+        "b4"
+      ],
+      "position_after": "b4",
+      "source_url": "https://ficgs.com/wikichess_1694.html",
+      "language": "en",
+      "retrieved_at": "2026-08-17T13:17:15.521832+00:00",
+      "contributors": [
+        "Gary Gruw",
+        "Ilmars Cirulis"
+      ],
+      "next_moves": [
+        {
+          "move": "d5",
+          "source_url": "https://ficgs.com/wikichess_1812.html"
+        },
+        {
+          "move": "e5",
+          "source_url": "https://ficgs.com/wikichess_1699.html"
+        },
+        {
+          "move": "b5",
+          "source_url": "https://ficgs.com/wikichess_15203.html"
+        },
+        {
+          "move": "b6",
+          "source_url": "https://ficgs.com/wikichess_10163.html"
+        },
+        {
+          "move": "c5",
+          "source_url": "https://ficgs.com/wikichess_10256.html"
+        },
+        {
+          "move": "h6",
+          "source_url": "https://ficgs.com/wikichess_101121.html"
+        },
+        {
+          "move": "Nc6",
+          "source_url": "https://ficgs.com/wikichess_101122.html"
+        },
+        {
+          "move": "f5",
+          "source_url": "https://ficgs.com/wikichess_84064.html"
+        },
+        {
+          "move": "f6",
+          "source_url": "https://ficgs.com/wikichess_98785.html"
+        },
+        {
+          "move": "g6",
+          "source_url": "https://ficgs.com/wikichess_1815.html"
+        },
+        {
+          "move": "a5",
+          "source_url": "https://ficgs.com/wikichess_7783.html"
+        },
+        {
+          "move": "c6",
+          "source_url": "https://ficgs.com/wikichess_7794.html"
+        },
+        {
+          "move": "Nf6",
+          "source_url": "https://ficgs.com/wikichess_1811.html"
+        },
+        {
+          "move": "e6",
+          "source_url": "https://ficgs.com/wikichess_1813.html"
+        },
+        {
+          "move": "a6",
+          "source_url": "https://ficgs.com/wikichess_1814.html"
+        },
+        {
+          "move": "d6",
+          "source_url": "https://ficgs.com/wikichess_53603.html"
+        }
+      ]
+    },
+    {
+      "slug": "nimzowitsch-larsen-attack",
+      "title": "Attaque Nimzowitsch-Larsen",
+      "wikichess_title": "Nimzovich-Larsen attack",
+      "eco": "A01",
+      "moves": [
+        "b3"
+      ],
+      "position_after": "b3",
+      "source_url": "https://ficgs.com/wikichess_1857.html",
+      "language": "en",
+      "retrieved_at": "2026-08-17T13:17:17.065784+00:00",
+      "contributors": [
+        "Ulrich Imbeck",
+        "Gregory Kohut",
+        "Carlos Oliveira"
+      ],
+      "next_moves": [
+        {
+          "move": "d6",
+          "source_url": "https://ficgs.com/wikichess_23742.html"
+        },
+        {
+          "move": "b5",
+          "source_url": "https://ficgs.com/wikichess_261741.html"
+        },
+        {
+          "move": "f5",
+          "source_url": "https://ficgs.com/wikichess_228925.html"
+        },
+        {
+          "move": "a5",
+          "source_url": "https://ficgs.com/wikichess_230561.html"
+        },
+        {
+          "move": "a6",
+          "source_url": "https://ficgs.com/wikichess_125927.html"
+        },
+        {
+          "move": "e6",
+          "source_url": "https://ficgs.com/wikichess_52976.html"
+        },
+        {
+          "move": "c5",
+          "source_url": "https://ficgs.com/wikichess_52802.html"
+        },
+        {
+          "move": "b6",
+          "source_url": "https://ficgs.com/wikichess_4461.html"
+        },
+        {
+          "move": "Nc6",
+          "source_url": "https://ficgs.com/wikichess_15998.html"
+        },
+        {
+          "move": "e5",
+          "source_url": "https://ficgs.com/wikichess_1858.html"
+        },
+        {
+          "move": "d5",
+          "source_url": "https://ficgs.com/wikichess_1859.html"
+        },
+        {
+          "move": "g6",
+          "source_url": "https://ficgs.com/wikichess_2031.html"
+        },
+        {
+          "move": "Nf6",
+          "source_url": "https://ficgs.com/wikichess_11919.html"
+        }
+      ]
+    },
+    {
+      "slug": "old-indian-defense",
+      "title": "Défense vieille-indienne",
+      "wikichess_title": "Old Indian defense",
+      "eco": "A53",
+      "moves": [
+        "d4",
+        "Nf6",
+        "c4",
+        "d6"
+      ],
+      "position_after": "d6",
+      "source_url": "https://ficgs.com/wikichess_9187.html",
+      "language": "en",
+      "retrieved_at": "2026-08-17T13:17:23.302831+00:00",
+      "contributors": [
+        "Benjamin Block"
+      ],
+      "next_moves": [
+        {
+          "move": "Nf3",
+          "source_url": "https://ficgs.com/wikichess_9188.html"
+        },
+        {
+          "move": "d5",
+          "source_url": "https://ficgs.com/wikichess_12387.html"
+        },
+        {
+          "move": "f4",
+          "source_url": "https://ficgs.com/wikichess_12824.html"
+        },
+        {
+          "move": "f3",
+          "source_url": "https://ficgs.com/wikichess_13032.html"
+        },
+        {
+          "move": "Nc3",
+          "source_url": "https://ficgs.com/wikichess_10303.html"
+        },
+        {
+          "move": "g3",
+          "source_url": "https://ficgs.com/wikichess_10304.html"
+        },
+        {
+          "move": "e3",
+          "source_url": "https://ficgs.com/wikichess_10306.html"
+        },
+        {
+          "move": "h3",
+          "source_url": "https://ficgs.com/wikichess_81564.html"
+        }
+      ]
+    },
+    {
+      "slug": "budapest-gambit",
+      "title": "Gambit de Budapest",
+      "wikichess_title": "Budapest defense declined",
+      "eco": "A51",
+      "moves": [
+        "d4",
+        "Nf6",
+        "c4",
+        "e5"
+      ],
+      "position_after": "e5",
+      "source_url": "https://ficgs.com/wikichess_525.html",
+      "language": "en",
+      "retrieved_at": "2026-08-17T13:17:29.555077+00:00",
+      "contributors": [
+        "Roger Weber"
+      ],
+      "next_moves": [
+        {
+          "move": "d5",
+          "source_url": "https://ficgs.com/wikichess_74909.html"
+        },
+        {
+          "move": "Nc3",
+          "source_url": "https://ficgs.com/wikichess_77471.html"
+        },
+        {
+          "move": "dxe5",
+          "source_url": "https://ficgs.com/wikichess_526.html"
+        },
+        {
+          "move": "e3",
+          "source_url": "https://ficgs.com/wikichess_55669.html"
+        }
+      ]
+    }
+  ],
+  "failures": []
+}

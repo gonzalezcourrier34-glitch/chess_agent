@@ -1,0 +1,68 @@
+{
+  "slug": "grunfeld-defense",
+  "title": "Défense Grünfeld",
+  "wikichess_title": "Gruenfeld defense",
+  "eco": "D80",
+  "moves": [
+    "d4",
+    "Nf6",
+    "c4",
+    "g6",
+    "Nc3",
+    "d5"
+  ],
+  "position_after": "d5",
+  "source_url": "https://ficgs.com/wikichess_143.html",
+  "language": "en",
+  "retrieved_at": "2026-08-17T13:15:50.722768+00:00",
+  "contributors": [
+    "Thibault de Vassal"
+  ],
+  "content": "The Gr�nfeld Defence is named after Ernst Gr�nfeld, the player who first employed the defence in the 1920s. The defence was later adopted by a number of prominent players, including Vasily Smyslov, Viktor Korchnoi and Bobby Fischer. Garry Kasparov has often used the defence, including in his World Championship matches against Anatoly Karpov in 1986, 1987 and 1990, and Vladimir Kramnik in 2000. In more recent years it has been regularly employed by Loek Van Wely, Peter Svidler and Luke McShane among others.\nThe opening relies on one of the main principles of the hypermodern school, which was coming to the fore in the 1920s - that a large pawn centre could be a liability rather than an asset. This idea is seen most clearly in the Exchange Variation of the defence: 1.d4 Nf6 2.c4 g6 3.Nc3 d5 4.cxd5 Nxd5 5.e4. Now White has an imposing looking centre - and the main continuation 5...Nxc3 bxc3 strengthens it still further. Black generally attack's White's centre with ...c5 and ...Bg7, often followed by moves like ...cxd4, ...Bg4, and ...Nc6. White often uses his big centre to launch an attack against Black's king, which generally ends up on g8 after Black castles king-side.",
+  "next_moves": [
+    {
+      "move": "Bf4",
+      "source_url": "https://ficgs.com/wikichess_28204.html"
+    },
+    {
+      "move": "h3",
+      "source_url": "https://ficgs.com/wikichess_223281.html"
+    },
+    {
+      "move": "g3",
+      "source_url": "https://ficgs.com/wikichess_15238.html"
+    },
+    {
+      "move": "f3",
+      "source_url": "https://ficgs.com/wikichess_127202.html"
+    },
+    {
+      "move": "e3",
+      "source_url": "https://ficgs.com/wikichess_21957.html"
+    },
+    {
+      "move": "b3",
+      "source_url": "https://ficgs.com/wikichess_142953.html"
+    },
+    {
+      "move": "Bg5",
+      "source_url": "https://ficgs.com/wikichess_49522.html"
+    },
+    {
+      "move": "Qb3",
+      "source_url": "https://ficgs.com/wikichess_909.html"
+    },
+    {
+      "move": "Nf3",
+      "source_url": "https://ficgs.com/wikichess_912.html"
+    },
+    {
+      "move": "cxd5",
+      "source_url": "https://ficgs.com/wikichess_5072.html"
+    },
+    {
+      "move": "Qd3",
+      "source_url": "https://ficgs.com/wikichess_69190.html"
+    }
+  ]
+}

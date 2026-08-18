@@ -1,0 +1,53 @@
+{
+  "slug": "kings-indian-attack",
+  "title": "Attaque est-indienne",
+  "wikichess_title": "Benko's Opening",
+  "eco": "A00",
+  "moves": [
+    "Nf3",
+    "d5",
+    "g3"
+  ],
+  "position_after": "Nf3",
+  "source_url": "https://ficgs.com/wikichess_9557.html",
+  "language": "en",
+  "retrieved_at": "2026-08-17T13:17:12.131045+00:00",
+  "contributors": [
+    "Mark Carroll"
+  ],
+  "content": "",
+  "next_moves": [
+    {
+      "move": "c6",
+      "source_url": "https://ficgs.com/wikichess_212303.html"
+    },
+    {
+      "move": "f6",
+      "source_url": "https://ficgs.com/wikichess_260916.html"
+    },
+    {
+      "move": "e6",
+      "source_url": "https://ficgs.com/wikichess_58301.html"
+    },
+    {
+      "move": "Bg4",
+      "source_url": "https://ficgs.com/wikichess_66358.html"
+    },
+    {
+      "move": "g6",
+      "source_url": "https://ficgs.com/wikichess_209365.html"
+    },
+    {
+      "move": "c5",
+      "source_url": "https://ficgs.com/wikichess_77889.html"
+    },
+    {
+      "move": "f5",
+      "source_url": "https://ficgs.com/wikichess_208410.html"
+    },
+    {
+      "move": "Nf6",
+      "source_url": "https://ficgs.com/wikichess_1600.html"
+    }
+  ]
+}

@@ -1,0 +1,50 @@
+{
+  "slug": "reti-opening",
+  "title": "Ouverture Réti",
+  "wikichess_title": "Reti Opening",
+  "eco": "A09",
+  "moves": [
+    "Nf3",
+    "d5",
+    "c4"
+  ],
+  "position_after": "c4",
+  "source_url": "https://ficgs.com/wikichess_2117.html",
+  "language": "en",
+  "retrieved_at": "2026-08-17T13:17:05.891615+00:00",
+  "contributors": [
+    "James Stripes",
+    "Yra Detchin [Событие \" FICGS__CHESS__RAPID_C__000287 \"]"
+  ],
+  "content": "White uses a flank pawn to prevent the development of black's center.",
+  "next_moves": [
+    {
+      "move": "e6",
+      "source_url": "https://ficgs.com/wikichess_11025.html"
+    },
+    {
+      "move": "d4",
+      "source_url": "https://ficgs.com/wikichess_14805.html"
+    },
+    {
+      "move": "dxc4",
+      "source_url": "https://ficgs.com/wikichess_10454.html"
+    },
+    {
+      "move": "e5",
+      "source_url": "https://ficgs.com/wikichess_59493.html"
+    },
+    {
+      "move": "c6",
+      "source_url": "https://ficgs.com/wikichess_18252.html"
+    },
+    {
+      "move": "Nc6",
+      "source_url": "https://ficgs.com/wikichess_173147.html"
+    },
+    {
+      "move": "Nf6",
+      "source_url": "https://ficgs.com/wikichess_15958.html"
+    }
+  ]
+}

@@ -1,0 +1,161 @@
+# Variables d'environnement
+
+.env
+.env.*
+!.env.example
+
+
+# Python
+
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+.python-version
+.venv/
+venv/
+env/
+ENV/
+
+
+# uv
+
+.uv/
+uv-cache/
+
+
+# Tests et qualité
+
+.pytest_cache/
+.coverage
+.coverage.*
+htmlcov/
+coverage.xml
+
+.mypy_cache/
+.pyright/
+.ruff_cache/
+.hypothesis/
+.tox/
+.nox/
+
+
+# FastAPI et exécution locale
+
+*.log
+logs/
+*.pid
+*.sock
+
+
+# Jupyter
+
+.ipynb_checkpoints/
+
+
+# Angular et Node.js
+
+frontend/node_modules/
+frontend/dist/
+frontend/.angular/
+frontend/.cache/
+
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+
+# Données générées
+
+data/processed/chunks/*
+!data/processed/chunks/.gitkeep
+
+data/tmp/
+data/cache/
+data/downloads/
+
+
+# Modèles et fichiers vectoriels
+
+*.bin
+*.onnx
+*.pt
+*.pth
+*.safetensors
+
+models/
+embeddings/
+
+
+# MongoDB
+
+infrastructure/mongodb/data/
+infrastructure/mongodb/logs/
+
+
+# Milvus
+
+infrastructure/milvus/data/
+infrastructure/milvus/logs/
+
+volumes/
+docker-data/
+
+
+# Docker
+
+*.dockerignore.tmp
+docker-compose.override.yml
+
+
+# IDE
+
+.vscode/
+.idea/
+*.code-workspace
+
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+
+# Système d'exploitation
+
+.DS_Store
+.AppleDouble
+.LSOverride
+
+Thumbs.db
+Thumbs.db:encryptable
+Desktop.ini
+$RECYCLE.BIN/
+
+
+# Fichiers temporaires
+
+*.tmp
+*.temp
+*.bak
+*.old
+*.orig
+*.rej
+
+~*
+*~
+
+
+# Archives et exports locaux
+
+*.zip
+*.tar
+*.tar.gz
+*.7z
+
+exports/
+
+livrables/
+perso/

@@ -1,0 +1,302 @@
+[
+    {
+        "slug": "italian-game",
+        "title": "Partie italienne",
+        "moves": ["e4", "e5", "Nf3", "Nc6", "Bc4"],
+        "eco": "C50"
+    },
+    {
+        "slug": "ruy-lopez",
+        "title": "Partie espagnole",
+        "moves": ["e4", "e5", "Nf3", "Nc6", "Bb5"],
+        "eco": "C60"
+    },
+    {
+        "slug": "sicilian-defense",
+        "title": "Défense sicilienne",
+        "moves": ["e4", "c5"],
+        "eco": "B20"
+    },
+    {
+        "slug": "french-defense",
+        "title": "Défense française",
+        "moves": ["e4", "e6"],
+        "eco": "C00"
+    },
+    {
+        "slug": "caro-kann-defense",
+        "title": "Défense Caro-Kann",
+        "moves": ["e4", "c6"],
+        "eco": "B10"
+    },
+    {
+        "slug": "queens-gambit",
+        "title": "Gambit dame",
+        "moves": ["d4", "d5", "c4"],
+        "eco": "D06"
+    },
+    {
+        "slug": "kings-indian-defense",
+        "title": "Défense est-indienne",
+        "moves": ["d4", "Nf6", "c4", "g6"],
+        "eco": "E60"
+    },
+    {
+        "slug": "english-opening",
+        "title": "Ouverture anglaise",
+        "moves": ["c4"],
+        "eco": "A10"
+    },
+    {
+        "slug": "scandinavian-defense",
+        "title": "Défense scandinave",
+        "moves": ["e4", "d5"],
+        "eco": "B01"
+    },
+    {
+        "slug": "nimzo-indian-defense",
+        "title": "Défense nimzo-indienne",
+        "moves": ["d4", "Nf6", "c4", "e6", "Nc3", "Bb4"],
+        "eco": "E20"
+    },
+    {
+        "slug": "alekhine-defense",
+        "title": "Défense Alekhine",
+        "moves": ["e4", "Nf6"],
+        "eco": "B02"
+    },
+    {
+        "slug": "pirc-defense",
+        "title": "Défense Pirc",
+        "moves": ["e4", "d6", "d4", "Nf6", "Nc3", "g6"],
+        "eco": "B07"
+    },
+    {
+        "slug": "modern-defense",
+        "title": "Défense moderne",
+        "moves": ["e4", "g6"],
+        "eco": "B06"
+    },
+    {
+        "slug": "owens-defense",
+        "title": "Défense Owen",
+        "moves": ["e4", "b6"],
+        "eco": "B00"
+    },
+    {
+        "slug": "philidor-defense",
+        "title": "Défense Philidor",
+        "moves": ["e4", "e5", "Nf3", "d6"],
+        "eco": "C41"
+    },
+    {
+        "slug": "petrov-defense",
+        "title": "Défense Petrov",
+        "moves": ["e4", "e5", "Nf3", "Nf6"],
+        "eco": "C42"
+    },
+    {
+        "slug": "vienna-game",
+        "title": "Partie viennoise",
+        "moves": ["e4", "e5", "Nc3"],
+        "eco": "C25"
+    },
+    {
+        "slug": "kings-gambit",
+        "title": "Gambit du roi",
+        "moves": ["e4", "e5", "f4"],
+        "eco": "C30"
+    },
+    {
+        "slug": "scotch-game",
+        "title": "Partie écossaise",
+        "moves": ["e4", "e5", "Nf3", "Nc6", "d4"],
+        "eco": "C44"
+    },
+    {
+        "slug": "four-knights-game",
+        "title": "Partie des quatre cavaliers",
+        "moves": ["e4", "e5", "Nf3", "Nc6", "Nc3", "Nf6"],
+        "eco": "C47"
+    },
+    {
+        "slug": "bishops-opening",
+        "title": "Ouverture du fou",
+        "moves": ["e4", "e5", "Bc4"],
+        "eco": "C23"
+    },
+    {
+        "slug": "center-game",
+        "title": "Partie du centre",
+        "moves": ["e4", "e5", "d4", "exd4"],
+        "eco": "C22"
+    },
+    {
+        "slug": "danish-gambit",
+        "title": "Gambit danois",
+        "moves": ["e4", "e5", "d4", "exd4", "c3"],
+        "eco": "C21"
+    },
+    {
+        "slug": "ponziani-opening",
+        "title": "Ouverture Ponziani",
+        "moves": ["e4", "e5", "Nf3", "Nc6", "c3"],
+        "eco": "C44"
+    },
+    {
+        "slug": "london-system",
+        "title": "Système de Londres",
+        "moves": ["d4", "d5", "Nf3", "Nf6", "Bf4"],
+        "eco": "D02"
+    },
+    {
+        "slug": "colle-system",
+        "title": "Système Colle",
+        "moves": ["d4", "d5", "Nf3", "Nf6", "e3"],
+        "eco": "D04"
+    },
+    {
+        "slug": "trompowsky-attack",
+        "title": "Attaque Trompowsky",
+        "moves": ["d4", "Nf6", "Bg5"],
+        "eco": "A45"
+    },
+    {
+        "slug": "torre-attack",
+        "title": "Attaque Torre",
+        "moves": ["d4", "Nf6", "Nf3", "e6", "Bg5"],
+        "eco": "A46"
+    },
+    {
+        "slug": "catalan-opening",
+        "title": "Ouverture catalane",
+        "moves": ["d4", "Nf6", "c4", "e6", "g3"],
+        "eco": "E00"
+    },
+    {
+        "slug": "queens-indian-defense",
+        "title": "Défense ouest-indienne",
+        "moves": ["d4", "Nf6", "c4", "e6", "Nf3", "b6"],
+        "eco": "E12"
+    },
+    {
+        "slug": "bogo-indian-defense",
+        "title": "Défense Bogo-indienne",
+        "moves": ["d4", "Nf6", "c4", "e6", "Nf3", "Bb4+"],
+        "eco": "E11"
+    },
+    {
+        "slug": "grunfeld-defense",
+        "title": "Défense Grünfeld",
+        "moves": ["d4", "Nf6", "c4", "g6", "Nc3", "d5"],
+        "eco": "D80"
+    },
+    {
+        "slug": "benoni-defense",
+        "title": "Défense Benoni",
+        "moves": ["d4", "Nf6", "c4", "c5"],
+        "eco": "A56"
+    },
+    {
+        "slug": "modern-benoni",
+        "title": "Défense Benoni moderne",
+        "moves": ["d4", "Nf6", "c4", "c5", "d5", "e6"],
+        "eco": "A60"
+    },
+    {
+        "slug": "benko-gambit",
+        "title": "Gambit Benko",
+        "moves": ["d4", "Nf6", "c4", "c5", "d5", "b5"],
+        "eco": "A57"
+    },
+    {
+        "slug": "dutch-defense",
+        "title": "Défense hollandaise",
+        "moves": ["d4", "f5"],
+        "eco": "A80"
+    },
+    {
+        "slug": "slav-defense",
+        "title": "Défense slave",
+        "moves": ["d4", "d5", "c4", "c6"],
+        "eco": "D10"
+    },
+    {
+        "slug": "semi-slav-defense",
+        "title": "Défense semi-slave",
+        "moves": ["d4", "d5", "c4", "c6", "Nf3", "Nf6", "e3", "e6"],
+        "eco": "D43"
+    },
+    {
+        "slug": "queens-gambit-accepted",
+        "title": "Gambit dame accepté",
+        "moves": ["d4", "d5", "c4", "dxc4"],
+        "eco": "D20"
+    },
+    {
+        "slug": "queens-gambit-declined",
+        "title": "Gambit dame refusé",
+        "moves": ["d4", "d5", "c4", "e6"],
+        "eco": "D30"
+    },
+    {
+        "slug": "chigorin-defense",
+        "title": "Défense Tchigorine",
+        "moves": ["d4", "d5", "c4", "Nc6"],
+        "eco": "D07"
+    },
+    {
+        "slug": "albin-countergambit",
+        "title": "Contre-gambit Albin",
+        "moves": ["d4", "d5", "c4", "e5"],
+        "eco": "D08"
+    },
+    {
+        "slug": "reti-opening",
+        "title": "Ouverture Réti",
+        "moves": ["Nf3", "d5", "c4"],
+        "eco": "A09"
+    },
+    {
+        "slug": "birds-opening",
+        "title": "Ouverture Bird",
+        "moves": ["f4"],
+        "eco": "A02"
+    },
+    {
+        "slug": "kings-indian-attack",
+        "title": "Attaque est-indienne",
+        "moves": ["Nf3", "d5", "g3"],
+        "eco": "A07"
+    },
+    {
+        "slug": "polish-opening",
+        "title": "Ouverture polonaise",
+        "moves": ["b4"],
+        "eco": "A00"
+    },
+    {
+        "slug": "sokolsky-opening",
+        "title": "Ouverture Sokolsky",
+        "moves": ["b4"],
+        "eco": "A00"
+    },
+    {
+        "slug": "nimzowitsch-larsen-attack",
+        "title": "Attaque Nimzowitsch-Larsen",
+        "moves": ["b3"],
+        "eco": "A01"
+    },
+    {
+        "slug": "old-indian-defense",
+        "title": "Défense vieille-indienne",
+        "moves": ["d4", "Nf6", "c4", "d6"],
+        "eco": "A53"
+    },
+    {
+        "slug": "budapest-gambit",
+        "title": "Gambit de Budapest",
+        "moves": ["d4", "Nf6", "c4", "e5"],
+        "eco": "A51"
+    }
+]

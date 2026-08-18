@@ -1,0 +1,60 @@
+{
+  "slug": "benko-gambit",
+  "title": "Gambit Benko",
+  "wikichess_title": "Benko gambit",
+  "eco": "A57",
+  "moves": [
+    "d4",
+    "Nf6",
+    "c4",
+    "c5",
+    "d5",
+    "b5"
+  ],
+  "position_after": "b5",
+  "source_url": "https://ficgs.com/wikichess_92.html",
+  "language": "en",
+  "retrieved_at": "2026-08-17T13:16:15.004270+00:00",
+  "contributors": [
+    "David Grosdemange"
+  ],
+  "content": "the benko gambit . when accepted , black have counterplay in the a and b columns , and by the control of the a1-h8 and f1-a6 diagonals .",
+  "next_moves": [
+    {
+      "move": "a4",
+      "source_url": "https://ficgs.com/wikichess_171.html"
+    },
+    {
+      "move": "Qc2",
+      "source_url": "https://ficgs.com/wikichess_173.html"
+    },
+    {
+      "move": "Nc3",
+      "source_url": "https://ficgs.com/wikichess_154533.html"
+    },
+    {
+      "move": "cxb5",
+      "source_url": "https://ficgs.com/wikichess_93.html"
+    },
+    {
+      "move": "Nf3",
+      "source_url": "https://ficgs.com/wikichess_6033.html"
+    },
+    {
+      "move": "f3",
+      "source_url": "https://ficgs.com/wikichess_6058.html"
+    },
+    {
+      "move": "Bg5",
+      "source_url": "https://ficgs.com/wikichess_11085.html"
+    },
+    {
+      "move": "e3",
+      "source_url": "https://ficgs.com/wikichess_84345.html"
+    },
+    {
+      "move": "b3",
+      "source_url": "https://ficgs.com/wikichess_55975.html"
+    }
+  ]
+}

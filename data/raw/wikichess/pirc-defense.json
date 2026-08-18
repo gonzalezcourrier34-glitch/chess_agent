@@ -1,0 +1,76 @@
+{
+  "slug": "pirc-defense",
+  "title": "Défense Pirc",
+  "wikichess_title": "Pirc defense",
+  "eco": "B07",
+  "moves": [
+    "e4",
+    "d6",
+    "d4",
+    "Nf6",
+    "Nc3",
+    "g6"
+  ],
+  "position_after": "g6",
+  "source_url": "https://ficgs.com/wikichess_1077.html",
+  "language": "en",
+  "retrieved_at": "2026-08-17T13:13:32.598551+00:00",
+  "contributors": [
+    "Dirk Jan Van Dijl"
+  ],
+  "content": "",
+  "next_moves": [
+    {
+      "move": "Bf4",
+      "source_url": "https://ficgs.com/wikichess_22498.html"
+    },
+    {
+      "move": "Bg5",
+      "source_url": "https://ficgs.com/wikichess_3244.html"
+    },
+    {
+      "move": "g3",
+      "source_url": "https://ficgs.com/wikichess_58352.html"
+    },
+    {
+      "move": "Nf3",
+      "source_url": "https://ficgs.com/wikichess_1078.html"
+    },
+    {
+      "move": "f4",
+      "source_url": "https://ficgs.com/wikichess_5627.html"
+    },
+    {
+      "move": "f3",
+      "source_url": "https://ficgs.com/wikichess_118731.html"
+    },
+    {
+      "move": "Bc4",
+      "source_url": "https://ficgs.com/wikichess_49980.html"
+    },
+    {
+      "move": "Bb5",
+      "source_url": "https://ficgs.com/wikichess_51492.html"
+    },
+    {
+      "move": "h3",
+      "source_url": "https://ficgs.com/wikichess_51718.html"
+    },
+    {
+      "move": "e5",
+      "source_url": "https://ficgs.com/wikichess_53066.html"
+    },
+    {
+      "move": "d5",
+      "source_url": "https://ficgs.com/wikichess_44203.html"
+    },
+    {
+      "move": "Be3",
+      "source_url": "https://ficgs.com/wikichess_10776.html"
+    },
+    {
+      "move": "Be2",
+      "source_url": "https://ficgs.com/wikichess_33088.html"
+    }
+  ]
+}

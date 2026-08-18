@@ -1,0 +1,53 @@
+{
+  "slug": "trompowsky-attack",
+  "title": "Attaque Trompowsky",
+  "wikichess_title": "Trompowsky attack (Ruth, Opovcensky Opening)",
+  "eco": "A45",
+  "moves": [
+    "d4",
+    "Nf6",
+    "Bg5"
+  ],
+  "position_after": "Bg5",
+  "source_url": "https://ficgs.com/wikichess_155.html",
+  "language": "en",
+  "retrieved_at": "2026-08-17T13:15:08.237147+00:00",
+  "contributors": [
+    "Thibault de Vassal"
+  ],
+  "content": "The Trompowski attack is named after the one-time Brazilian champion Octavio Siqueiro F. Trompowski (1897�1984) who played it in the 1930s and 1940s.\nWith the second move, White is intending to exchange his bishop for Black's knight inflicting doubled pawns upon Black in the process. This is not a lethal threat, Black can choose to fall in with White's plan.\nAfter 1.d4 Nf6, the Trompowski is a popular alternative to the more common 2.c4 and 2.Nf3 lines. By playing 2.Bg5, White avoids the immense opening theory of various Indian Defences like the Queen's Indian and the King's Indian. Some of the grandmasters who often play the Trompowski are Julian Hodgson and Antoaneta Stefanova.\nAccording to Chessbase, white chances are about 56%",
+  "next_moves": [
+    {
+      "move": "Ne4",
+      "source_url": "https://ficgs.com/wikichess_184.html"
+    },
+    {
+      "move": "d5",
+      "source_url": "https://ficgs.com/wikichess_15483.html"
+    },
+    {
+      "move": "g6",
+      "source_url": "https://ficgs.com/wikichess_102081.html"
+    },
+    {
+      "move": "c5",
+      "source_url": "https://ficgs.com/wikichess_22527.html"
+    },
+    {
+      "move": "h6",
+      "source_url": "https://ficgs.com/wikichess_19896.html"
+    },
+    {
+      "move": "c6",
+      "source_url": "https://ficgs.com/wikichess_39104.html"
+    },
+    {
+      "move": "e6",
+      "source_url": "https://ficgs.com/wikichess_183.html"
+    },
+    {
+      "move": "d6",
+      "source_url": "https://ficgs.com/wikichess_112573.html"
+    }
+  ]
+}

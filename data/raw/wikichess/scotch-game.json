@@ -1,0 +1,75 @@
+{
+  "slug": "scotch-game",
+  "title": "Partie écossaise",
+  "wikichess_title": "Scotch Opening",
+  "eco": "C44",
+  "moves": [
+    "e4",
+    "e5",
+    "Nf3",
+    "Nc6",
+    "d4"
+  ],
+  "position_after": "d4",
+  "source_url": "https://ficgs.com/wikichess_46.html",
+  "language": "en",
+  "retrieved_at": "2026-08-17T13:14:10.993606+00:00",
+  "contributors": [
+    "Thibault de Vassal"
+  ],
+  "content": "The Scotch Game received its name from a correspondence match in 1824 between Edinburgh and London. Popular in the 19th century, by 1900 the Scotch had lost favor among top players because it was thought to release the central tension too early and allow Black to equalize without difficulty. More recently the Scotch has regained some popularity and it has been used by grandmasters Kasparov and Timman as a surprise weapon to avoid the well-analyzed Ruy Lopez.\nAccording to Chessbase, white chances are about 57%",
+  "next_moves": [
+    {
+      "move": "Be7",
+      "source_url": "https://ficgs.com/wikichess_238407.html"
+    },
+    {
+      "move": "exd4",
+      "source_url": "https://ficgs.com/wikichess_353.html"
+    },
+    {
+      "move": "f6",
+      "source_url": "https://ficgs.com/wikichess_165943.html"
+    },
+    {
+      "move": "Qf6",
+      "source_url": "https://ficgs.com/wikichess_84306.html"
+    },
+    {
+      "move": "d6",
+      "source_url": "https://ficgs.com/wikichess_14193.html"
+    },
+    {
+      "move": "Nf6",
+      "source_url": "https://ficgs.com/wikichess_20508.html"
+    },
+    {
+      "move": "Qe7",
+      "source_url": "https://ficgs.com/wikichess_57697.html"
+    },
+    {
+      "move": "Bd6",
+      "source_url": "https://ficgs.com/wikichess_58514.html"
+    },
+    {
+      "move": "d5",
+      "source_url": "https://ficgs.com/wikichess_17232.html"
+    },
+    {
+      "move": "a6",
+      "source_url": "https://ficgs.com/wikichess_84616.html"
+    },
+    {
+      "move": "Nxd4",
+      "source_url": "https://ficgs.com/wikichess_76154.html"
+    },
+    {
+      "move": "h6",
+      "source_url": "https://ficgs.com/wikichess_87350.html"
+    },
+    {
+      "move": "Bb4",
+      "source_url": "https://ficgs.com/wikichess_50103.html"
+    }
+  ]
+}

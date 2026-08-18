@@ -1,0 +1,39 @@
+{
+  "slug": "torre-attack",
+  "title": "Attaque Torre",
+  "wikichess_title": "Queen's pawn",
+  "eco": "A46",
+  "moves": [
+    "d4",
+    "Nf6",
+    "Nf3",
+    "e6",
+    "Bg5"
+  ],
+  "position_after": "Bg5",
+  "source_url": "https://ficgs.com/wikichess_9640.html",
+  "language": "en",
+  "retrieved_at": "2026-08-17T13:15:16.013794+00:00",
+  "contributors": [
+    "Gregory Kohut"
+  ],
+  "content": "",
+  "next_moves": [
+    {
+      "move": "d5",
+      "source_url": "https://ficgs.com/wikichess_9641.html"
+    },
+    {
+      "move": "c5",
+      "source_url": "https://ficgs.com/wikichess_9707.html"
+    },
+    {
+      "move": "h6",
+      "source_url": "https://ficgs.com/wikichess_9708.html"
+    },
+    {
+      "move": "Be7",
+      "source_url": "https://ficgs.com/wikichess_9710.html"
+    }
+  ]
+}

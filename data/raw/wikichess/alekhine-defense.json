@@ -1,0 +1,48 @@
+{
+  "slug": "alekhine-defense",
+  "title": "Défense Alekhine",
+  "wikichess_title": "Alekhine's defense",
+  "eco": "B02",
+  "moves": [
+    "e4",
+    "Nf6"
+  ],
+  "position_after": "Nf6",
+  "source_url": "https://ficgs.com/wikichess_33.html",
+  "language": "en",
+  "retrieved_at": "2026-08-17T13:13:23.383216+00:00",
+  "contributors": [
+    "Thibault de Vassal"
+  ],
+  "content": "Alekhine's Defence is named after Alexander Alekhine who first used it in two games in the 1921 Budapest tournament: one against Andre Steiner (which he won) and the other against Fritz S�misch (which he drew). Another early exponent of the defence was Ernst Gr�nfeld. The opening is considered hypermodern because Black provokes White to attack Black's knight and occupy the centre with his pawns, hoping to prove that White's imposing mass of pawns in the centre (which often includes pawns on c4, d4, e5, and f4) is in fact weak.\nAccording to Chessbase, black chances are about 39%",
+  "next_moves": [
+    {
+      "move": "d3",
+      "source_url": "https://ficgs.com/wikichess_11625.html"
+    },
+    {
+      "move": "e5",
+      "source_url": "https://ficgs.com/wikichess_85.html"
+    },
+    {
+      "move": "Nc3",
+      "source_url": "https://ficgs.com/wikichess_289.html"
+    },
+    {
+      "move": "Bc4",
+      "source_url": "https://ficgs.com/wikichess_107767.html"
+    },
+    {
+      "move": "d4",
+      "source_url": "https://ficgs.com/wikichess_128767.html"
+    },
+    {
+      "move": "Qf3",
+      "source_url": "https://ficgs.com/wikichess_126659.html"
+    },
+    {
+      "move": "f3",
+      "source_url": "https://ficgs.com/wikichess_60533.html"
+    }
+  ]
+}

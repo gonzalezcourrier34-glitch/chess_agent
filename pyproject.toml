@@ -1,0 +1,95 @@
+[project]
+name = "chess_agent"
+version = "0.1.0"
+description = "Agent IA d'aide à l'apprentissage des ouvertures d'échecs"
+readme = "README.md"
+requires-python = ">=3.12"
+authors = [
+    { name = "Stéphane Moa" }
+]
+
+dependencies = [
+    "beautifulsoup4>=4.15.0",
+    "fastapi>=0.116.0",
+    "httpx>=0.28.0",
+    "langchain>=0.3.0",
+    "langgraph>=0.6.0",
+    "loguru>=0.7.0",
+    "orjson>=3.11.0",
+    "pydantic>=2.11.0",
+    "pydantic-settings>=2.10.0",
+    "pymilvus>=2.5.0",
+    "pymongo>=4.14.0",
+    "python-chess>=1.999",
+    "python-dotenv>=1.1.0",
+    "sentence-transformers>=5.0.0",
+    "torch>=2.7.0",
+    "transformers>=4.51.0",
+    "uvicorn[standard]>=0.35.0"
+]
+
+[dependency-groups]
+dev = [
+    "mkdocs>=1.6.1",
+    "mkdocs-material>=9.7.7",
+    "mypy>=1.17.0",
+    "pre-commit>=4.3.0",
+    "pyright>=1.1.411",
+    "pytest>=8.4.0",
+    "pytest-asyncio>=1.1.0",
+    "pytest-cov>=6.2.0",
+    "ruff>=0.12.0",
+    "vulture>=2.16",
+]
+
+[tool.uv]
+package = false
+
+[tool.uv.sources]
+torch = { index = "pytorch-cu130" }
+
+[[tool.uv.index]]
+name = "pytorch-cu130"
+url = "https://download.pytorch.org/whl/cu130"
+explicit = true
+
+[tool.ruff]
+line-length = 88
+target-version = "py312"
+
+[tool.ruff.lint]
+select = [
+    "E",
+    "F",
+    "I",
+    "UP",
+    "B"
+]
+
+[tool.ruff.lint.per-file-ignores]
+"backend/scripts/*.py" = ["E402"]
+
+[tool.pytest.ini_options]
+pythonpath = ["backend"]
+testpaths = ["tests"]
+asyncio_mode = "auto"
+
+addopts = [
+    "-ra",
+]
+
+markers = [
+    "deployment: tests exécutés contre une stack Chess Agent déployée",
+]
+
+[tool.pyright]
+extraPaths = ["backend"]
+
+[tool.mypy]
+python_version = "3.12"
+strict = true
+warn_unused_configs = true
+warn_return_any = true
+warn_unused_ignores = true
+disallow_untyped_defs = true
+ignore_missing_imports = true

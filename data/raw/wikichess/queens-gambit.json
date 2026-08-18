@@ -1,0 +1,77 @@
+{
+  "slug": "queens-gambit",
+  "title": "Gambit dame",
+  "wikichess_title": "Queen's Gambit",
+  "eco": "D06",
+  "moves": [
+    "d4",
+    "d5",
+    "c4"
+  ],
+  "position_after": "c4",
+  "source_url": "https://ficgs.com/wikichess_16.html",
+  "language": "en",
+  "retrieved_at": "2026-08-17T13:12:59.624888+00:00",
+  "contributors": [
+    "Thibault de Vassal"
+  ],
+  "content": "The Queen's Gambit is one of the oldest known chess openings, as Lucena wrote about it in 1497 and it is mentioned in an earlier manuscript in G�ttingen. During the early period of modern chess queen pawn openings were not in fashion, and the Queen's Gambit did not become common until the 1873 tournament in Vienna.\nAs Steinitz and Tarrasch developed chess theory and increased the appreciation of positional play, the Queen's Gambit grew more popular. It reached its peak popularity in the 1920s and 1930s, and was played in 32 out of 34 games in the 1934 World Chess Championship.\nSince then Black has increasingly moved away from symmetrical openings, tending to use the Indian defences to combat queen pawn openings. The Queen's Gambit is still frequently played, however, and it remains an important part of many grandmasters' opening repertoires.\nWith 2.c4, White threatens to exchange a wing pawn (the c-pawn) for a center pawn (Black's d-pawn) and dominate the center with e2-e4. This is not a true gambit since if Black accepts the pawn he cannot expect to keep it.",
+  "next_moves": [
+    {
+      "move": "c6",
+      "source_url": "https://ficgs.com/wikichess_17.html"
+    },
+    {
+      "move": "h5",
+      "source_url": "https://ficgs.com/wikichess_205712.html"
+    },
+    {
+      "move": "Qd7",
+      "source_url": "https://ficgs.com/wikichess_221251.html"
+    },
+    {
+      "move": "Nc6",
+      "source_url": "https://ficgs.com/wikichess_743.html"
+    },
+    {
+      "move": "Nf6",
+      "source_url": "https://ficgs.com/wikichess_8886.html"
+    },
+    {
+      "move": "e5",
+      "source_url": "https://ficgs.com/wikichess_1896.html"
+    },
+    {
+      "move": "e6",
+      "source_url": "https://ficgs.com/wikichess_872.html"
+    },
+    {
+      "move": "dxc4",
+      "source_url": "https://ficgs.com/wikichess_881.html"
+    },
+    {
+      "move": "Bf5",
+      "source_url": "https://ficgs.com/wikichess_52999.html"
+    },
+    {
+      "move": "b6",
+      "source_url": "https://ficgs.com/wikichess_67904.html"
+    },
+    {
+      "move": "Be6",
+      "source_url": "https://ficgs.com/wikichess_34097.html"
+    },
+    {
+      "move": "f6",
+      "source_url": "https://ficgs.com/wikichess_16902.html"
+    },
+    {
+      "move": "c5",
+      "source_url": "https://ficgs.com/wikichess_16628.html"
+    },
+    {
+      "move": "h6",
+      "source_url": "https://ficgs.com/wikichess_24747.html"
+    }
+  ]
+}

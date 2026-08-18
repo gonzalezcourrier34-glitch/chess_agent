@@ -1,0 +1,132 @@
+site_name: Chess Agent
+site_description: Documentation technique du projet Chess Agent
+site_author: Stéphane Moa
+
+docs_dir: docs
+site_dir: site
+
+theme:
+  name: material
+  language: fr
+
+  features:
+    - navigation.tabs
+    - navigation.sections
+    - navigation.expand
+    - navigation.top
+    - navigation.footer
+    - navigation.indexes
+    - search.suggest
+    - search.highlight
+    - content.code.copy
+    - content.code.annotate
+    - toc.follow
+
+  palette:
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-7
+        name: Passer au thème sombre
+
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-4
+        name: Passer au thème clair
+
+plugins:
+  - search:
+      lang: fr
+
+markdown_extensions:
+  - tables
+  - attr_list
+  - md_in_html
+  - def_list
+  - footnotes
+  - admonition
+
+  - toc:
+      permalink: true
+
+  - pymdownx.details
+
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+
+  - pymdownx.inlinehilite
+
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+
+  - pymdownx.emoji:
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
+
+  - pymdownx.tabbed:
+      alternate_style: true
+
+  - pymdownx.tasklist:
+      custom_checkbox: true
+
+  - pymdownx.mark
+  - pymdownx.caret
+  - pymdownx.tilde
+
+nav:
+  - Accueil: index.md
+
+  - Projet:
+      - Présentation du projet: 01-presentation-projet.md
+      - Architecture technique: 02-architecture-technique.md
+      - Workflow LangGraph: 03-workflow-langgraph.md
+      - État et routage: 04-etat-et-routage.md
+
+  - Backend:
+      - Services applicatifs: 05-services-applicatifs.md
+      - Adapters et infrastructure: 06-adapters-infrastructure.md
+      - RAG et Wikichess: 07-rag-wikichess.md
+      - API, contrats et erreurs: 08-api-contrats-erreurs.md
+      - Modèles de données: 09-modeles-donnees.md
+      - Persistance MongoDB: 10-persistance-mongodb.md
+      - Cycle de vie, configuration et supervision: 11-cycle-vie-configuration-supervision.md
+
+  - Frontend:
+      - Frontend Angular: 12-frontend-angular.md
+      - Cours Angular appliqué à Chess Agent: cours/cours-angular-chess-agent.md
+
+  - Qualité:
+      - Qualité et tests: 13-qualite-tests.md
+      - Convention MISA: 14-convention-misa.md
+
+  - Projet et soutenance:
+      - Limites et évolutions: 15-limites-evolutions.md
+      - Glossaire: 16-glossaire.md
+      - Guide de présentation: 17-guide-presentation.md
+      - Inventaire des sources: 18-inventaire-sources.md
+
+  - Étude MCP:
+      - Présentation: mcp/README.md
+      - Synthèse exécutive: mcp/01_documentation/00-synthese-executive.md
+      - Étude de faisabilité complète: mcp/01_documentation/01-etude-faisabilite-complete.md
+      - Exigences et traçabilité: mcp/01_documentation/02-exigences-et-tracabilite.md
+      - Architecture MCP: mcp/01_documentation/03-architecture-mcp.md
+      - Pipeline vidéo / FEN: mcp/01_documentation/04-pipeline-video-fen.md
+      - Sécurité et conformité: mcp/01_documentation/05-securite-conformite.md
+      - Qualité, tests et recette: mcp/01_documentation/06-qualite-tests-recette.md
+      - Plan et budget: mcp/01_documentation/07-plan-budget.md
+      - Risques et alternatives: mcp/01_documentation/08-risques-alternatives.md
+      - Décisions et hypothèses: mcp/01_documentation/09-decisions-hypotheses-questions.md
+      - Audit des fichiers: mcp/01_documentation/10-audit-fichiers-fournis.md
+      - Soutenance et preuves: mcp/01_documentation/11-soutenance-et-preuves.md
+      - Inventaire des sources: mcp/01_documentation/12-inventaire-sources.md

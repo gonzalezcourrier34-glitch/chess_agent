@@ -1,0 +1,51 @@
+{
+  "slug": "colle-system",
+  "title": "Système Colle",
+  "wikichess_title": "Queen's pawn game",
+  "eco": "A46",
+  "moves": [
+    "d4",
+    "d5",
+    "Nf3",
+    "Nf6",
+    "e3"
+  ],
+  "position_after": "e3",
+  "source_url": "https://ficgs.com/wikichess_3966.html",
+  "language": "en",
+  "retrieved_at": "2026-08-17T13:15:03.501394+00:00",
+  "contributors": [
+    "Paul K�nig"
+  ],
+  "content": "",
+  "next_moves": [
+    {
+      "move": "e6",
+      "source_url": "https://ficgs.com/wikichess_3967.html"
+    },
+    {
+      "move": "b6",
+      "source_url": "https://ficgs.com/wikichess_165139.html"
+    },
+    {
+      "move": "g6",
+      "source_url": "https://ficgs.com/wikichess_60260.html"
+    },
+    {
+      "move": "c6",
+      "source_url": "https://ficgs.com/wikichess_102363.html"
+    },
+    {
+      "move": "Bf5",
+      "source_url": "https://ficgs.com/wikichess_24563.html"
+    },
+    {
+      "move": "c5",
+      "source_url": "https://ficgs.com/wikichess_6926.html"
+    },
+    {
+      "move": "Bg4",
+      "source_url": "https://ficgs.com/wikichess_119239.html"
+    }
+  ]
+}

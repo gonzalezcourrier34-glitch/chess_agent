@@ -1,0 +1,81 @@
+{
+  "slug": "bishops-opening",
+  "title": "Ouverture du fou",
+  "wikichess_title": "Bishop's Opening",
+  "eco": "C23",
+  "moves": [
+    "e4",
+    "e5",
+    "Bc4"
+  ],
+  "position_after": "Bc4",
+  "source_url": "https://ficgs.com/wikichess_9.html",
+  "language": "en",
+  "retrieved_at": "2026-08-17T13:14:25.431323+00:00",
+  "contributors": [
+    "Thibault de Vassal"
+  ],
+  "content": "The Bishop's Opening is one of the oldest openings to be analyzed; it was studied by Lucena and Ruy Lopez. Later it was played by Philidor. Larsen was one of the few grandmasters to play it often, after first using it at the 1964 Interzonal Tournament. Although the Bishop's Opening is uncommon today, it has been used occasionally as a surprise by players such as Kasparov and Nunn.\nWhite attacks Black's f7-square and prevents Black from advancing his d-pawn to d5. By ignoring the beginner's rule, \"develop knights before bishops\", White leaves his f-pawn unblocked allowing the possibility of playing f4. This gives the Bishop's Opening an affinity to the King's Gambit and the Vienna Game, two openings that share this characteristic. In fact, the Bishop's Opening can transpose into the King's Gambit or the Vienna Game, and transpositions into Giuoco Piano and Two Knights Defense and other openings are also possible. In particular, White should remain alert for any chance to transpose into a favorable variation of the King's Gambit, but with careful play Black can avoid this danger.\nAccording to Chessbase, white chances are about 55%",
+  "next_moves": [
+    {
+      "move": "c6",
+      "source_url": "https://ficgs.com/wikichess_169774.html"
+    },
+    {
+      "move": "a6",
+      "source_url": "https://ficgs.com/wikichess_80276.html"
+    },
+    {
+      "move": "c5",
+      "source_url": "https://ficgs.com/wikichess_196354.html"
+    },
+    {
+      "move": "Be7",
+      "source_url": "https://ficgs.com/wikichess_96324.html"
+    },
+    {
+      "move": "Bc5",
+      "source_url": "https://ficgs.com/wikichess_6424.html"
+    },
+    {
+      "move": "Qf6",
+      "source_url": "https://ficgs.com/wikichess_195588.html"
+    },
+    {
+      "move": "Nc6",
+      "source_url": "https://ficgs.com/wikichess_10353.html"
+    },
+    {
+      "move": "f5",
+      "source_url": "https://ficgs.com/wikichess_3923.html"
+    },
+    {
+      "move": "Nf6",
+      "source_url": "https://ficgs.com/wikichess_3924.html"
+    },
+    {
+      "move": "b5",
+      "source_url": "https://ficgs.com/wikichess_3925.html"
+    },
+    {
+      "move": "h6",
+      "source_url": "https://ficgs.com/wikichess_75166.html"
+    },
+    {
+      "move": "Qg5",
+      "source_url": "https://ficgs.com/wikichess_50351.html"
+    },
+    {
+      "move": "Qh4",
+      "source_url": "https://ficgs.com/wikichess_134537.html"
+    },
+    {
+      "move": "d5",
+      "source_url": "https://ficgs.com/wikichess_79879.html"
+    },
+    {
+      "move": "d6",
+      "source_url": "https://ficgs.com/wikichess_26155.html"
+    }
+  ]
+}

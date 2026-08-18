@@ -1,0 +1,50 @@
+{
+  "slug": "chigorin-defense",
+  "title": "Défense Tchigorine",
+  "wikichess_title": "QGD",
+  "eco": "D07",
+  "moves": [
+    "d4",
+    "d5",
+    "c4",
+    "Nc6"
+  ],
+  "position_after": "Nc6",
+  "source_url": "https://ficgs.com/wikichess_743.html",
+  "language": "en",
+  "retrieved_at": "2026-08-17T13:16:55.457276+00:00",
+  "contributors": [
+    "Christophe Sengez"
+  ],
+  "content": "QGD Tchigorine",
+  "next_moves": [
+    {
+      "move": "c5",
+      "source_url": "https://ficgs.com/wikichess_9747.html"
+    },
+    {
+      "move": "Nf3",
+      "source_url": "https://ficgs.com/wikichess_9496.html"
+    },
+    {
+      "move": "Bf4",
+      "source_url": "https://ficgs.com/wikichess_9497.html"
+    },
+    {
+      "move": "e3",
+      "source_url": "https://ficgs.com/wikichess_9498.html"
+    },
+    {
+      "move": "Nc3",
+      "source_url": "https://ficgs.com/wikichess_9045.html"
+    },
+    {
+      "move": "cxd5",
+      "source_url": "https://ficgs.com/wikichess_784.html"
+    },
+    {
+      "move": "g3",
+      "source_url": "https://ficgs.com/wikichess_222333.html"
+    }
+  ]
+}

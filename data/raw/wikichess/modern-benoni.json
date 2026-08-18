@@ -1,0 +1,32 @@
+{
+  "slug": "modern-benoni",
+  "title": "Défense Benoni moderne",
+  "wikichess_title": "Benoni defense",
+  "eco": "A60",
+  "moves": [
+    "d4",
+    "Nf6",
+    "c4",
+    "c5",
+    "d5",
+    "e6"
+  ],
+  "position_after": "e6",
+  "source_url": "https://ficgs.com/wikichess_237.html",
+  "language": "en",
+  "retrieved_at": "2026-08-17T13:16:05.990465+00:00",
+  "contributors": [
+    "Larry Wolfley"
+  ],
+  "content": "Initiating the Modern Benoni defense",
+  "next_moves": [
+    {
+      "move": "Nf3",
+      "source_url": "https://ficgs.com/wikichess_41966.html"
+    },
+    {
+      "move": "Nc3",
+      "source_url": "https://ficgs.com/wikichess_238.html"
+    }
+  ]
+}

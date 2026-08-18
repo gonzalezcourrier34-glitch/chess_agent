@@ -1,0 +1,66 @@
+{
+  "slug": "petrov-defense",
+  "title": "Défense Petrov",
+  "wikichess_title": "Petrov's defense",
+  "eco": "C42",
+  "moves": [
+    "e4",
+    "e5",
+    "Nf3",
+    "Nf6"
+  ],
+  "position_after": "Nf6",
+  "source_url": "https://ficgs.com/wikichess_13.html",
+  "language": "en",
+  "retrieved_at": "2026-08-17T13:13:52.608183+00:00",
+  "contributors": [
+    "Thibault de Vassal"
+  ],
+  "content": "Petrov's Defence (sometimes spelled Petroff's) has a long history, it was first popularized by Alexander Petrov � a Russian chess player of the mid-19th century. In recognition of the early investigations by the Russian masters Petrov and Carl Jaenisch, this opening is called the Russian Game in some countries.\nThe Petrov has a reputation of being dull and uninspired. However, it offers attacking opportunities for both sides, and many lines are quite sharp. Often a trade occurs, and black after gaining a tempo (or unit of time) gains a well placed knight. Pillsbury's game in 1896 against Emmanuel Lasker testifies to this. The Black counterattack in the center also avoids the Ruy Lopez and Giuoco Piano.\nAccording to Chessbase, black chances are about 41%",
+  "next_moves": [
+    {
+      "move": "Qe2",
+      "source_url": "https://ficgs.com/wikichess_261227.html"
+    },
+    {
+      "move": "Bd3",
+      "source_url": "https://ficgs.com/wikichess_194448.html"
+    },
+    {
+      "move": "Nxe5",
+      "source_url": "https://ficgs.com/wikichess_74.html"
+    },
+    {
+      "move": "d3",
+      "source_url": "https://ficgs.com/wikichess_235.html"
+    },
+    {
+      "move": "Nc3",
+      "source_url": "https://ficgs.com/wikichess_10008.html"
+    },
+    {
+      "move": "Bc4",
+      "source_url": "https://ficgs.com/wikichess_1365.html"
+    },
+    {
+      "move": "Bb5",
+      "source_url": "https://ficgs.com/wikichess_100346.html"
+    },
+    {
+      "move": "d4",
+      "source_url": "https://ficgs.com/wikichess_1056.html"
+    },
+    {
+      "move": "a3",
+      "source_url": "https://ficgs.com/wikichess_69970.html"
+    },
+    {
+      "move": "h3",
+      "source_url": "https://ficgs.com/wikichess_77403.html"
+    },
+    {
+      "move": "Be2",
+      "source_url": "https://ficgs.com/wikichess_43184.html"
+    }
+  ]
+}

@@ -1,0 +1,354 @@
+name: chess-agent
+
+
+services:
+
+  # ============================================================
+  # Backend FastAPI
+  # ============================================================
+
+  backend:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+
+    container_name: chess-agent-backend
+
+    gpus: all
+
+    env_file:
+      - ./.env
+
+    environment:
+      # Connexions internes au réseau Docker
+      MONGODB_URI: mongodb://mongodb:27017
+      MILVUS_HOST: milvus
+      MILVUS_PORT: "19530"
+      LLM_BASE_URL: http://ollama:11434
+
+      # Stockfish installé dans l'image backend
+      STOCKFISH_PATH: /usr/games/stockfish
+
+      # Frontend
+      FRONTEND_URL: http://localhost:4200
+      CORS_ORIGINS: '["http://localhost:4200"]'
+
+    ports:
+      - "8000:8000"
+
+    volumes:
+      # Corpus Wikichess et données préparées
+      - ./data:/app/data
+
+      # Cache persistant du modèle d'embeddings
+      - huggingface_cache:/root/.cache/huggingface
+
+    depends_on:
+      mongodb:
+        condition: service_healthy
+
+      milvus:
+        condition: service_healthy
+
+      ollama:
+        condition: service_healthy
+
+    # Healthcheck Docker volontairement léger.
+    #
+    # /api/v1/healthcheck reste disponible pour le diagnostic complet
+    # de l'application, mais n'est pas utilisé ici afin de ne pas
+    # solliciter régulièrement les services externes comme YouTube.
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "curl",
+          "-f",
+          "http://localhost:8000/api/v1/health/live"
+        ]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 60s
+
+    restart: unless-stopped
+
+    networks:
+      - chess-agent-network
+
+
+  # ============================================================
+  # Frontend Angular
+  # ============================================================
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+
+    container_name: chess-agent-frontend
+
+    ports:
+      - "4200:4200"
+
+    depends_on:
+      backend:
+        condition: service_healthy
+
+    restart: unless-stopped
+
+    networks:
+      - chess-agent-network
+
+
+  # ============================================================
+  # Ollama
+  # ============================================================
+
+  ollama:
+    image: ollama/ollama:latest
+
+    container_name: chess-agent-ollama
+
+    gpus: all
+
+    ports:
+      - "11434:11434"
+
+    volumes:
+      - ollama_data:/root/.ollama
+
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "ollama",
+          "list"
+        ]
+      interval: 30s
+      timeout: 10s
+      retries: 10
+      start_period: 20s
+
+    restart: unless-stopped
+
+    networks:
+      - chess-agent-network
+
+
+  # ============================================================
+  # MongoDB
+  # ============================================================
+
+  mongodb:
+    image: mongo:8
+
+    container_name: chess-agent-mongodb
+
+    environment:
+      MONGO_INITDB_DATABASE: chess_agent
+
+    ports:
+      - "27017:27017"
+
+    volumes:
+      - mongodb_data:/data/db
+
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "mongosh",
+          "--quiet",
+          "--eval",
+          "quit(db.adminCommand('ping').ok ? 0 : 1)"
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+
+    restart: unless-stopped
+
+    networks:
+      - chess-agent-network
+
+
+  # ============================================================
+  # etcd
+  # ============================================================
+
+  etcd:
+    image: quay.io/coreos/etcd:v3.5.21
+
+    container_name: chess-agent-etcd
+
+    command:
+      - etcd
+      - --advertise-client-urls=http://etcd:2379
+      - --listen-client-urls=http://0.0.0.0:2379
+      - --data-dir=/etcd
+
+    environment:
+      ETCDCTL_API: "3"
+      ETCD_AUTO_COMPACTION_MODE: revision
+      ETCD_AUTO_COMPACTION_RETENTION: "1000"
+      ETCD_QUOTA_BACKEND_BYTES: "4294967296"
+      ETCD_SNAPSHOT_COUNT: "50000"
+
+    volumes:
+      - etcd_data:/etcd
+
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "etcdctl",
+          "--endpoints=http://localhost:2379",
+          "endpoint",
+          "health"
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+
+    restart: unless-stopped
+
+    networks:
+      - chess-agent-network
+
+
+  # ============================================================
+  # MinIO
+  # ============================================================
+
+  minio:
+    image: minio/minio
+
+    container_name: chess-agent-minio
+
+    command:
+      - server
+      - /data
+      - --console-address
+      - ":9001"
+
+    environment:
+      MINIO_ROOT_USER: ${MINIO_ROOT_USER:-minioadmin}
+      MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD:-minioadmin}
+
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+
+    volumes:
+      - minio_data:/data
+
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "curl",
+          "-f",
+          "http://localhost:9000/minio/health/live"
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+
+    restart: unless-stopped
+
+    networks:
+      - chess-agent-network
+
+
+  # ============================================================
+  # Milvus
+  # ============================================================
+
+  milvus:
+    image: milvusdb/milvus:v2.6.0
+
+    container_name: chess-agent-milvus
+
+    command:
+      - milvus
+      - run
+      - standalone
+
+    environment:
+      ETCD_ENDPOINTS: etcd:2379
+
+      MINIO_ADDRESS: minio:9000
+      MINIO_ACCESS_KEY_ID: ${MINIO_ROOT_USER:-minioadmin}
+      MINIO_SECRET_ACCESS_KEY: ${MINIO_ROOT_PASSWORD:-minioadmin}
+
+    ports:
+      - "19530:19530"
+      - "9091:9091"
+
+    volumes:
+      - milvus_data:/var/lib/milvus
+
+    depends_on:
+      etcd:
+        condition: service_healthy
+
+      minio:
+        condition: service_healthy
+
+    healthcheck:
+      test:
+        [
+          "CMD",
+          "curl",
+          "-f",
+          "http://localhost:9091/healthz"
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 15
+      start_period: 30s
+
+    restart: unless-stopped
+
+    networks:
+      - chess-agent-network
+
+
+# ==============================================================
+# Volumes persistants
+# ==============================================================
+
+volumes:
+
+  mongodb_data:
+    name: chess-agent-mongodb-data
+
+  etcd_data:
+    name: chess-agent-etcd-data
+
+  minio_data:
+    name: chess-agent-minio-data
+
+  milvus_data:
+    name: chess-agent-milvus-data
+
+  huggingface_cache:
+    name: chess-agent-huggingface-cache
+
+  ollama_data:
+    name: chess-agent-ollama-data
+
+
+# ==============================================================
+# Réseau
+# ==============================================================
+
+networks:
+
+  chess-agent-network:
+    name: chess-agent-network
+    driver: bridge

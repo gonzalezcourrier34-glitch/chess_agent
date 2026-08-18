@@ -1,0 +1,50 @@
+{
+  "slug": "semi-slav-defense",
+  "title": "Défense semi-slave",
+  "wikichess_title": "QGD Slav",
+  "eco": "D11",
+  "moves": [
+    "d4",
+    "d5",
+    "c4",
+    "c6",
+    "Nf3",
+    "Nf6",
+    "e3",
+    "e6"
+  ],
+  "position_after": "e6",
+  "source_url": "https://ficgs.com/wikichess_7872.html",
+  "language": "en",
+  "retrieved_at": "2026-08-17T13:16:36.608033+00:00",
+  "contributors": [
+    "Andrew Stephenson"
+  ],
+  "content": "",
+  "next_moves": [
+    {
+      "move": "Bd3",
+      "source_url": "https://ficgs.com/wikichess_7873.html"
+    },
+    {
+      "move": "Nc3",
+      "source_url": "https://ficgs.com/wikichess_10452.html"
+    },
+    {
+      "move": "b3",
+      "source_url": "https://ficgs.com/wikichess_19720.html"
+    },
+    {
+      "move": "cxd5",
+      "source_url": "https://ficgs.com/wikichess_29580.html"
+    },
+    {
+      "move": "Nbd2",
+      "source_url": "https://ficgs.com/wikichess_64062.html"
+    },
+    {
+      "move": "Be2",
+      "source_url": "https://ficgs.com/wikichess_22155.html"
+    }
+  ]
+}

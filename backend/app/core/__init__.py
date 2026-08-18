@@ -1,0 +1,1 @@
+"""Composants centraux de Chess Agent."""

@@ -1,0 +1,1969 @@
+<main class="page">
+
+    <!-- # En-tête -->
+
+    <header class="header">
+
+        <div class="header-copy">
+
+            <span class="header-kicker">
+                Chess Agent
+            </span>
+
+            <h1>
+                Analyse d'une position
+            </h1>
+
+            <p>
+                Théorie, moteur Stockfish et ressources pédagogiques
+            </p>
+
+        </div>
+
+
+        <!-- # Sources -->
+
+        <div
+            class="header-status"
+            aria-label="Sources d'analyse"
+        >
+
+            <span class="source-item source-chess">
+                <span class="source-dot"></span>
+                Échecs
+            </span>
+
+            <span class="source-item source-stockfish">
+                <span class="source-dot"></span>
+                Stockfish
+            </span>
+
+            <span class="source-item source-rag">
+                <span class="source-dot"></span>
+                RAG
+            </span>
+
+            <span class="source-item source-youtube">
+                <span class="source-dot"></span>
+                YouTube
+            </span>
+
+        </div>
+
+    </header>
+
+
+    <!-- # Espace de travail -->
+
+    <section class="workspace">
+
+
+        <!-- # Statistiques -->
+
+        <aside class="stats-column">
+
+
+            <!-- # Lichess -->
+
+            <section class="panel panel-compact">
+
+                <div class="panel-heading">
+
+                    <div>
+
+                        <span class="panel-eyebrow">
+                            Théorie
+                        </span>
+
+                        <h2>
+                            Lichess
+                        </h2>
+
+                    </div>
+
+                    <span
+                        class="panel-icon theory-icon"
+                        aria-hidden="true"
+                    >
+                        ♟
+                    </span>
+
+                </div>
+
+
+                @if (
+                    analysis?.opening;
+                    as opening
+                ) {
+
+                    <!-- # Ouverture -->
+
+                    <div class="opening-card">
+
+                        <span class="opening-label">
+                            Ouverture détectée
+                        </span>
+
+                        <strong class="opening-name">
+                            {{ opening.opening.name }}
+                        </strong>
+
+                        <span class="opening-eco">
+                            ECO {{ opening.opening.eco }}
+                        </span>
+
+                    </div>
+
+
+                    <!-- # Statistiques -->
+
+                    @if (
+                        opening.statistics;
+                        as stats
+                    ) {
+
+                        <div class="section-label">
+                            Statistiques
+                        </div>
+
+
+                        <div class="lichess-summary">
+
+                            <div class="lichess-chart">
+
+                                <div
+                                    class="win-chart"
+                                    [style.background]="lichessChartStyle"
+                                    role="img"
+                                    aria-label="Répartition des résultats Lichess"
+                                >
+
+                                    <div class="win-chart-center">
+
+                                        <strong>
+                                            {{
+                                                stats.games
+                                                | number
+                                            }}
+                                        </strong>
+
+                                        <span>
+                                            parties
+                                        </span>
+
+                                    </div>
+
+                                </div>
+
+
+                                <!-- # Légende -->
+
+                                <div class="win-chart-legend">
+
+                                    <div class="chart-stat white-wins">
+
+                                        <span class="chart-dot"></span>
+
+                                        <span>
+                                            Blancs
+                                        </span>
+
+                                        <strong>
+                                            {{
+                                                stats.white_win_rate
+                                                | number:'1.1-2'
+                                            }} %
+                                        </strong>
+
+                                    </div>
+
+
+                                    <div class="chart-stat draws">
+
+                                        <span class="chart-dot"></span>
+
+                                        <span>
+                                            Nulles
+                                        </span>
+
+                                        <strong>
+                                            {{
+                                                stats.draw_rate
+                                                | number:'1.1-2'
+                                            }} %
+                                        </strong>
+
+                                    </div>
+
+
+                                    <div class="chart-stat black-wins">
+
+                                        <span class="chart-dot"></span>
+
+                                        <span>
+                                            Noirs
+                                        </span>
+
+                                        <strong>
+                                            {{
+                                                stats.black_win_rate
+                                                | number:'1.1-2'
+                                            }} %
+                                        </strong>
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+
+                            <!-- # Elo -->
+
+                            <div class="lichess-meta">
+
+                                <span>
+                                    Elo moyen
+                                </span>
+
+                                <strong>
+
+                                    @if (
+                                        stats.average_rating !== null
+                                    ) {
+
+                                        {{
+                                            stats.average_rating
+                                            | number
+                                        }}
+
+                                    } @else {
+
+                                        —
+
+                                    }
+
+                                </strong>
+
+                            </div>
+
+                        </div>
+
+                    }
+
+                } @else {
+
+                    <div class="empty-state">
+
+                        <span
+                            class="empty-icon"
+                            aria-hidden="true"
+                        >
+                            ♙
+                        </span>
+
+                        <p>
+                            Aucune donnée théorique disponible.
+                        </p>
+
+                    </div>
+
+                }
+
+            </section>
+
+
+            <!-- # Stockfish -->
+
+            <section class="panel panel-stockfish">
+
+                <div class="panel-heading">
+
+                    <div>
+
+                        <span class="panel-eyebrow">
+                            Moteur
+                        </span>
+
+                        <h2>
+                            Stockfish
+                        </h2>
+
+                    </div>
+
+                    <span
+                        class="panel-icon engine-icon"
+                        aria-hidden="true"
+                    >
+                        ⚡
+                    </span>
+
+                </div>
+
+
+                @if (
+                    analysis?.evaluation;
+                    as evaluation
+                ) {
+
+                    <!-- # Évaluation -->
+
+                    <div class="evaluation-block">
+
+                        <div class="evaluation-main">
+
+                            <span class="section-label">
+                                Évaluation
+                            </span>
+
+                            <strong class="evaluation">
+                                {{ evaluationLabel }}
+                            </strong>
+
+                        </div>
+
+
+                        <div class="evaluation-details">
+
+                            <span class="detail-pill">
+
+                                Depth
+
+                                {{
+                                    evaluation
+                                        .engine
+                                        .evaluation
+                                        .depth
+                                }}
+
+                            </span>
+
+
+                            @if (
+                                evaluation
+                                    .engine
+                                    .evaluation
+                                    .nodes !== null
+                            ) {
+
+                                <span class="detail-pill">
+
+                                    {{
+                                        evaluation
+                                            .engine
+                                            .evaluation
+                                            .nodes
+                                        | number
+                                    }}
+
+                                    nœuds
+
+                                </span>
+
+                            }
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- # Balance -->
+
+                    <div
+                        class="score-balance"
+                        aria-hidden="true"
+                    >
+
+                        <span class="score-balance-black"></span>
+
+                        <span class="score-balance-white"></span>
+
+                    </div>
+
+
+                    <div class="score-caption">
+
+                        <span>
+                            Noirs
+                        </span>
+
+                        <span>
+                            Blancs
+                        </span>
+
+                    </div>
+
+
+                    <!-- # Métadonnées moteur -->
+
+                    <div class="engine-meta">
+
+                        <div>
+
+                            <span>
+                                Profondeur
+                            </span>
+
+                            <strong>
+                                {{
+                                    evaluation
+                                        .engine
+                                        .evaluation
+                                        .depth
+                                }}
+                            </strong>
+
+                        </div>
+
+
+                        <div>
+
+                            <span>
+                                Nœuds
+                            </span>
+
+                            <strong>
+                                {{
+                                    evaluation
+                                        .engine
+                                        .evaluation
+                                        .nodes
+                                    ?? '—'
+                                }}
+                            </strong>
+
+                        </div>
+
+
+                        <div>
+
+                            <span>
+                                Temps
+                            </span>
+
+                            <strong>
+
+                                @if (
+                                    evaluation
+                                        .engine
+                                        .evaluation
+                                        .time_ms !== null
+                                ) {
+
+                                    {{
+                                        evaluation
+                                            .engine
+                                            .evaluation
+                                            .time_ms
+                                    }}
+                                    ms
+
+                                } @else {
+
+                                    —
+
+                                }
+
+                            </strong>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- # Meilleur coup -->
+
+                    <div class="section-label section-spacing">
+                        Meilleur coup
+                    </div>
+
+
+                    @if (
+                        evaluation.engine.best_move;
+                        as bestMove
+                    ) {
+
+                        <div class="best-move-card">
+
+                            <div class="best-move-copy">
+
+                                <span class="best-move-label">
+                                    Recommandation
+                                </span>
+
+                                <strong class="best-move">
+                                    {{ bestMove.san }}
+                                </strong>
+
+                            </div>
+
+                            <span class="best-move-score">
+
+                                {{
+                                    formatScore(
+                                        bestMove.score,
+                                        bestMove.evaluation_type
+                                    )
+                                }}
+
+                            </span>
+
+                        </div>
+
+                    } @else {
+
+                        <p class="empty">
+                            Aucun coup disponible.
+                        </p>
+
+                    }
+
+
+                    <!-- # Alternatives -->
+
+                    @if (
+                        evaluation.engine.alternatives.length > 0
+                    ) {
+
+                        <div class="section-label section-spacing">
+                            Alternatives
+                        </div>
+
+                        <div class="moves">
+
+                            @for (
+                                move
+                                of evaluation.engine.alternatives;
+                                track move.uci
+                            ) {
+
+                                <div class="move-row">
+
+                                    <div class="move-main">
+
+                                        <strong>
+                                            {{ move.san }}
+                                        </strong>
+
+                                        <span class="move-line"></span>
+
+                                    </div>
+
+                                    <span class="move-score">
+
+                                        {{
+                                            formatScore(
+                                                move.score,
+                                                move.evaluation_type
+                                            )
+                                        }}
+
+                                    </span>
+
+                                </div>
+
+                            }
+
+                        </div>
+
+                    }
+
+                } @else {
+
+                    <div class="empty-state">
+
+                        <span
+                            class="empty-icon"
+                            aria-hidden="true"
+                        >
+                            ⚡
+                        </span>
+
+                        <p>
+                            Aucune analyse moteur disponible.
+                        </p>
+
+                    </div>
+
+                }
+
+            </section>
+
+        </aside>
+
+
+        <!-- # Position -->
+
+        <section class="board-column">
+
+
+            <!-- # Échiquier -->
+
+            <div class="board-frame">
+
+                <div class="board-topline">
+
+                    <span class="board-label">
+                        Position
+                    </span>
+
+                    <span class="turn-chip">
+
+                        Trait
+
+                        <strong>
+                            {{ sideToMoveLabel }}
+                        </strong>
+
+                    </span>
+
+                </div>
+
+
+                <div class="board-container">
+
+                    <ngx-chess-board
+                        #board
+                        [size]="500"
+                        [showCoords]="true"
+                        [showLastMove]="true"
+                        [showLegalMoves]="true"
+                        [dragDisabled]="loading"
+                        (moveChange)="onBoardMove($event)"
+                    >
+                    </ngx-chess-board>
+
+                </div>
+
+            </div>
+
+
+            <!-- # Position FEN -->
+
+            <div class="position-section">
+
+                <div class="position-header">
+
+                    <label for="fen">
+                        Position FEN
+                    </label>
+
+
+                    @if (!fenError) {
+
+                        <span class="fen-valid">
+
+                            <span class="status-dot"></span>
+
+                            Position prête
+
+                        </span>
+
+                    }
+
+                </div>
+
+
+                <div class="fen-row">
+
+                    <input
+                        id="fen"
+                        type="text"
+                        [(ngModel)]="fen"
+                        (change)="applyFen()"
+                        (keydown.enter)="applyFen()"
+                        [disabled]="loading"
+                        autocomplete="off"
+                        spellcheck="false"
+                        aria-label="Position FEN"
+                    >
+
+
+                    <button
+                        class="analyze-button"
+                        type="button"
+                        [disabled]="loading"
+                        (click)="analyze()"
+                    >
+
+                        @if (loading) {
+
+                            <span
+                                class="loading-spinner"
+                                aria-hidden="true"
+                            ></span>
+
+                            Analyse...
+
+                        } @else {
+
+                            <span
+                                class="button-icon"
+                                aria-hidden="true"
+                            >
+                                ⚡
+                            </span>
+
+                            Analyser
+
+                        }
+
+                    </button>
+
+                </div>
+
+
+                @if (fenError) {
+
+                    <p class="error">
+                        {{ fenError }}
+                    </p>
+
+                }
+
+
+                <!-- # Métadonnées -->
+
+                <div class="position-meta">
+
+                    @if (
+                        analysis?.opening;
+                        as opening
+                    ) {
+
+                        <span class="meta-chip">
+
+                            <span class="meta-dot theory-dot"></span>
+
+                            {{ opening.opening.name }}
+
+                        </span>
+
+
+                        <span class="meta-chip">
+
+                            ECO
+
+                            {{ opening.opening.eco }}
+
+                        </span>
+
+                    }
+
+
+                    @if (analysis?.evaluation) {
+
+                        <span class="meta-chip">
+
+                            <span class="meta-dot engine-dot"></span>
+
+                            Stockfish analysé
+
+                        </span>
+
+                    }
+
+                </div>
+
+            </div>
+
+
+            <!-- # Actions -->
+
+            <div class="analysis-actions">
+
+                <button
+                    class="reset-button"
+                    type="button"
+                    [disabled]="loading"
+                    (click)="reset()"
+                >
+                    Réinitialiser la position
+                </button>
+
+            </div>
+
+
+            <!-- # Erreur -->
+
+            @if (analysisError) {
+
+                <p class="error analysis-error">
+                    {{ analysisError }}
+                </p>
+
+            }
+
+        </section>
+
+
+        <!-- # Résultats -->
+
+        <aside class="result-column">
+
+
+            <!-- # Analyse IA -->
+
+            <section class="panel result-panel">
+
+                <div class="panel-heading">
+
+                    <div>
+
+                        <span class="panel-eyebrow">
+                            Synthèse
+                        </span>
+
+                        <h2>
+                            Analyse IA
+                        </h2>
+
+                    </div>
+
+                    <span
+                        class="panel-icon ai-icon"
+                        aria-hidden="true"
+                    >
+                        ✦
+                    </span>
+
+                </div>
+
+
+                @if (
+                    analysis?.explanation;
+                    as explanation
+                ) {
+
+                    <article class="llm-result">
+                        {{ explanation }}
+                    </article>
+
+                } @else {
+
+                    <div class="llm-result empty-result">
+
+                        <span
+                            class="empty-result-icon"
+                            aria-hidden="true"
+                        >
+                            ✦
+                        </span>
+
+                        <p>
+                            L'analyse pédagogique apparaîtra ici
+                            après l'analyse de la position.
+                        </p>
+
+                    </div>
+
+                }
+
+
+                <!-- # Wikichess -->
+
+                @if (
+                    wikichessDocument;
+                    as document
+                ) {
+
+                    <a
+                        class="document-link"
+                        [href]="document.metadata.url"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                    >
+
+                        <span
+                            class="document-icon"
+                            aria-hidden="true"
+                        >
+                            ↗
+                        </span>
+
+                        Voir {{ document.title }} sur Wikichess
+
+                    </a>
+
+                }
+
+            </section>
+
+
+            <!-- # Vidéos -->
+
+            <section class="panel videos-panel">
+
+                <div class="panel-heading">
+
+                    <div>
+
+                        <span class="panel-eyebrow">
+                            Ressources
+                        </span>
+
+                        <h2>
+                            Vidéos
+                        </h2>
+
+                    </div>
+
+
+                    @if (
+                        analysis?.videos;
+                        as videos
+                    ) {
+
+                        @if (videos.length > 0) {
+
+                            <span class="videos-count">
+                                {{ videos.length }}
+                            </span>
+
+                        }
+
+                    }
+
+
+                    <span
+                        class="panel-icon video-icon"
+                        aria-hidden="true"
+                    >
+                        ▶
+                    </span>
+
+                </div>
+
+
+                @if (
+                    analysis?.videos;
+                    as videos
+                ) {
+
+                    @if (
+                        videos.length > 0
+                    ) {
+
+                        <div class="videos-scroll">
+
+                            @for (
+                                video
+                                of videos;
+                                track video.id
+                            ) {
+
+                                <button
+                                    class="video-card"
+                                    type="button"
+                                    (click)="openVideo(video)"
+                                    [attr.aria-label]="
+                                        'Lire la vidéo '
+                                        + video.title
+                                    "
+                                >
+
+
+                                    <!-- # Miniature -->
+
+                                    <div class="video-media">
+
+                                        @if (
+                                            video.thumbnail_url
+                                        ) {
+
+                                            <img
+                                                [src]="video.thumbnail_url"
+                                                [alt]="video.title"
+                                                loading="lazy"
+                                            >
+
+                                        } @else {
+
+                                            <div class="video-placeholder">
+
+                                                <span aria-hidden="true">
+                                                    ▶
+                                                </span>
+
+                                                Vidéo
+
+                                            </div>
+
+                                        }
+
+
+                                        <!-- # Lecture -->
+
+                                        <span
+                                            class="video-play"
+                                            aria-hidden="true"
+                                        >
+                                            ▶
+                                        </span>
+
+
+                                        <!-- # Durée -->
+
+                                        @if (
+                                            video.duration_seconds !== null
+                                        ) {
+
+                                            <span class="video-duration">
+
+                                                {{
+                                                    formatVideoDuration(
+                                                        video.duration_seconds
+                                                    )
+                                                }}
+
+                                            </span>
+
+                                        }
+
+                                    </div>
+
+
+                                    <!-- # Informations -->
+
+                                    <div class="video-info">
+
+
+                                        <!-- # Titre -->
+
+                                        <strong
+                                            class="video-title"
+                                            [title]="video.title"
+                                        >
+                                            {{ video.title }}
+                                        </strong>
+
+
+                                        <!-- # Chaîne -->
+
+                                        <span
+                                            class="video-channel"
+                                            [title]="video.channel.name"
+                                        >
+                                            {{ video.channel.name }}
+                                        </span>
+
+
+                                        <!-- # Métadonnées -->
+
+                                        <div class="video-meta">
+
+
+                                            @if (
+                                                video.view_count !== null
+                                            ) {
+
+                                                <span
+                                                    class="video-meta-item"
+                                                    [title]="
+                                                        (
+                                                            video.view_count
+                                                            | number
+                                                        )
+                                                        + ' vues'
+                                                    "
+                                                >
+
+                                                    <span aria-hidden="true">
+                                                        ◉
+                                                    </span>
+
+                                                    {{
+                                                        formatCompactNumber(
+                                                            video.view_count
+                                                        )
+                                                    }}
+
+                                                </span>
+
+                                            }
+
+
+                                            @if (
+                                                video.like_count !== null
+                                            ) {
+
+                                                <span
+                                                    class="video-meta-item"
+                                                    [title]="
+                                                        (
+                                                            video.like_count
+                                                            | number
+                                                        )
+                                                        + ' mentions J’aime'
+                                                    "
+                                                >
+
+                                                    <span aria-hidden="true">
+                                                        ♡
+                                                    </span>
+
+                                                    {{
+                                                        formatCompactNumber(
+                                                            video.like_count
+                                                        )
+                                                    }}
+
+                                                </span>
+
+                                            }
+
+                                        </div>
+
+                                    </div>
+
+                                </button>
+
+                            }
+
+                        </div>
+
+
+                        <!-- # Indication -->
+
+                        <div class="videos-footer">
+
+                            <span>
+                                Cliquez sur une vidéo pour la lire
+                            </span>
+
+                            <span aria-hidden="true">
+                                ▶
+                            </span>
+
+                        </div>
+
+                    } @else {
+
+                        <div class="empty-state compact-empty">
+
+                            <span
+                                class="empty-icon"
+                                aria-hidden="true"
+                            >
+                                ▶
+                            </span>
+
+                            <p>
+                                Aucune vidéo pédagogique trouvée
+                                pour cette position.
+                            </p>
+
+                        </div>
+
+                    }
+
+                } @else {
+
+                    <div class="empty-state compact-empty">
+
+                        <span
+                            class="empty-icon"
+                            aria-hidden="true"
+                        >
+                            ▶
+                        </span>
+
+                        <p>
+                            Les ressources vidéo apparaîtront
+                            après l'analyse.
+                        </p>
+
+                    </div>
+
+                }
+
+            </section>
+
+
+            <!-- # Sources -->
+
+            <div class="sources-legend">
+
+                <span class="source-item source-chess">
+                    <span class="source-dot"></span>
+                    Échecs
+                </span>
+
+                <span class="source-item source-stockfish">
+                    <span class="source-dot"></span>
+                    Stockfish
+                </span>
+
+                <span class="source-item source-rag">
+                    <span class="source-dot"></span>
+                    RAG
+                </span>
+
+                <span class="source-item source-youtube">
+                    <span class="source-dot"></span>
+                    YouTube
+                </span>
+
+            </div>
+
+        </aside>
+
+    </section>
+
+
+    <!-- # Modale de progression -->
+
+    @if (loading) {
+
+        <div
+            class="analysis-overlay"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="analysis-progress-title"
+        >
+
+            <section class="analysis-modal">
+
+
+                <!-- # En-tête -->
+
+                <div class="analysis-modal-header">
+
+                    <div class="analysis-modal-title">
+
+                        <span
+                            class="loading-spinner modal-spinner"
+                            aria-hidden="true"
+                        ></span>
+
+                        <div>
+
+                            <span class="panel-eyebrow">
+                                Chess Agent
+                            </span>
+
+                            <h2 id="analysis-progress-title">
+                                Analyse en cours
+                            </h2>
+
+                        </div>
+
+                    </div>
+
+
+                    @if (currentService) {
+
+                        <span class="progress-service">
+                            {{ currentService }}
+                        </span>
+
+                    }
+
+                </div>
+
+
+                <!-- # Message courant -->
+
+                <div class="progress-current">
+
+                    <span class="progress-current-message">
+
+                        {{
+                            progressMessage
+                            ?? 'Préparation de l’analyse...'
+                        }}
+
+                    </span>
+
+                </div>
+
+
+                <!-- # Étapes -->
+
+                <div class="progress-steps">
+
+
+                    <!-- # Validation -->
+
+                    <div
+                        class="progress-step"
+                        [class.completed]="
+                            isStepCompleted(
+                                'validate_position'
+                            )
+                        "
+                        [class.running]="
+                            isStepRunning(
+                                'validate_position'
+                            )
+                        "
+                        [class.warning]="
+                            isStepWarning(
+                                'validate_position'
+                            )
+                        "
+                        [class.failed]="
+                            isStepFailed(
+                                'validate_position'
+                            )
+                        "
+                    >
+
+                        <span class="step-marker">
+
+                            @if (
+                                isStepCompleted(
+                                    'validate_position'
+                                )
+                            ) {
+
+                                ✓
+
+                            } @else {
+
+                                1
+
+                            }
+
+                        </span>
+
+                        <div class="step-content">
+
+                            <strong>
+                                Validation de la position
+                            </strong>
+
+                            <span>
+                                Vérification de la position FEN
+                            </span>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- # Théorie -->
+
+                    <div
+                        class="progress-step"
+                        [class.completed]="
+                            isStepCompleted(
+                                'detect_theory'
+                            )
+                        "
+                        [class.running]="
+                            isStepRunning(
+                                'detect_theory'
+                            )
+                        "
+                        [class.warning]="
+                            isStepWarning(
+                                'detect_theory'
+                            )
+                        "
+                        [class.failed]="
+                            isStepFailed(
+                                'detect_theory'
+                            )
+                        "
+                    >
+
+                        <span class="step-marker">
+
+                            @if (
+                                isStepCompleted(
+                                    'detect_theory'
+                                )
+                            ) {
+
+                                ✓
+
+                            } @else {
+
+                                2
+
+                            }
+
+                        </span>
+
+                        <div class="step-content">
+
+                            <strong>
+                                Détection de l'ouverture
+                            </strong>
+
+                            <span>
+                                Recherche théorique Lichess
+                            </span>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- # Stockfish -->
+
+                    <div
+                        class="progress-step"
+                        [class.completed]="
+                            isStepCompleted(
+                                'engine_analysis'
+                            )
+                        "
+                        [class.running]="
+                            isStepRunning(
+                                'engine_analysis'
+                            )
+                        "
+                        [class.warning]="
+                            isStepWarning(
+                                'engine_analysis'
+                            )
+                        "
+                        [class.failed]="
+                            isStepFailed(
+                                'engine_analysis'
+                            )
+                        "
+                    >
+
+                        <span class="step-marker">
+
+                            @if (
+                                isStepCompleted(
+                                    'engine_analysis'
+                                )
+                            ) {
+
+                                ✓
+
+                            } @else {
+
+                                3
+
+                            }
+
+                        </span>
+
+                        <div class="step-content">
+
+                            <strong>
+                                Analyse Stockfish
+                            </strong>
+
+                            <span>
+                                Évaluation de la position
+                            </span>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- # Position hors théorie -->
+
+                    @if (
+                        currentStep
+                            === 'unknown_position_analysis'
+                        || isStepCompleted(
+                            'unknown_position_analysis'
+                        )
+                    ) {
+
+                        <div
+                            class="progress-step"
+                            [class.completed]="
+                                isStepCompleted(
+                                    'unknown_position_analysis'
+                                )
+                            "
+                            [class.running]="
+                                isStepRunning(
+                                    'unknown_position_analysis'
+                                )
+                            "
+                            [class.warning]="
+                                isStepWarning(
+                                    'unknown_position_analysis'
+                                )
+                            "
+                            [class.failed]="
+                                isStepFailed(
+                                    'unknown_position_analysis'
+                                )
+                            "
+                        >
+
+                            <span class="step-marker">
+
+                                @if (
+                                    isStepCompleted(
+                                        'unknown_position_analysis'
+                                    )
+                                ) {
+
+                                    ✓
+
+                                } @else {
+
+                                    •
+
+                                }
+
+                            </span>
+
+                            <div class="step-content">
+
+                                <strong>
+                                    Position hors théorie
+                                </strong>
+
+                                <span>
+                                    Préparation de l'analyse pédagogique
+                                </span>
+
+                            </div>
+
+                        </div>
+
+                    }
+
+
+                    <!-- # Documents -->
+
+                    <div
+                        class="progress-step"
+                        [class.completed]="
+                            isStepCompleted(
+                                'retrieve_context'
+                            )
+                        "
+                        [class.running]="
+                            isStepRunning(
+                                'retrieve_context'
+                            )
+                        "
+                        [class.warning]="
+                            isStepWarning(
+                                'retrieve_context'
+                            )
+                        "
+                        [class.failed]="
+                            isStepFailed(
+                                'retrieve_context'
+                            )
+                        "
+                    >
+
+                        <span class="step-marker">
+
+                            @if (
+                                isStepCompleted(
+                                    'retrieve_context'
+                                )
+                            ) {
+
+                                ✓
+
+                            } @else {
+
+                                4
+
+                            }
+
+                        </span>
+
+                        <div class="step-content">
+
+                            <strong>
+                                Recherche documentaire
+                            </strong>
+
+                            <span>
+                                Recherche dans Wikichess
+                            </span>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- # Vidéos -->
+
+                    <div
+                        class="progress-step"
+                        [class.completed]="
+                            isStepCompleted(
+                                'retrieve_videos'
+                            )
+                        "
+                        [class.running]="
+                            isStepRunning(
+                                'retrieve_videos'
+                            )
+                        "
+                        [class.warning]="
+                            isStepWarning(
+                                'retrieve_videos'
+                            )
+                        "
+                        [class.failed]="
+                            isStepFailed(
+                                'retrieve_videos'
+                            )
+                        "
+                    >
+
+                        <span class="step-marker">
+
+                            @if (
+                                isStepCompleted(
+                                    'retrieve_videos'
+                                )
+                            ) {
+
+                                ✓
+
+                            } @else {
+
+                                5
+
+                            }
+
+                        </span>
+
+                        <div class="step-content">
+
+                            <strong>
+                                Recherche des vidéos
+                            </strong>
+
+                            <span>
+                                Sélection des ressources YouTube
+                            </span>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- # Génération -->
+
+                    <div
+                        class="progress-step"
+                        [class.completed]="
+                            isStepCompleted(
+                                'generate_response'
+                            )
+                        "
+                        [class.running]="
+                            isStepRunning(
+                                'generate_response'
+                            )
+                        "
+                        [class.warning]="
+                            isStepWarning(
+                                'generate_response'
+                            )
+                        "
+                        [class.failed]="
+                            isStepFailed(
+                                'generate_response'
+                            )
+                        "
+                    >
+
+                        <span class="step-marker">
+
+                            @if (
+                                isStepCompleted(
+                                    'generate_response'
+                                )
+                            ) {
+
+                                ✓
+
+                            } @else {
+
+                                6
+
+                            }
+
+                        </span>
+
+                        <div class="step-content">
+
+                            <strong>
+                                Génération de la réponse
+                            </strong>
+
+                            <span>
+                                Construction de l'analyse pédagogique
+                            </span>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- # Sauvegarde -->
+
+                    <div
+                        class="progress-step"
+                        [class.completed]="
+                            isStepCompleted(
+                                'save_analysis'
+                            )
+                        "
+                        [class.running]="
+                            isStepRunning(
+                                'save_analysis'
+                            )
+                        "
+                        [class.warning]="
+                            isStepWarning(
+                                'save_analysis'
+                            )
+                        "
+                        [class.failed]="
+                            isStepFailed(
+                                'save_analysis'
+                            )
+                        "
+                    >
+
+                        <span class="step-marker">
+
+                            @if (
+                                isStepCompleted(
+                                    'save_analysis'
+                                )
+                            ) {
+
+                                ✓
+
+                            } @else {
+
+                                7
+
+                            }
+
+                        </span>
+
+                        <div class="step-content">
+
+                            <strong>
+                                Sauvegarde
+                            </strong>
+
+                            <span>
+                                Enregistrement de l'analyse
+                            </span>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+        </div>
+
+    }
+
+
+    <!-- # Lecteur vidéo -->
+
+    @if (
+        selectedVideo
+        && selectedVideoEmbedUrl
+    ) {
+
+        <div
+            class="video-overlay"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="video-player-title"
+            (click)="closeVideo()"
+        >
+
+            <section
+                class="video-modal"
+                (click)="$event.stopPropagation()"
+            >
+
+
+                <!-- # En-tête vidéo -->
+
+                <div class="video-modal-header">
+
+                    <div class="video-modal-title">
+
+                        <span class="panel-eyebrow">
+                            Ressource pédagogique
+                        </span>
+
+                        <h2 id="video-player-title">
+                            {{ selectedVideo.title }}
+                        </h2>
+
+                        <span class="video-modal-channel">
+                            {{ selectedVideo.channel.name }}
+                        </span>
+
+                    </div>
+
+
+                    <button
+                        class="video-close-button"
+                        type="button"
+                        aria-label="Fermer la vidéo"
+                        (click)="closeVideo()"
+                    >
+                        ×
+                    </button>
+
+                </div>
+
+
+                <!-- # Lecteur YouTube -->
+
+                <div class="video-player">
+
+                    <iframe
+                        [src]="selectedVideoEmbedUrl"
+                        [title]="selectedVideo.title"
+                        allow="
+                            accelerometer;
+                            autoplay;
+                            clipboard-write;
+                            encrypted-media;
+                            gyroscope;
+                            picture-in-picture;
+                            web-share
+                        "
+                        referrerpolicy="strict-origin-when-cross-origin"
+                        allowfullscreen
+                    >
+                    </iframe>
+
+                </div>
+
+
+                <!-- # Métadonnées vidéo -->
+
+                <div class="video-modal-footer">
+
+                    <div class="video-modal-meta">
+
+
+                        @if (
+                            selectedVideo.duration_seconds !== null
+                        ) {
+
+                            <span>
+
+                                Durée
+
+                                <strong>
+                                    {{
+                                        formatVideoDuration(
+                                            selectedVideo.duration_seconds
+                                        )
+                                    }}
+                                </strong>
+
+                            </span>
+
+                        }
+
+
+                        @if (
+                            selectedVideo.view_count !== null
+                        ) {
+
+                            <span>
+
+                                Vues
+
+                                <strong>
+                                    {{
+                                        selectedVideo.view_count
+                                        | number
+                                    }}
+                                </strong>
+
+                            </span>
+
+                        }
+
+
+                        @if (
+                            selectedVideo.like_count !== null
+                        ) {
+
+                            <span>
+
+                                J'aime
+
+                                <strong>
+                                    {{
+                                        selectedVideo.like_count
+                                        | number
+                                    }}
+                                </strong>
+
+                            </span>
+
+                        }
+
+
+                        @if (
+                            selectedVideo.comment_count !== null
+                        ) {
+
+                            <span>
+
+                                Commentaires
+
+                                <strong>
+                                    {{
+                                        selectedVideo.comment_count
+                                        | number
+                                    }}
+                                </strong>
+
+                            </span>
+
+                        }
+
+                    </div>
+
+
+                    <!-- # Lien YouTube -->
+
+                    <a
+                        class="video-youtube-link"
+                        [href]="selectedVideo.url"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                    >
+
+                        Ouvrir sur YouTube
+
+                        <span aria-hidden="true">
+                            ↗
+                        </span>
+
+                    </a>
+
+                </div>
+
+            </section>
+
+        </div>
+
+    }
+
+</main>

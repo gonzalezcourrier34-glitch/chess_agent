@@ -1,0 +1,56 @@
+{
+  "slug": "modern-defense",
+  "title": "Défense moderne",
+  "wikichess_title": "Robatsch (Modern) defense",
+  "eco": "B06",
+  "moves": [
+    "e4",
+    "g6"
+  ],
+  "position_after": "g6",
+  "source_url": "https://ficgs.com/wikichess_891.html",
+  "language": "en",
+  "retrieved_at": "2026-08-17T13:13:36.079969+00:00",
+  "contributors": [
+    "Dirk Jan Van Dijl"
+  ],
+  "content": "",
+  "next_moves": [
+    {
+      "move": "f4",
+      "source_url": "https://ficgs.com/wikichess_104325.html"
+    },
+    {
+      "move": "h4",
+      "source_url": "https://ficgs.com/wikichess_104327.html"
+    },
+    {
+      "move": "c3",
+      "source_url": "https://ficgs.com/wikichess_58450.html"
+    },
+    {
+      "move": "d3",
+      "source_url": "https://ficgs.com/wikichess_230993.html"
+    },
+    {
+      "move": "Bc4",
+      "source_url": "https://ficgs.com/wikichess_70335.html"
+    },
+    {
+      "move": "d4",
+      "source_url": "https://ficgs.com/wikichess_892.html"
+    },
+    {
+      "move": "a4",
+      "source_url": "https://ficgs.com/wikichess_76706.html"
+    },
+    {
+      "move": "Nf3",
+      "source_url": "https://ficgs.com/wikichess_10518.html"
+    },
+    {
+      "move": "Nc3",
+      "source_url": "https://ficgs.com/wikichess_17179.html"
+    }
+  ]
+}

@@ -1,0 +1,89 @@
+{
+  "slug": "kings-gambit",
+  "title": "Gambit du roi",
+  "wikichess_title": "King's gambit",
+  "eco": "C30",
+  "moves": [
+    "e4",
+    "e5",
+    "f4"
+  ],
+  "position_after": "f4",
+  "source_url": "https://ficgs.com/wikichess_10.html",
+  "language": "en",
+  "retrieved_at": "2026-08-17T13:14:02.703893+00:00",
+  "contributors": [
+    "Thibault de Vassal"
+  ],
+  "content": "King's gambit was the most popular opening in the 19th century. White offers a pawn to divert Black's e-pawn and build a full center with d2-d4. In order to hold the extra pawn, Black will have to spend time weakening his kingside with moves like g7-g5. It is now rarely seen at the master level, it being generally thought that Black can obtain a reasonable position either by giving back the gambitted pawn at a later time or holding on to it and consolidating defensively.\nBlack must decide whether or not to accept the gambit. Since White cannot easily regain the pawn if Black accepts, the King's Gambit Accepted is the most common.\nAccording to Chessbase and correspondence chess statistics, white chances are about 54%",
+  "next_moves": [
+    {
+      "move": "exf4",
+      "source_url": "https://ficgs.com/wikichess_20.html"
+    },
+    {
+      "move": "Bc5",
+      "source_url": "https://ficgs.com/wikichess_362.html"
+    },
+    {
+      "move": "Nf6",
+      "source_url": "https://ficgs.com/wikichess_3866.html"
+    },
+    {
+      "move": "Qh4",
+      "source_url": "https://ficgs.com/wikichess_7814.html"
+    },
+    {
+      "move": "Ne7",
+      "source_url": "https://ficgs.com/wikichess_177648.html"
+    },
+    {
+      "move": "d5",
+      "source_url": "https://ficgs.com/wikichess_19.html"
+    },
+    {
+      "move": "d6",
+      "source_url": "https://ficgs.com/wikichess_363.html"
+    },
+    {
+      "move": "Be7",
+      "source_url": "https://ficgs.com/wikichess_171133.html"
+    },
+    {
+      "move": "c5",
+      "source_url": "https://ficgs.com/wikichess_3865.html"
+    },
+    {
+      "move": "Qf6",
+      "source_url": "https://ficgs.com/wikichess_3867.html"
+    },
+    {
+      "move": "f5",
+      "source_url": "https://ficgs.com/wikichess_153548.html"
+    },
+    {
+      "move": "Bd6",
+      "source_url": "https://ficgs.com/wikichess_149690.html"
+    },
+    {
+      "move": "Qe7",
+      "source_url": "https://ficgs.com/wikichess_86836.html"
+    },
+    {
+      "move": "h5",
+      "source_url": "https://ficgs.com/wikichess_167326.html"
+    },
+    {
+      "move": "f6",
+      "source_url": "https://ficgs.com/wikichess_7989.html"
+    },
+    {
+      "move": "a6",
+      "source_url": "https://ficgs.com/wikichess_31393.html"
+    },
+    {
+      "move": "Nc6",
+      "source_url": "https://ficgs.com/wikichess_5942.html"
+    }
+  ]
+}

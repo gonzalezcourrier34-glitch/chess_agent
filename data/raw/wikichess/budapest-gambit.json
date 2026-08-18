@@ -1,0 +1,38 @@
+{
+  "slug": "budapest-gambit",
+  "title": "Gambit de Budapest",
+  "wikichess_title": "Budapest defense declined",
+  "eco": "A51",
+  "moves": [
+    "d4",
+    "Nf6",
+    "c4",
+    "e5"
+  ],
+  "position_after": "e5",
+  "source_url": "https://ficgs.com/wikichess_525.html",
+  "language": "en",
+  "retrieved_at": "2026-08-17T13:17:29.555077+00:00",
+  "contributors": [
+    "Roger Weber"
+  ],
+  "content": "",
+  "next_moves": [
+    {
+      "move": "d5",
+      "source_url": "https://ficgs.com/wikichess_74909.html"
+    },
+    {
+      "move": "Nc3",
+      "source_url": "https://ficgs.com/wikichess_77471.html"
+    },
+    {
+      "move": "dxe5",
+      "source_url": "https://ficgs.com/wikichess_526.html"
+    },
+    {
+      "move": "e3",
+      "source_url": "https://ficgs.com/wikichess_55669.html"
+    }
+  ]
+}

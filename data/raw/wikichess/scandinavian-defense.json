@@ -1,0 +1,73 @@
+{
+  "slug": "scandinavian-defense",
+  "title": "Défense scandinave",
+  "wikichess_title": "Scandinavian (centre counter) defense",
+  "eco": "B01",
+  "moves": [
+    "e4",
+    "d5"
+  ],
+  "position_after": "d5",
+  "source_url": "https://ficgs.com/wikichess_502.html",
+  "language": "en",
+  "retrieved_at": "2026-08-17T13:13:11.096954+00:00",
+  "contributors": [
+    "Adam Domurad",
+    "Sandor Porkolab"
+  ],
+  "content": "One of the oldest recorded openings, first recorded as being played between Francesco di Castellvi and Narciso Vinyoles in Valencia in 1475, and being mentioned by Lucena in 1497. It and the French Defense are the oldest asymmetric defenses to 1.e4.\nIt is a playable, underrated defence that can lead to equality for black. White almost always takes the pawn. Other alternatives are 2. Nc3!?, leading to the Dunst opening, 2. d4!?, leading to the Blackmar-Deimer gambit, and 2. e5?!, leading to unique positions where black can easily equalise. After 2. exd5, there are two very different ways of playing the defence, 2...Nf6 and 2...Qxd5.\n1.e4 d5 2.e5!? is also an option - going to French/CaroCann Lines - preventing the skandinawian...",
+  "next_moves": [
+    {
+      "move": "Nf3",
+      "source_url": "https://ficgs.com/wikichess_48418.html"
+    },
+    {
+      "move": "d4",
+      "source_url": "https://ficgs.com/wikichess_4169.html"
+    },
+    {
+      "move": "Qg4",
+      "source_url": "https://ficgs.com/wikichess_96413.html"
+    },
+    {
+      "move": "g4",
+      "source_url": "https://ficgs.com/wikichess_133678.html"
+    },
+    {
+      "move": "d3",
+      "source_url": "https://ficgs.com/wikichess_60789.html"
+    },
+    {
+      "move": "Nc3",
+      "source_url": "https://ficgs.com/wikichess_58074.html"
+    },
+    {
+      "move": "exd5",
+      "source_url": "https://ficgs.com/wikichess_503.html"
+    },
+    {
+      "move": "c3",
+      "source_url": "https://ficgs.com/wikichess_222404.html"
+    },
+    {
+      "move": "Qf3",
+      "source_url": "https://ficgs.com/wikichess_126051.html"
+    },
+    {
+      "move": "Qh5",
+      "source_url": "https://ficgs.com/wikichess_120713.html"
+    },
+    {
+      "move": "Bd3",
+      "source_url": "https://ficgs.com/wikichess_143455.html"
+    },
+    {
+      "move": "e5",
+      "source_url": "https://ficgs.com/wikichess_46756.html"
+    },
+    {
+      "move": "Qe2",
+      "source_url": "https://ficgs.com/wikichess_11916.html"
+    }
+  ]
+}

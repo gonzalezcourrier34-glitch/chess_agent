@@ -1,0 +1,72 @@
+{
+  "slug": "four-knights-game",
+  "title": "Partie des quatre cavaliers",
+  "wikichess_title": "Four knights game",
+  "eco": "C46",
+  "moves": [
+    "e4",
+    "e5",
+    "Nf3",
+    "Nc6",
+    "Nc3",
+    "Nf6"
+  ],
+  "position_after": "Nf6",
+  "source_url": "https://ficgs.com/wikichess_1382.html",
+  "language": "en",
+  "retrieved_at": "2026-08-17T13:14:20.514312+00:00",
+  "contributors": [
+    "Dirk Jan Van Dijl"
+  ],
+  "content": "",
+  "next_moves": [
+    {
+      "move": "g3",
+      "source_url": "https://ficgs.com/wikichess_28559.html"
+    },
+    {
+      "move": "h3",
+      "source_url": "https://ficgs.com/wikichess_96603.html"
+    },
+    {
+      "move": "a3",
+      "source_url": "https://ficgs.com/wikichess_38980.html"
+    },
+    {
+      "move": "d4",
+      "source_url": "https://ficgs.com/wikichess_15791.html"
+    },
+    {
+      "move": "Bd3",
+      "source_url": "https://ficgs.com/wikichess_208071.html"
+    },
+    {
+      "move": "d3",
+      "source_url": "https://ficgs.com/wikichess_10685.html"
+    },
+    {
+      "move": "Be2",
+      "source_url": "https://ficgs.com/wikichess_16831.html"
+    },
+    {
+      "move": "b3",
+      "source_url": "https://ficgs.com/wikichess_67699.html"
+    },
+    {
+      "move": "Bc4",
+      "source_url": "https://ficgs.com/wikichess_8937.html"
+    },
+    {
+      "move": "Bb5",
+      "source_url": "https://ficgs.com/wikichess_1383.html"
+    },
+    {
+      "move": "Nxe5",
+      "source_url": "https://ficgs.com/wikichess_8071.html"
+    },
+    {
+      "move": "Nd5",
+      "source_url": "https://ficgs.com/wikichess_67465.html"
+    }
+  ]
+}

@@ -1,0 +1,42 @@
+{
+  "slug": "albin-countergambit",
+  "title": "Contre-gambit Albin",
+  "wikichess_title": "QGD",
+  "eco": "D08",
+  "moves": [
+    "d4",
+    "d5",
+    "c4",
+    "e5"
+  ],
+  "position_after": "e5",
+  "source_url": "https://ficgs.com/wikichess_1896.html",
+  "language": "en",
+  "retrieved_at": "2026-08-17T13:17:01.484510+00:00",
+  "contributors": [
+    "Ron Keyston"
+  ],
+  "content": "The Albin Countergambit",
+  "next_moves": [
+    {
+      "move": "cxd5",
+      "source_url": "https://ficgs.com/wikichess_74023.html"
+    },
+    {
+      "move": "dxe5",
+      "source_url": "https://ficgs.com/wikichess_1897.html"
+    },
+    {
+      "move": "a3",
+      "source_url": "https://ficgs.com/wikichess_104509.html"
+    },
+    {
+      "move": "Nc3",
+      "source_url": "https://ficgs.com/wikichess_70349.html"
+    },
+    {
+      "move": "e3",
+      "source_url": "https://ficgs.com/wikichess_32032.html"
+    }
+  ]
+}

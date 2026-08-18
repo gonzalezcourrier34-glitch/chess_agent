@@ -1,0 +1,73 @@
+{
+  "slug": "nimzowitsch-larsen-attack",
+  "title": "Attaque Nimzowitsch-Larsen",
+  "wikichess_title": "Nimzovich-Larsen attack",
+  "eco": "A01",
+  "moves": [
+    "b3"
+  ],
+  "position_after": "b3",
+  "source_url": "https://ficgs.com/wikichess_1857.html",
+  "language": "en",
+  "retrieved_at": "2026-08-17T13:17:17.065784+00:00",
+  "contributors": [
+    "Ulrich Imbeck",
+    "Gregory Kohut",
+    "Carlos Oliveira"
+  ],
+  "content": "The Larsen-Opening",
+  "next_moves": [
+    {
+      "move": "d6",
+      "source_url": "https://ficgs.com/wikichess_23742.html"
+    },
+    {
+      "move": "b5",
+      "source_url": "https://ficgs.com/wikichess_261741.html"
+    },
+    {
+      "move": "f5",
+      "source_url": "https://ficgs.com/wikichess_228925.html"
+    },
+    {
+      "move": "a5",
+      "source_url": "https://ficgs.com/wikichess_230561.html"
+    },
+    {
+      "move": "a6",
+      "source_url": "https://ficgs.com/wikichess_125927.html"
+    },
+    {
+      "move": "e6",
+      "source_url": "https://ficgs.com/wikichess_52976.html"
+    },
+    {
+      "move": "c5",
+      "source_url": "https://ficgs.com/wikichess_52802.html"
+    },
+    {
+      "move": "b6",
+      "source_url": "https://ficgs.com/wikichess_4461.html"
+    },
+    {
+      "move": "Nc6",
+      "source_url": "https://ficgs.com/wikichess_15998.html"
+    },
+    {
+      "move": "e5",
+      "source_url": "https://ficgs.com/wikichess_1858.html"
+    },
+    {
+      "move": "d5",
+      "source_url": "https://ficgs.com/wikichess_1859.html"
+    },
+    {
+      "move": "g6",
+      "source_url": "https://ficgs.com/wikichess_2031.html"
+    },
+    {
+      "move": "Nf6",
+      "source_url": "https://ficgs.com/wikichess_11919.html"
+    }
+  ]
+}

@@ -1,0 +1,36 @@
+{
+  "slug": "bogo-indian-defense",
+  "title": "Défense Bogo-indienne",
+  "wikichess_title": "Bogo-Indian defense",
+  "eco": "E11",
+  "moves": [
+    "d4",
+    "Nf6",
+    "c4",
+    "e6",
+    "Nf3",
+    "Bb4+"
+  ],
+  "position_after": "Bb4+",
+  "source_url": "https://ficgs.com/wikichess_43.html",
+  "language": "en",
+  "retrieved_at": "2026-08-17T13:15:41.508173+00:00",
+  "contributors": [
+    "Thibault de Vassal"
+  ],
+  "content": "The Bogo-Indian Defence, named after Efim Bogoljubov, is not so popular as the Queen's Indian, but is occasionally seen at all levels.\nAccording to Chessbase, black chances are about 41%",
+  "next_moves": [
+    {
+      "move": "Bd2",
+      "source_url": "https://ficgs.com/wikichess_6075.html"
+    },
+    {
+      "move": "Nbd2",
+      "source_url": "https://ficgs.com/wikichess_10030.html"
+    },
+    {
+      "move": "Nc3",
+      "source_url": "https://ficgs.com/wikichess_8938.html"
+    }
+  ]
+}

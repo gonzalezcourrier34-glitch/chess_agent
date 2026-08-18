@@ -1,0 +1,56 @@
+{
+  "slug": "ponziani-opening",
+  "title": "Ouverture Ponziani",
+  "wikichess_title": "Ponziani Opening",
+  "eco": "C44",
+  "moves": [
+    "e4",
+    "e5",
+    "Nf3",
+    "Nc6",
+    "c3"
+  ],
+  "position_after": "c3",
+  "source_url": "https://ficgs.com/wikichess_1315.html",
+  "language": "en",
+  "retrieved_at": "2026-08-17T13:14:48.488284+00:00",
+  "contributors": [
+    "Dirk Jan Van Dijl",
+    "Kieran Child"
+  ],
+  "content": "The ponziani opening.\nAims to grasp d4 early on, but is this possibly a premature aim?",
+  "next_moves": [
+    {
+      "move": "a6",
+      "source_url": "https://ficgs.com/wikichess_96156.html"
+    },
+    {
+      "move": "Be7",
+      "source_url": "https://ficgs.com/wikichess_217132.html"
+    },
+    {
+      "move": "d5",
+      "source_url": "https://ficgs.com/wikichess_1341.html"
+    },
+    {
+      "move": "Nf6",
+      "source_url": "https://ficgs.com/wikichess_1316.html"
+    },
+    {
+      "move": "f5",
+      "source_url": "https://ficgs.com/wikichess_6798.html"
+    },
+    {
+      "move": "Bc5",
+      "source_url": "https://ficgs.com/wikichess_69651.html"
+    },
+    {
+      "move": "h6",
+      "source_url": "https://ficgs.com/wikichess_72658.html"
+    },
+    {
+      "move": "d6",
+      "source_url": "https://ficgs.com/wikichess_17227.html"
+    }
+  ]
+}

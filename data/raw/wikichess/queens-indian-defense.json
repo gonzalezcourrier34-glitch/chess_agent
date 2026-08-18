@@ -1,0 +1,48 @@
+{
+  "slug": "queens-indian-defense",
+  "title": "Défense ouest-indienne",
+  "wikichess_title": "Queen's Indian defense",
+  "eco": "E12",
+  "moves": [
+    "d4",
+    "Nf6",
+    "c4",
+    "e6",
+    "Nf3",
+    "b6"
+  ],
+  "position_after": "b6",
+  "source_url": "https://ficgs.com/wikichess_41.html",
+  "language": "en",
+  "retrieved_at": "2026-08-17T13:15:32.415281+00:00",
+  "contributors": [
+    "Thibault de Vassal"
+  ],
+  "content": "Since White's third move 3.Nf3, a move commonly played to avoid the Nimzo-Indian Defence, does not threaten to occupy the centre with 4.e4, Black has the option of playing 3...b6, called Queen's Indian Defense.\nThe play in the Queen's Indian is similar to that of the Nimzo-Indian. The opening is considered a hypermodern one, since Black does not strive to occupy the centre with his pawns immediately. Instead he intends to fianchetto his queen's bishop and put pressure on the e4-square in order to prevent White from occupying that square. With the White centre restrained Black intends to attack it. As in most other hypermodern openings, White will attempt to solidify his centre, prove that it is strong, not weak, and use his advantage in space to crush Black.",
+  "next_moves": [
+    {
+      "move": "Bf4",
+      "source_url": "https://ficgs.com/wikichess_117375.html"
+    },
+    {
+      "move": "Bg5",
+      "source_url": "https://ficgs.com/wikichess_10029.html"
+    },
+    {
+      "move": "g3",
+      "source_url": "https://ficgs.com/wikichess_519.html"
+    },
+    {
+      "move": "a3",
+      "source_url": "https://ficgs.com/wikichess_6721.html"
+    },
+    {
+      "move": "Nc3",
+      "source_url": "https://ficgs.com/wikichess_6722.html"
+    },
+    {
+      "move": "e3",
+      "source_url": "https://ficgs.com/wikichess_6723.html"
+    }
+  ]
+}

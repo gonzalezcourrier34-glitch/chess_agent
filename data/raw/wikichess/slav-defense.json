@@ -1,0 +1,71 @@
+{
+  "slug": "slav-defense",
+  "title": "Défense slave",
+  "wikichess_title": "QGD Slav defense",
+  "eco": "D10",
+  "moves": [
+    "d4",
+    "d5",
+    "c4",
+    "c6"
+  ],
+  "position_after": "c6",
+  "source_url": "https://ficgs.com/wikichess_17.html",
+  "language": "en",
+  "retrieved_at": "2026-08-17T13:16:24.626977+00:00",
+  "contributors": [
+    "Thibault de Vassal",
+    "Sebastien Marez"
+  ],
+  "content": "The Slav is one of the primary defenses to the Queen's Gambit. Although it was analyzed as early as 1590, it wasn't until the 1920s that it started to be explored extensively. Many masters of Slavic descent helped develop the theory of this opening, including Alapin, Alekhine, Bogoljubov, and Vidmar.\nThe Slav received an exhaustive test during the two Alekhine�Euwe World Championship matches in 1935 and 1937. Played by 11 of the first 13 world champions, this defense was particularly favored by Euwe, Botvinnik, and Smyslov. More recently the Slav has been adopted by Anand, Ivanchuk, Lautier, Short, and other top grandmasters. Today the theory of the Slav is very extensive and well developed.\nBlack faces three major problems in many variations of the Queen's Gambit Declined (QGD).\n- Development of the Black queen bishop is difficult, as it is often blocked by ...e6.\n- The pawn structure offers White targets, especially the possibility of a minority attack on the queenside in the Exchange variation of the QGD.\n- White often plays Bg5 to pin the black king knight on f6 against the black queen, and unpinning it is awkward for Black.\nThe Slav addresses all of these problems. Black's queen bishop is unblocked, the pawn structure remains balanced, and the move Bg5 is not yet threatening as the unmoved black pawn on e7 prevents the pin. Also, if Black later takes the gambit pawn with ...dxc4, the support provided by the pawn on c6 allows ...b5 which may threaten to keep the gambit pawn or to drive away a white piece that has captured it, gaining Black a tempo for queenside expansion.\nOn the other side, Black usually won't be able to develop the queen bishop without first giving up the center with ...dxc4, and moving this bishop may leave the Black queenside weak. White will try to dominate the center with e2-e4.\nAccording to Chessbase, Black chances are about 43%",
+  "next_moves": [
+    {
+      "move": "Bg5",
+      "source_url": "https://ficgs.com/wikichess_158162.html"
+    },
+    {
+      "move": "Qc2",
+      "source_url": "https://ficgs.com/wikichess_153098.html"
+    },
+    {
+      "move": "Bf4",
+      "source_url": "https://ficgs.com/wikichess_60257.html"
+    },
+    {
+      "move": "Nf3",
+      "source_url": "https://ficgs.com/wikichess_3206.html"
+    },
+    {
+      "move": "Nd2",
+      "source_url": "https://ficgs.com/wikichess_25391.html"
+    },
+    {
+      "move": "e3",
+      "source_url": "https://ficgs.com/wikichess_17879.html"
+    },
+    {
+      "move": "a3",
+      "source_url": "https://ficgs.com/wikichess_269286.html"
+    },
+    {
+      "move": "g3",
+      "source_url": "https://ficgs.com/wikichess_91594.html"
+    },
+    {
+      "move": "Nc3",
+      "source_url": "https://ficgs.com/wikichess_6871.html"
+    },
+    {
+      "move": "h3",
+      "source_url": "https://ficgs.com/wikichess_118771.html"
+    },
+    {
+      "move": "cxd5",
+      "source_url": "https://ficgs.com/wikichess_8593.html"
+    },
+    {
+      "move": "c5",
+      "source_url": "https://ficgs.com/wikichess_67924.html"
+    }
+  ]
+}

@@ -1,0 +1,15 @@
+sequenceDiagram
+    participant C as Client autorisé
+    participant M as MCP/API
+    participant J as Job store
+    participant V as Worker vidéo
+    participant I as Index
+    C->>M: start_indexing(asset_ref, rights)
+    M->>J: create job_id
+    M-->>C: accepted(job_id)
+    V->>J: claim job
+    V->>V: frames -> board -> pieces -> timeline
+    V->>I: positions + segments + confidence
+    V->>J: completed(metrics)
+    C->>M: get_indexing_status(job_id)
+    M-->>C: completed + summary

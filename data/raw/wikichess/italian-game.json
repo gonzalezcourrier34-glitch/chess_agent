@@ -1,0 +1,91 @@
+{
+  "slug": "italian-game",
+  "title": "Partie italienne",
+  "wikichess_title": "King's pawn game",
+  "eco": "C50",
+  "moves": [
+    "e4",
+    "e5",
+    "Nf3",
+    "Nc6",
+    "Bc4"
+  ],
+  "position_after": "Bc4",
+  "source_url": "https://ficgs.com/wikichess_45.html",
+  "language": "en",
+  "retrieved_at": "2026-08-17T13:12:36.224425+00:00",
+  "contributors": [
+    "Thibault de Vassal"
+  ],
+  "content": "The Italian Game is a chess opening, or more accurately a family of chess openings, characterized by this move.\nThe openings arising from the Italian Game are among the oldest recorded openings and the sequence of moves is known as the �pine Dorsale. The Giuoco Piano (Italian: \"quiet game\") was played by the Portuguese Damiano at the beginning of the 15th century, and the Italian Greco at the beginning of the 16th century. The Italian Game received its name because of Greco's work, while Damiano has the misfortune to have his name attached to the Damiano Defense, 1.e4 e5 2.Nf3 f6?, a line he rightly condemned. The Two Knights Defense was analyzed by Giulio Cesare Polerio (c.1550�c.1610) in 1580.\nAccording to Chessbase, white chances are about 52%",
+  "next_moves": [
+    {
+      "move": "Bc5",
+      "source_url": "https://ficgs.com/wikichess_48.html"
+    },
+    {
+      "move": "Nh6",
+      "source_url": "https://ficgs.com/wikichess_19565.html"
+    },
+    {
+      "move": "f5",
+      "source_url": "https://ficgs.com/wikichess_45904.html"
+    },
+    {
+      "move": "Bb4",
+      "source_url": "https://ficgs.com/wikichess_46669.html"
+    },
+    {
+      "move": "Be7",
+      "source_url": "https://ficgs.com/wikichess_16432.html"
+    },
+    {
+      "move": "h6",
+      "source_url": "https://ficgs.com/wikichess_8043.html"
+    },
+    {
+      "move": "b6",
+      "source_url": "https://ficgs.com/wikichess_48235.html"
+    },
+    {
+      "move": "Nf6",
+      "source_url": "https://ficgs.com/wikichess_296.html"
+    },
+    {
+      "move": "g6",
+      "source_url": "https://ficgs.com/wikichess_198333.html"
+    },
+    {
+      "move": "Qe7",
+      "source_url": "https://ficgs.com/wikichess_166801.html"
+    },
+    {
+      "move": "a6",
+      "source_url": "https://ficgs.com/wikichess_132795.html"
+    },
+    {
+      "move": "Nb4",
+      "source_url": "https://ficgs.com/wikichess_78958.html"
+    },
+    {
+      "move": "f6",
+      "source_url": "https://ficgs.com/wikichess_72741.html"
+    },
+    {
+      "move": "Nd4",
+      "source_url": "https://ficgs.com/wikichess_52978.html"
+    },
+    {
+      "move": "d6",
+      "source_url": "https://ficgs.com/wikichess_30323.html"
+    },
+    {
+      "move": "d5",
+      "source_url": "https://ficgs.com/wikichess_46757.html"
+    },
+    {
+      "move": "Qf6",
+      "source_url": "https://ficgs.com/wikichess_47459.html"
+    }
+  ]
+}

@@ -1,0 +1,116 @@
+{
+  "slug": "sicilian-defense",
+  "title": "Défense sicilienne",
+  "wikichess_title": "Sicilian defense",
+  "eco": "B20",
+  "moves": [
+    "e4",
+    "c5"
+  ],
+  "position_after": "c5",
+  "source_url": "https://ficgs.com/wikichess_3.html",
+  "language": "en",
+  "retrieved_at": "2026-08-17T13:12:48.050612+00:00",
+  "contributors": [
+    "Thibault de Vassal"
+  ],
+  "content": "The Sicilian Defence is a chess opening which begins with 1.e4 c5\nThis is the most popular response to 1.e4 at the master level. Black immediately fights for the centre, but by attacking from the c-file (instead of mirroring White's move) he creates an asymmetrical position that leads to complicated situations. Typically, White has the initiative on the kingside while Black obtains counterplay on the queenside, particularly on the c-file after the exchange of Black's c-pawn for White's d-pawn.\nAccording to Chessbase, black chances are about 43%",
+  "next_moves": [
+    {
+      "move": "Nf3",
+      "source_url": "https://ficgs.com/wikichess_6.html"
+    },
+    {
+      "move": "Nc3",
+      "source_url": "https://ficgs.com/wikichess_7.html"
+    },
+    {
+      "move": "c3",
+      "source_url": "https://ficgs.com/wikichess_79.html"
+    },
+    {
+      "move": "d4",
+      "source_url": "https://ficgs.com/wikichess_80.html"
+    },
+    {
+      "move": "f4",
+      "source_url": "https://ficgs.com/wikichess_153.html"
+    },
+    {
+      "move": "b4",
+      "source_url": "https://ficgs.com/wikichess_154.html"
+    },
+    {
+      "move": "Qh5",
+      "source_url": "https://ficgs.com/wikichess_655.html"
+    },
+    {
+      "move": "h4",
+      "source_url": "https://ficgs.com/wikichess_204080.html"
+    },
+    {
+      "move": "g4",
+      "source_url": "https://ficgs.com/wikichess_138801.html"
+    },
+    {
+      "move": "d3",
+      "source_url": "https://ficgs.com/wikichess_21896.html"
+    },
+    {
+      "move": "c4",
+      "source_url": "https://ficgs.com/wikichess_1638.html"
+    },
+    {
+      "move": "a3",
+      "source_url": "https://ficgs.com/wikichess_14513.html"
+    },
+    {
+      "move": "h3",
+      "source_url": "https://ficgs.com/wikichess_9727.html"
+    },
+    {
+      "move": "Bc4",
+      "source_url": "https://ficgs.com/wikichess_2756.html"
+    },
+    {
+      "move": "a4",
+      "source_url": "https://ficgs.com/wikichess_192804.html"
+    },
+    {
+      "move": "Bb5",
+      "source_url": "https://ficgs.com/wikichess_14429.html"
+    },
+    {
+      "move": "b3",
+      "source_url": "https://ficgs.com/wikichess_2936.html"
+    },
+    {
+      "move": "Ne2",
+      "source_url": "https://ficgs.com/wikichess_8373.html"
+    },
+    {
+      "move": "g3",
+      "source_url": "https://ficgs.com/wikichess_10112.html"
+    },
+    {
+      "move": "e5",
+      "source_url": "https://ficgs.com/wikichess_31765.html"
+    },
+    {
+      "move": "Be2",
+      "source_url": "https://ficgs.com/wikichess_36082.html"
+    },
+    {
+      "move": "Qf3",
+      "source_url": "https://ficgs.com/wikichess_28425.html"
+    },
+    {
+      "move": "Bd3",
+      "source_url": "https://ficgs.com/wikichess_76060.html"
+    },
+    {
+      "move": "Na3",
+      "source_url": "https://ficgs.com/wikichess_16576.html"
+    }
+  ]
+}

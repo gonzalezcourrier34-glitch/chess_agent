@@ -1,0 +1,99 @@
+{
+  "slug": "ruy-lopez",
+  "title": "Partie espagnole",
+  "wikichess_title": "Ruy Lopez (Spanish Opening)",
+  "eco": "C60",
+  "moves": [
+    "e4",
+    "e5",
+    "Nf3",
+    "Nc6",
+    "Bb5"
+  ],
+  "position_after": "Bb5",
+  "source_url": "https://ficgs.com/wikichess_12.html",
+  "language": "en",
+  "retrieved_at": "2026-08-17T13:12:44.365785+00:00",
+  "contributors": [
+    "Thibault de Vassal"
+  ],
+  "content": "The Ruy Lopez, generally called the Spanish Game outside of English speaking countries, is named after the 16th century Spanish priest R�y L�pez de Segura. He made a systematic study of this and other openings in the 150-page book on chess Libro del Ajedrez written in 1561 (which also included some more esoteric and what some would consider unfair suggestions, such as setting up the board so the sun shines in one's opponent's eyes).\nHowever, although it is named after him, this particular opening was known earlier; it is included in the G�ttingen manuscript, which dates from 1490. Popular use of the Ruy Lopez opening did not develop, however, until the mid-1800s when Jaenisch, a Russian theoretician, \"rediscovered\" its potential.\nThe opening is still in active use as the double king's pawn opening most commonly used in master play; it has been adopted by almost all players at some point in their careers and many play it from both the white and black sides.\nAccording to Chessbase, white chances are about 58%",
+  "next_moves": [
+    {
+      "move": "a6",
+      "source_url": "https://ficgs.com/wikichess_297.html"
+    },
+    {
+      "move": "Nf6",
+      "source_url": "https://ficgs.com/wikichess_376.html"
+    },
+    {
+      "move": "g6",
+      "source_url": "https://ficgs.com/wikichess_1856.html"
+    },
+    {
+      "move": "f5",
+      "source_url": "https://ficgs.com/wikichess_1692.html"
+    },
+    {
+      "move": "Nb4",
+      "source_url": "https://ficgs.com/wikichess_128964.html"
+    },
+    {
+      "move": "Bd6",
+      "source_url": "https://ficgs.com/wikichess_12464.html"
+    },
+    {
+      "move": "Be7",
+      "source_url": "https://ficgs.com/wikichess_13307.html"
+    },
+    {
+      "move": "Na5",
+      "source_url": "https://ficgs.com/wikichess_229711.html"
+    },
+    {
+      "move": "Bc5",
+      "source_url": "https://ficgs.com/wikichess_2975.html"
+    },
+    {
+      "move": "Bb4",
+      "source_url": "https://ficgs.com/wikichess_10345.html"
+    },
+    {
+      "move": "h6",
+      "source_url": "https://ficgs.com/wikichess_260685.html"
+    },
+    {
+      "move": "g5",
+      "source_url": "https://ficgs.com/wikichess_145968.html"
+    },
+    {
+      "move": "Nge7",
+      "source_url": "https://ficgs.com/wikichess_9054.html"
+    },
+    {
+      "move": "f6",
+      "source_url": "https://ficgs.com/wikichess_49227.html"
+    },
+    {
+      "move": "Nd4",
+      "source_url": "https://ficgs.com/wikichess_1430.html"
+    },
+    {
+      "move": "Qf6",
+      "source_url": "https://ficgs.com/wikichess_83893.html"
+    },
+    {
+      "move": "d5",
+      "source_url": "https://ficgs.com/wikichess_82721.html"
+    },
+    {
+      "move": "d6",
+      "source_url": "https://ficgs.com/wikichess_488.html"
+    },
+    {
+      "move": "Nce7",
+      "source_url": "https://ficgs.com/wikichess_72162.html"
+    }
+  ]
+}

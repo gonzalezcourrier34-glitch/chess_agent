@@ -1,0 +1,83 @@
+{
+  "slug": "birds-opening",
+  "title": "Ouverture Bird",
+  "wikichess_title": "Bird's Opening",
+  "eco": "A02",
+  "moves": [
+    "f4"
+  ],
+  "position_after": "f4",
+  "source_url": "https://ficgs.com/wikichess_30.html",
+  "language": "en",
+  "retrieved_at": "2026-08-17T13:17:07.640429+00:00",
+  "contributors": [
+    "Thibault de Vassal"
+  ],
+  "content": "Bird's Opening is named after the 19th century English master, Henry Bird.\nAccording to ChessBase, in master level chess, out of the twenty possible opening moves, 1.f4 ranks seventh in popularity. It is much less popular than 1.c4 (the English Opening) mainly because 1.f4 weakens the king's position slightly.",
+  "next_moves": [
+    {
+      "move": "e5",
+      "source_url": "https://ficgs.com/wikichess_31.html"
+    },
+    {
+      "move": "h6",
+      "source_url": "https://ficgs.com/wikichess_28822.html"
+    },
+    {
+      "move": "b6",
+      "source_url": "https://ficgs.com/wikichess_58284.html"
+    },
+    {
+      "move": "g5",
+      "source_url": "https://ficgs.com/wikichess_16798.html"
+    },
+    {
+      "move": "e6",
+      "source_url": "https://ficgs.com/wikichess_493.html"
+    },
+    {
+      "move": "f5",
+      "source_url": "https://ficgs.com/wikichess_2928.html"
+    },
+    {
+      "move": "c5",
+      "source_url": "https://ficgs.com/wikichess_2930.html"
+    },
+    {
+      "move": "Nf6",
+      "source_url": "https://ficgs.com/wikichess_5151.html"
+    },
+    {
+      "move": "c6",
+      "source_url": "https://ficgs.com/wikichess_111502.html"
+    },
+    {
+      "move": "b5",
+      "source_url": "https://ficgs.com/wikichess_111504.html"
+    },
+    {
+      "move": "f6",
+      "source_url": "https://ficgs.com/wikichess_169894.html"
+    },
+    {
+      "move": "g6",
+      "source_url": "https://ficgs.com/wikichess_9893.html"
+    },
+    {
+      "move": "d6",
+      "source_url": "https://ficgs.com/wikichess_8335.html"
+    },
+    {
+      "move": "d5",
+      "source_url": "https://ficgs.com/wikichess_2888.html"
+    },
+    {
+      "move": "Nc6",
+      "source_url": "https://ficgs.com/wikichess_19799.html"
+    },
+    {
+      "move": "Nh6",
+      "source_url": "https://ficgs.com/wikichess_16788.html"
+    }
+  ]
+}

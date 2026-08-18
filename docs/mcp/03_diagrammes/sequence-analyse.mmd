@@ -1,0 +1,21 @@
+sequenceDiagram
+    participant C as Client
+    participant M as MCP/API
+    participant W as LangGraph
+    participant E as Chess services
+    participant D as Data/RAG
+    C->>M: analyze_position(fen)
+    M->>E: validate + normalize
+    E-->>M: position_key
+    M->>W: run(request_id, position)
+    W->>E: opening + Lichess
+    alt théorie trouvée
+        E-->>W: coups statistiques
+    else hors théorie
+        W->>E: Stockfish timebox
+        E-->>W: MultiPV légales
+    end
+    W->>D: contexte RAG + vidéos
+    D-->>W: sources + timestamps
+    W-->>M: réponse structurée
+    M-->>C: AnalysisResponse

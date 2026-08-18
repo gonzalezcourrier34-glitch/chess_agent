@@ -1,0 +1,54 @@
+{
+  "slug": "old-indian-defense",
+  "title": "Défense vieille-indienne",
+  "wikichess_title": "Old Indian defense",
+  "eco": "A53",
+  "moves": [
+    "d4",
+    "Nf6",
+    "c4",
+    "d6"
+  ],
+  "position_after": "d6",
+  "source_url": "https://ficgs.com/wikichess_9187.html",
+  "language": "en",
+  "retrieved_at": "2026-08-17T13:17:23.302831+00:00",
+  "contributors": [
+    "Benjamin Block"
+  ],
+  "content": "",
+  "next_moves": [
+    {
+      "move": "Nf3",
+      "source_url": "https://ficgs.com/wikichess_9188.html"
+    },
+    {
+      "move": "d5",
+      "source_url": "https://ficgs.com/wikichess_12387.html"
+    },
+    {
+      "move": "f4",
+      "source_url": "https://ficgs.com/wikichess_12824.html"
+    },
+    {
+      "move": "f3",
+      "source_url": "https://ficgs.com/wikichess_13032.html"
+    },
+    {
+      "move": "Nc3",
+      "source_url": "https://ficgs.com/wikichess_10303.html"
+    },
+    {
+      "move": "g3",
+      "source_url": "https://ficgs.com/wikichess_10304.html"
+    },
+    {
+      "move": "e3",
+      "source_url": "https://ficgs.com/wikichess_10306.html"
+    },
+    {
+      "move": "h3",
+      "source_url": "https://ficgs.com/wikichess_81564.html"
+    }
+  ]
+}

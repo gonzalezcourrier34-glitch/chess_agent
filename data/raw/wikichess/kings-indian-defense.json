@@ -1,0 +1,50 @@
+{
+  "slug": "kings-indian-defense",
+  "title": "Défense est-indienne",
+  "wikichess_title": "King's Indian defense",
+  "eco": "E60",
+  "moves": [
+    "d4",
+    "Nf6",
+    "c4",
+    "g6"
+  ],
+  "position_after": "g6",
+  "source_url": "https://ficgs.com/wikichess_44.html",
+  "language": "en",
+  "retrieved_at": "2026-08-17T13:13:05.763485+00:00",
+  "contributors": [
+    "Thibault de Vassal"
+  ],
+  "content": "The King's Indian Defence is a chess opening that begins 1.d4 Nf6 2.c4 g6 followed by ...Bg7 and ...d6. The King's Indian is a \"hypermodern\" opening, where Black lets White take the center with the view to later ruining White's \"wonderful\" position, often by an attack on White's king. It is a risky opening, which has been a favourite of players such as former world champions Garry Kasparov, Bobby Fischer and Tigran Petrosian. Prominent grandmasters John Nunn, Svetozar Gligoric, Wolfgang Uhlmann, and Larry Christiansen have also played this opening frequently.\nAccording to Chessbase, black chances are about 42%",
+  "next_moves": [
+    {
+      "move": "Nc3",
+      "source_url": "https://ficgs.com/wikichess_142.html"
+    },
+    {
+      "move": "h4",
+      "source_url": "https://ficgs.com/wikichess_193826.html"
+    },
+    {
+      "move": "f3",
+      "source_url": "https://ficgs.com/wikichess_18909.html"
+    },
+    {
+      "move": "g3",
+      "source_url": "https://ficgs.com/wikichess_11984.html"
+    },
+    {
+      "move": "Bg5",
+      "source_url": "https://ficgs.com/wikichess_152340.html"
+    },
+    {
+      "move": "Nf3",
+      "source_url": "https://ficgs.com/wikichess_4349.html"
+    },
+    {
+      "move": "e3",
+      "source_url": "https://ficgs.com/wikichess_166331.html"
+    }
+  ]
+}
