@@ -20,7 +20,7 @@ permissions:
 jobs:
 
   # ---------------------------------------------------------------------------
-  # Qualité et tests Python
+  # Qualité backend
   # ---------------------------------------------------------------------------
 
   backend-quality:
@@ -167,27 +167,40 @@ jobs:
             sed -i "s|^YOUTUBE_API_KEY=.*|YOUTUBE_API_KEY=${{ secrets.YOUTUBE_API_KEY }}|" .env
           fi
 
-      - name: Start application
+      - name: Start infrastructure
         run: >
           docker compose
           -f docker-compose.yml
           -f docker-compose.ci.yml
           up -d
+          mongodb
+          etcd
+          minio
+          milvus
+          ollama
 
-      - name: Show running containers
+      - name: Show infrastructure status
         run: >
           docker compose
           -f docker-compose.yml
           -f docker-compose.ci.yml
           ps
 
+      - name: Start backend
+        run: >
+          docker compose
+          -f docker-compose.yml
+          -f docker-compose.ci.yml
+          up -d
+          backend
+
       - name: Wait for backend
         shell: bash
         run: |
           echo "Waiting for backend..."
 
-          for i in {1..30}; do
-            if curl --fail --silent http://localhost:8000/openapi.json > /dev/null; then
+          for i in {1..60}; do
+            if curl --fail --silent http://localhost:8000/api/v1/health/live > /dev/null; then
               echo "Backend is ready."
               exit 0
             fi
@@ -202,12 +215,29 @@ jobs:
             -f docker-compose.ci.yml \
             ps
 
+          echo "----- BACKEND LOGS -----"
+
           docker compose \
             -f docker-compose.yml \
             -f docker-compose.ci.yml \
-            logs backend
+            logs --no-color backend
+
+          echo "----- OLLAMA LOGS -----"
+
+          docker compose \
+            -f docker-compose.yml \
+            -f docker-compose.ci.yml \
+            logs --no-color ollama
 
           exit 1
+
+      - name: Start frontend
+        run: >
+          docker compose
+          -f docker-compose.yml
+          -f docker-compose.ci.yml
+          up -d
+          frontend
 
       - name: Wait for frontend
         shell: bash
@@ -230,10 +260,12 @@ jobs:
             -f docker-compose.ci.yml \
             ps
 
+          echo "----- FRONTEND LOGS -----"
+
           docker compose \
             -f docker-compose.yml \
             -f docker-compose.ci.yml \
-            logs frontend
+            logs --no-color frontend
 
           exit 1
 
@@ -251,7 +283,23 @@ jobs:
           -f docker-compose.ci.yml
           ps
 
-      - name: Show Docker logs on failure
+      - name: Show backend logs on failure
+        if: failure()
+        run: >
+          docker compose
+          -f docker-compose.yml
+          -f docker-compose.ci.yml
+          logs --no-color backend
+
+      - name: Show Ollama logs on failure
+        if: failure()
+        run: >
+          docker compose
+          -f docker-compose.yml
+          -f docker-compose.ci.yml
+          logs --no-color ollama
+
+      - name: Show all Docker logs on failure
         if: failure()
         run: >
           docker compose
