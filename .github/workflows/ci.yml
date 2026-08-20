@@ -167,6 +167,10 @@ jobs:
             sed -i "s|^YOUTUBE_API_KEY=.*|YOUTUBE_API_KEY=${{ secrets.YOUTUBE_API_KEY }}|" .env
           fi
 
+      # -----------------------------------------------------------------------
+      # Infrastructure
+      # -----------------------------------------------------------------------
+
       - name: Start infrastructure
         run: >
           docker compose
@@ -186,6 +190,58 @@ jobs:
           -f docker-compose.ci.yml
           ps
 
+      # -----------------------------------------------------------------------
+      # Ollama
+      # -----------------------------------------------------------------------
+
+      - name: Wait for Ollama
+        shell: bash
+        run: |
+          echo "Waiting for Ollama..."
+
+          for i in {1..30}; do
+            if docker compose \
+              -f docker-compose.yml \
+              -f docker-compose.ci.yml \
+              exec -T ollama \
+              ollama list > /dev/null 2>&1; then
+
+              echo "Ollama is ready."
+              exit 0
+            fi
+
+            sleep 2
+          done
+
+          echo "Ollama did not become ready."
+
+          docker compose \
+            -f docker-compose.yml \
+            -f docker-compose.ci.yml \
+            logs --no-color ollama
+
+          exit 1
+
+      - name: Pull Ollama model
+        run: >
+          docker compose
+          -f docker-compose.yml
+          -f docker-compose.ci.yml
+          exec -T ollama
+          ollama pull qwen2.5:7b-instruct
+
+      - name: Show Ollama models
+        run: >
+          docker compose
+          -f docker-compose.yml
+          -f docker-compose.ci.yml
+          exec -T ollama
+          ollama list
+
+      # -----------------------------------------------------------------------
+      # Backend
+      # -----------------------------------------------------------------------
+
       - name: Start backend
         run: >
           docker compose
@@ -200,7 +256,12 @@ jobs:
           echo "Waiting for backend..."
 
           for i in {1..60}; do
-            if curl --fail --silent http://localhost:8000/api/v1/health/live > /dev/null; then
+            if curl \
+              --fail \
+              --silent \
+              http://localhost:8000/api/v1/health/live \
+              > /dev/null; then
+
               echo "Backend is ready."
               exit 0
             fi
@@ -231,6 +292,10 @@ jobs:
 
           exit 1
 
+      # -----------------------------------------------------------------------
+      # Frontend
+      # -----------------------------------------------------------------------
+
       - name: Start frontend
         run: >
           docker compose
@@ -245,7 +310,12 @@ jobs:
           echo "Waiting for frontend..."
 
           for i in {1..30}; do
-            if curl --fail --silent http://localhost:4200 > /dev/null; then
+            if curl \
+              --fail \
+              --silent \
+              http://localhost:4200 \
+              > /dev/null; then
+
               echo "Frontend is ready."
               exit 0
             fi
@@ -269,11 +339,19 @@ jobs:
 
           exit 1
 
+      # -----------------------------------------------------------------------
+      # Tests de déploiement
+      # -----------------------------------------------------------------------
+
       - name: Run deployment tests
         run: >
           uv run pytest
           tests/deployment
           -v
+
+      # -----------------------------------------------------------------------
+      # Diagnostic en cas d'échec
+      # -----------------------------------------------------------------------
 
       - name: Show Docker status on failure
         if: failure()
@@ -299,6 +377,14 @@ jobs:
           -f docker-compose.ci.yml
           logs --no-color ollama
 
+      - name: Show frontend logs on failure
+        if: failure()
+        run: >
+          docker compose
+          -f docker-compose.yml
+          -f docker-compose.ci.yml
+          logs --no-color frontend
+
       - name: Show all Docker logs on failure
         if: failure()
         run: >
@@ -306,6 +392,10 @@ jobs:
           -f docker-compose.yml
           -f docker-compose.ci.yml
           logs --no-color
+
+      # -----------------------------------------------------------------------
+      # Nettoyage
+      # -----------------------------------------------------------------------
 
       - name: Stop application
         if: always()
