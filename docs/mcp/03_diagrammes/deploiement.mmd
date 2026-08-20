@@ -1,8 +1,0 @@
-flowchart LR
-    GW["Gateway TLS/OAuth"] --> SVC["API + MCP stateless"]
-    SVC --> QUEUE["File de jobs"]
-    QUEUE --> CPU["Workers Stockfish"]
-    QUEUE --> GPU["Workers vidéo"]
-    SVC --> DB["MongoDB"]
-    SVC --> VDB["Milvus"]
-    GPU --> OBJ["Stockage objet"]

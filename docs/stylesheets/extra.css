@@ -1,0 +1,193 @@
+/* =========================================================
+   Mermaid - optimisation pour thème sombre MkDocs
+   ========================================================= */
+
+/* ---------------------------------------------------------
+   FLOWCHARTS : texte blanc dans les cellules sombres
+   --------------------------------------------------------- */
+
+.mermaid .nodeLabel,
+.mermaid .nodeLabel p,
+.mermaid .nodeLabel span,
+.mermaid .label,
+.mermaid .label text,
+.mermaid foreignObject div,
+.mermaid foreignObject span,
+.mermaid foreignObject p {
+    color: #ffffff !important;
+    fill: #ffffff !important;
+    font-weight: 500;
+}
+
+
+/* Titres des sous-graphes */
+.mermaid .cluster-label,
+.mermaid .cluster-label span,
+.mermaid .cluster-label p,
+.mermaid .cluster-label text {
+    color: #ffffff !important;
+    fill: #ffffff !important;
+    font-weight: 600;
+}
+
+
+/* Flèches des flowcharts */
+.mermaid .flowchart-link {
+    stroke: #cbd5e1 !important;
+    stroke-width: 2px !important;
+}
+
+
+/* Pointe des flèches */
+.mermaid marker path {
+    fill: #cbd5e1 !important;
+    stroke: #cbd5e1 !important;
+}
+
+
+/* Texte sur les flèches */
+.mermaid .edgeLabel,
+.mermaid .edgeLabel p,
+.mermaid .edgeLabel span,
+.mermaid .edgeLabel div {
+    color: #ffffff !important;
+    fill: #ffffff !important;
+}
+
+
+/* Fond des labels de flèche */
+.mermaid .edgeLabel {
+    background-color: transparent !important;
+}
+
+
+/* Évite les fonds clairs derrière les labels */
+.mermaid .edgeLabel rect {
+    fill: transparent !important;
+    opacity: 0 !important;
+}
+
+
+/* Texte SVG Mermaid par défaut */
+.mermaid text {
+    fill: #ffffff !important;
+}
+
+
+/* Bordures plus nettes */
+.mermaid .node rect,
+.mermaid .node polygon,
+.mermaid .node path {
+    stroke-width: 2px;
+}
+
+
+/* =========================================================
+   TIMELINE : cellules pastel + texte noir
+   ========================================================= */
+
+/* Texte dans les cellules de timeline */
+.mermaid .timeline-node text,
+.mermaid .timeline-node tspan,
+.mermaid .timeline-node span,
+.mermaid .timeline-node p,
+.mermaid .eventWrapper text,
+.mermaid .eventWrapper tspan,
+.mermaid .eventWrapper span,
+.mermaid .eventWrapper p {
+    color: #111827 !important;
+    fill: #111827 !important;
+    font-weight: 500;
+}
+
+
+/* Texte des périodes S1, S1 à S2, etc. */
+.mermaid .timeWrapper text,
+.mermaid .timeWrapper tspan,
+.mermaid .timeWrapper span,
+.mermaid .timeWrapper p {
+    color: #111827 !important;
+    fill: #111827 !important;
+    font-weight: 600;
+}
+
+
+/* =========================================================
+   TIMELINE : titre visible sur fond sombre
+   ========================================================= */
+
+.mermaid .timeline-title,
+.mermaid .timeline-title text,
+.mermaid .timeline-title tspan {
+    color: #ffffff !important;
+    fill: #ffffff !important;
+    font-weight: 700 !important;
+}
+
+
+/* Certains rendus Mermaid utilisent titleText */
+.mermaid .titleText {
+    color: #ffffff !important;
+    fill: #ffffff !important;
+    font-weight: 700 !important;
+}
+
+
+/* =========================================================
+   TIMELINE : axe et repères visibles
+   ========================================================= */
+
+/* Axe principal */
+.mermaid .timeline-axis {
+    stroke: #cbd5e1 !important;
+    stroke-width: 2px !important;
+}
+
+
+/* Traits verticaux */
+.mermaid .timeline-axis-tick {
+    stroke: #64748b !important;
+    stroke-width: 1px !important;
+}
+
+
+/* Autres lignes utilisées selon la version Mermaid */
+.mermaid .timeline line {
+    stroke: #64748b !important;
+}
+
+
+/* Flèche au bout de la timeline */
+.mermaid .timeline marker path,
+.mermaid marker path {
+    fill: #cbd5e1 !important;
+    stroke: #cbd5e1 !important;
+}
+
+
+/* =========================================================
+   TIMELINE : correction finale du texte
+   ========================================================= */
+
+/*
+   La règle globale ".mermaid text" définie plus haut force le blanc.
+   On la surcharge ici uniquement pour les cellules de timeline.
+*/
+
+.mermaid .timeline-node text,
+.mermaid .eventWrapper text,
+.mermaid .timeWrapper text {
+    fill: #111827 !important;
+}
+
+
+/*
+   Le titre doit rester blanc même après les règles timeline.
+*/
+
+.mermaid .timeline-title,
+.mermaid .timeline-title text,
+.mermaid .titleText {
+    fill: #ffffff !important;
+    color: #ffffff !important;
+}

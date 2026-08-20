@@ -6,7 +6,12 @@
 # automatiquement sur GitHub Pages.
 #
 # Le fichier mkdocs.yml reste la configuration centrale de la documentation.
-# Ce workflow s'occupe uniquement de construire et publier le site.
+# Ce workflow s'occupe uniquement :
+#
+#   1. de construire le site statique avec MkDocs ;
+#   2. d'envoyer le dossier généré à GitHub Pages ;
+#   3. de publier la documentation.
+#
 # =============================================================================
 
 name: Documentation
@@ -18,11 +23,8 @@ name: Documentation
 
 on:
 
-  # La documentation est reconstruite lorsqu'une modification
-  # est poussée sur main et concerne :
-  # - le dossier docs ;
-  # - la configuration MkDocs ;
-  # - ce workflow.
+  # Le workflow est lancé lorsqu'une modification est poussée
+  # sur la branche principale et concerne la documentation.
   push:
     branches:
       - main
@@ -32,13 +34,23 @@ on:
       - "mkdocs.yml"
       - ".github/workflows/docs.yml"
 
-  # Permet également un lancement manuel depuis GitHub Actions.
+  # Permet également de lancer manuellement le workflow
+  # depuis l'onglet GitHub Actions.
   workflow_dispatch:
 
 
 # =============================================================================
-# Permissions nécessaires à GitHub Pages
+# Permissions GitHub Pages
 # =============================================================================
+#
+# contents: read
+#   permet de lire le dépôt.
+#
+# pages: write
+#   permet de publier sur GitHub Pages.
+#
+# id-token: write
+#   permet l'authentification sécurisée utilisée par deploy-pages.
 
 permissions:
   contents: read
@@ -50,7 +62,7 @@ permissions:
 # Gestion des déploiements simultanés
 # =============================================================================
 #
-# Si plusieurs mises à jour de documentation sont envoyées rapidement,
+# Si plusieurs mises à jour sont poussées rapidement,
 # seul le déploiement le plus récent est conservé.
 
 concurrency:
@@ -70,40 +82,71 @@ jobs:
 
     steps:
 
-      # Récupère le dépôt.
+      # -----------------------------------------------------------------------
+      # Récupération du dépôt
+      # -----------------------------------------------------------------------
+
       - name: Checkout repository
         uses: actions/checkout@v6
 
-      # Installe uv, utilisé par le projet pour gérer Python
-      # et les dépendances.
+
+      # -----------------------------------------------------------------------
+      # Installation de l'environnement Python
+      # -----------------------------------------------------------------------
+
+      # uv est utilisé dans Chess Agent pour gérer Python
+      # et les dépendances du projet.
       - name: Install uv
         uses: astral-sh/setup-uv@v7
         with:
           enable-cache: true
 
-      # Installe Python 3.12.
+      # Installation de la version Python utilisée par le projet.
       - name: Install Python
         run: uv python install 3.12
 
-      # Installe les dépendances définies dans uv.lock.
+      # Installe les dépendances exactement telles qu'elles sont
+      # définies dans uv.lock.
       #
-      # MkDocs, Material et pymdown-extensions doivent donc
-      # être présents dans les dépendances du projet.
+      # MkDocs et MkDocs Material doivent donc être présents
+      # dans les dépendances du projet.
       - name: Install dependencies
         run: uv sync --frozen
 
-      # Construit le site statique dans le dossier "site".
+
+      # -----------------------------------------------------------------------
+      # Construction MkDocs
+      # -----------------------------------------------------------------------
+
+      # MkDocs transforme le contenu du dossier docs/
+      # en site HTML statique.
       #
-      # --strict fait échouer le workflow si MkDocs détecte
-      # certaines incohérences dans la documentation.
+      # Le résultat est placé dans le dossier "site"
+      # défini dans mkdocs.yml.
+      #
+      # --strict permet de considérer les avertissements MkDocs
+      # comme des erreurs afin d'éviter de publier une documentation
+      # contenant des références cassées.
       - name: Build MkDocs site
         run: uv run mkdocs build --strict
 
-      # Configure l'environnement GitHub Pages.
+
+      # -----------------------------------------------------------------------
+      # Préparation GitHub Pages
+      # -----------------------------------------------------------------------
+
+      # Configure GitHub Pages pour le workflow.
       - name: Setup Pages
         uses: actions/configure-pages@v5
 
-      # Envoie le site généré comme artifact GitHub Pages.
+
+      # -----------------------------------------------------------------------
+      # Création de l'artifact Pages
+      # -----------------------------------------------------------------------
+
+      # Le dossier "site" contient le site statique généré par MkDocs.
+      #
+      # Cet artifact sera récupéré par le job de déploiement.
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v4
         with:
@@ -116,19 +159,40 @@ jobs:
 
   deploy:
     name: Deploy documentation
-    runs-on: ubuntu-latest
 
+    # Le déploiement ne commence que si la construction
+    # de la documentation a réussi.
     needs:
       - build
+
+    runs-on: ubuntu-latest
+
+
+    # -------------------------------------------------------------------------
+    # Environnement GitHub Pages
+    # -------------------------------------------------------------------------
+    #
+    # "github-pages" est l'environnement standard utilisé
+    # par GitHub pour les déploiements Pages.
+    #
+    # page_url est générée automatiquement par deploy-pages.
+    #
+    # GitHub pourra ainsi afficher directement le lien
+    # vers le site publié dans le résultat du workflow.
 
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
 
+
     steps:
 
-      # Publie l'artifact généré par le job précédent
-      # sur GitHub Pages.
+      # -----------------------------------------------------------------------
+      # Déploiement
+      # -----------------------------------------------------------------------
+
+      # Récupère l'artifact produit par le job "build"
+      # et le publie sur GitHub Pages.
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
