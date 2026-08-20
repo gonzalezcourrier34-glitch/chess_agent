@@ -6,6 +6,8 @@ from unittest.mock import AsyncMock, MagicMock
 
 import httpx
 import pytest
+from pydantic import SecretStr
+
 from app.adapters.youtube_service import (
     MAX_SEARCH_RESULTS,
     MIN_SEARCH_RESULTS,
@@ -27,10 +29,8 @@ from app.core.exceptions import (
     YoutubeTimeoutError,
     YoutubeUnavailableError,
 )
-from app.schemas.media.video import (
-    VideoSearchRequest,
-)
-from pydantic import SecretStr
+from app.schemas.media.video import VideoSearchRequest
+
 
 # Configuration
 
@@ -42,6 +42,7 @@ LANGUAGE = "fr"
 
 VIDEO_ID = "video-1"
 CHANNEL_ID = "channel-1"
+
 
 SEARCH_PAYLOAD: YoutubePayload = {
     "items": [
@@ -72,6 +73,7 @@ SEARCH_PAYLOAD: YoutubePayload = {
         },
     ],
 }
+
 
 DETAILS_PAYLOAD: YoutubePayload = {
     "items": [
@@ -491,7 +493,8 @@ def test_parse_response_payload_rejects_invalid_json(
 @pytest.mark.parametrize(
     "status_code",
     [
-        429,
+        408,
+        425,
         500,
         502,
         503,
@@ -502,10 +505,11 @@ def test_should_retry_status_accepts_retryable_status(
     service: YoutubeService,
     status_code: int,
 ) -> None:
-    """Vérifie les statuts temporaires."""
+    """Vérifie les statuts temporaires hors endpoint de recherche."""
 
     assert (
         service._should_retry_status(
+            endpoint=YOUTUBE_VIDEOS_ENDPOINT,
             status_code=status_code,
             attempt=1,
             total_attempts=2,
@@ -521,8 +525,54 @@ def test_should_retry_status_rejects_last_attempt(
 
     assert (
         service._should_retry_status(
+            endpoint=YOUTUBE_VIDEOS_ENDPOINT,
             status_code=503,
             attempt=2,
+            total_attempts=2,
+        )
+        is False
+    )
+
+
+@pytest.mark.parametrize(
+    "status_code",
+    [
+        408,
+        425,
+        429,
+        500,
+        502,
+        503,
+        504,
+    ],
+)
+def test_should_retry_status_rejects_search_endpoint(
+    service: YoutubeService,
+    status_code: int,
+) -> None:
+    """Vérifie qu'une recherche YouTube n'est jamais retentée."""
+
+    assert (
+        service._should_retry_status(
+            endpoint=YOUTUBE_SEARCH_ENDPOINT,
+            status_code=status_code,
+            attempt=1,
+            total_attempts=2,
+        )
+        is False
+    )
+
+
+def test_should_retry_status_rejects_non_retryable_status(
+    service: YoutubeService,
+) -> None:
+    """Vérifie le rejet d'un statut non temporaire."""
+
+    assert (
+        service._should_retry_status(
+            endpoint=YOUTUBE_VIDEOS_ENDPOINT,
+            status_code=404,
+            attempt=1,
             total_attempts=2,
         )
         is False
