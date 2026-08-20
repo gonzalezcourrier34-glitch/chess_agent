@@ -42,14 +42,13 @@ STARTING_FEN = chess.STARTING_FEN
 
 # Construction des données de test
 
+
 def build_best_move(
     *,
     uci: str = "e2e4",
     san: str = "e4",
     score: float = 30.0,
-    evaluation_type: EvaluationType = (
-        EvaluationType.CENTIPAWN
-    ),
+    evaluation_type: EvaluationType = (EvaluationType.CENTIPAWN),
     depth: int = 15,
     principal_variation: list[str] | None = None,
 ) -> BestMove:
@@ -76,20 +75,14 @@ def build_best_move(
 def build_evaluation(
     *,
     score: float = 30.0,
-    evaluation_type: EvaluationType = (
-        EvaluationType.CENTIPAWN
-    ),
+    evaluation_type: EvaluationType = (EvaluationType.CENTIPAWN),
     depth: int = 15,
     nodes: int | None = 1000,
     time_ms: int | None = 250,
     principal_moves: list[str] | None = None,
-    principal_explanation: str | None = (
-        "Développement central."
-    ),
+    principal_explanation: str | None = ("Développement central."),
     alternatives: list[BestMove] | None = None,
-    summary: str | None = (
-        "Stockfish préfère e4."
-    ),
+    summary: str | None = ("Stockfish préfère e4."),
 ) -> PositionEvaluation:
     """Construit une évaluation Stockfish complète."""
 
@@ -148,6 +141,7 @@ def build_evaluation(
 
 # Fixtures
 
+
 @pytest.fixture
 def state() -> ChessAnalysisState:
     """Construit un état minimal sans ouverture."""
@@ -165,6 +159,7 @@ def evaluation() -> PositionEvaluation:
 
 
 # Statuts
+
 
 @pytest.mark.parametrize(
     ("initial_status", "expected_status"),
@@ -200,15 +195,11 @@ def test_get_success_status(
         }
     )
 
-    assert (
-        _get_success_status(
-            current_state
-        )
-        == expected_status
-    )
+    assert _get_success_status(current_state) == expected_status
 
 
 # Formatage des scores
+
 
 def test_format_score_centipawn() -> None:
     """Vérifie le format centipion."""
@@ -260,6 +251,7 @@ def test_format_score_negative_mate() -> None:
 
 # Formatage des coups
 
+
 def test_format_moves_returns_normalized_moves() -> None:
     """Vérifie la normalisation d'une suite de coups."""
 
@@ -293,13 +285,11 @@ def test_format_moves_returns_none_for_empty_values() -> None:
 def test_format_moves_returns_none_for_empty_list() -> None:
     """Vérifie une liste vide."""
 
-    assert (
-        _format_moves([])
-        is None
-    )
+    assert _format_moves([]) is None
 
 
 # Meilleur coup
+
 
 def test_append_best_move(
     evaluation: PositionEvaluation,
@@ -315,10 +305,7 @@ def test_append_best_move(
 
     assert len(sections) == 1
 
-    assert (
-        "Meilleur coup calculé par Stockfish"
-        in sections[0]
-    )
+    assert "Meilleur coup calculé par Stockfish" in sections[0]
 
     assert "- SAN : e4" in sections[0]
     assert "- UCI : e2e4" in sections[0]
@@ -350,12 +337,7 @@ def test_append_best_move_without_best_move() -> None:
         evaluation,
     )
 
-    assert sections == [
-        (
-            "Meilleur coup calculé par Stockfish :\n"
-            "- Non disponible."
-        )
-    ]
+    assert sections == [("Meilleur coup calculé par Stockfish :\n- Non disponible.")]
 
 
 def test_append_best_move_formats_mate() -> None:
@@ -377,6 +359,7 @@ def test_append_best_move_formats_mate() -> None:
 
 
 # Évaluation moteur
+
 
 def test_append_evaluation(
     evaluation: PositionEvaluation,
@@ -416,15 +399,9 @@ def test_append_evaluation_without_optional_metrics() -> None:
     assert "- Score : 30 centipions" in sections[0]
     assert "- Profondeur : 15" in sections[0]
 
-    assert (
-        "Nœuds analysés"
-        not in sections[0]
-    )
+    assert "Nœuds analysés" not in sections[0]
 
-    assert (
-        "Temps d'analyse"
-        not in sections[0]
-    )
+    assert "Temps d'analyse" not in sections[0]
 
 
 def test_append_evaluation_without_engine_evaluation() -> None:
@@ -451,12 +428,11 @@ def test_append_evaluation_without_engine_evaluation() -> None:
         evaluation,
     )
 
-    assert sections == [
-        "Évaluation moteur :\n- Non disponible."
-    ]
+    assert sections == ["Évaluation moteur :\n- Non disponible."]
 
 
 # Variante principale
+
 
 def test_append_principal_variation(
     evaluation: PositionEvaluation,
@@ -476,10 +452,7 @@ def test_append_principal_variation(
     assert "- Score : 30 centipions" in sections[0]
     assert "- Profondeur : 15" in sections[0]
 
-    assert (
-        "- Description : Développement central."
-        in sections[0]
-    )
+    assert "- Description : Développement central." in sections[0]
 
 
 def test_append_principal_variation_without_moves() -> None:
@@ -515,13 +488,11 @@ def test_append_principal_variation_without_explanation() -> None:
 
     assert len(sections) == 1
 
-    assert (
-        "Description"
-        not in sections[0]
-    )
+    assert "Description" not in sections[0]
 
 
 # Alternatives
+
 
 def test_append_alternatives(
     evaluation: PositionEvaluation,
@@ -537,30 +508,15 @@ def test_append_alternatives(
 
     assert len(sections) == 1
 
-    assert (
-        "Alternatives calculées"
-        in sections[0]
-    )
+    assert "Alternatives calculées" in sections[0]
 
-    assert (
-        "- d4 (d2d4)"
-        in sections[0]
-    )
+    assert "- d4 (d2d4)" in sections[0]
 
-    assert (
-        "Score : 20 centipions"
-        in sections[0]
-    )
+    assert "Score : 20 centipions" in sections[0]
 
-    assert (
-        "Profondeur : 15"
-        in sections[0]
-    )
+    assert "Profondeur : 15" in sections[0]
 
-    assert (
-        "Variante : d2d4 d7d5"
-        in sections[0]
-    )
+    assert "Variante : d2d4 d7d5" in sections[0]
 
 
 def test_append_alternatives_without_alternatives() -> None:
@@ -605,10 +561,7 @@ def test_append_alternatives_without_principal_variation() -> None:
 
     assert len(sections) == 1
 
-    assert (
-        "Variante :"
-        not in sections[0]
-    )
+    assert "Variante :" not in sections[0]
 
 
 def test_append_alternatives_formats_mate() -> None:
@@ -639,6 +592,7 @@ def test_append_alternatives_formats_mate() -> None:
 
 # Synthèse
 
+
 def test_append_summary(
     evaluation: PositionEvaluation,
 ) -> None:
@@ -651,12 +605,7 @@ def test_append_summary(
         evaluation,
     )
 
-    assert sections == [
-        (
-            "Synthèse moteur :\n"
-            "Stockfish préfère e4."
-        )
-    ]
+    assert sections == [("Synthèse moteur :\nStockfish préfère e4.")]
 
 
 def test_append_summary_without_summary() -> None:
@@ -678,25 +627,20 @@ def test_append_summary_without_summary() -> None:
 
 # Contexte complet
 
+
 def test_build_unknown_position_context(
     evaluation: PositionEvaluation,
 ) -> None:
     """Vérifie la construction du contexte pédagogique complet."""
 
-    result = _build_unknown_position_context(
-        evaluation
-    )
+    result = _build_unknown_position_context(evaluation)
 
     assert (
         "La position ne correspond à aucune ouverture "
-        "connue retournée par Lichess."
-        in result
+        "connue retournée par Lichess." in result
     )
 
-    assert (
-        "Meilleur coup calculé par Stockfish"
-        in result
-    )
+    assert "Meilleur coup calculé par Stockfish" in result
 
     assert "Évaluation moteur" in result
     assert "Variante principale" in result
@@ -705,6 +649,7 @@ def test_build_unknown_position_context(
 
 
 # Contexte du workflow
+
 
 def test_build_workflow_context(
     state: ChessAnalysisState,
@@ -716,20 +661,13 @@ def test_build_workflow_context(
         "Contexte inconnu.",
     )
 
-    assert (
-        context.unknown_position_context
-        == "Contexte inconnu."
-    )
+    assert context.unknown_position_context == "Contexte inconnu."
 
-    assert (
-        state
-        .workflow_context
-        .unknown_position_context
-        is None
-    )
+    assert state.workflow_context.unknown_position_context is None
 
 
 # Mise à jour réussie
+
 
 def test_build_success_update(
     state: ChessAnalysisState,
@@ -741,27 +679,13 @@ def test_build_success_update(
         "Contexte inconnu.",
     )
 
-    assert (
-        result["status"]
-        == AnalysisStatus.SUCCESS
-    )
+    assert result["status"] == AnalysisStatus.SUCCESS
 
-    assert (
-        result["current_step"]
-        == WorkflowStep.UNKNOWN_POSITION_ANALYSIS
-    )
+    assert result["current_step"] == WorkflowStep.UNKNOWN_POSITION_ANALYSIS
 
-    assert (
-        WorkflowStep.UNKNOWN_POSITION_ANALYSIS
-        in result["completed_steps"]
-    )
+    assert WorkflowStep.UNKNOWN_POSITION_ANALYSIS in result["completed_steps"]
 
-    assert (
-        result[
-            "workflow_context"
-        ].unknown_position_context
-        == "Contexte inconnu."
-    )
+    assert result["workflow_context"].unknown_position_context == "Contexte inconnu."
 
     assert result["errors"] == []
     assert result["warnings"] == []
@@ -783,10 +707,7 @@ def test_build_success_update_preserves_partial_success(
         "Contexte.",
     )
 
-    assert (
-        result["status"]
-        == AnalysisStatus.PARTIAL_SUCCESS
-    )
+    assert result["status"] == AnalysisStatus.PARTIAL_SUCCESS
 
 
 def test_build_success_update_preserves_failed_status(
@@ -805,13 +726,11 @@ def test_build_success_update_preserves_failed_status(
         "Contexte.",
     )
 
-    assert (
-        result["status"]
-        == AnalysisStatus.FAILED
-    )
+    assert result["status"] == AnalysisStatus.FAILED
 
 
 # API publique
+
 
 @pytest.mark.asyncio
 async def test_unknown_position_analysis_success(
@@ -835,34 +754,19 @@ async def test_unknown_position_analysis_success(
         ),
     )
 
-    assert (
-        result["status"]
-        == AnalysisStatus.SUCCESS
-    )
+    assert result["status"] == AnalysisStatus.SUCCESS
 
-    assert (
-        result["current_step"]
-        == WorkflowStep.UNKNOWN_POSITION_ANALYSIS
-    )
+    assert result["current_step"] == WorkflowStep.UNKNOWN_POSITION_ANALYSIS
 
-    assert (
-        WorkflowStep.UNKNOWN_POSITION_ANALYSIS
-        in result["completed_steps"]
-    )
+    assert WorkflowStep.UNKNOWN_POSITION_ANALYSIS in result["completed_steps"]
 
-    context = result[
-        "workflow_context"
-    ]
+    context = result["workflow_context"]
 
-    assert (
-        context.unknown_position_context
-        is not None
-    )
+    assert context.unknown_position_context is not None
 
     assert (
         "La position ne correspond à aucune ouverture "
-        "connue retournée par Lichess."
-        in context.unknown_position_context
+        "connue retournée par Lichess." in context.unknown_position_context
     )
 
 
@@ -883,10 +787,7 @@ async def test_unknown_position_analysis_rejects_known_opening(
 
     with pytest.raises(
         RuntimeError,
-        match=(
-            "uniquement lorsqu'aucune ouverture "
-            "n'a été détectée"
-        ),
+        match=("uniquement lorsqu'aucune ouverture n'a été détectée"),
     ):
         await unknown_position_analysis(
             current_state,
@@ -912,9 +813,7 @@ async def test_unknown_position_analysis_requires_evaluation(
 
     with pytest.raises(
         RuntimeError,
-        match=(
-            "nécessite une évaluation Stockfish"
-        ),
+        match=("nécessite une évaluation Stockfish"),
     ):
         await unknown_position_analysis(
             current_state,

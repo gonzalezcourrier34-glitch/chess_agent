@@ -50,6 +50,7 @@ SEARCH_SOURCE_WIKICHESS = "wikichess"
 
 # Types
 
+
 @dataclass(frozen=True, slots=True)
 class VideoSearchContext:
     """Informations nécessaires à une recherche YouTube."""
@@ -62,12 +63,11 @@ class VideoSearchContext:
 
 # Services
 
+
 def _get_youtube_service(config: RunnableConfig) -> YoutubeService | None:
     """Retourne le service YouTube configuré avec un type vérifié."""
     service = get_configured_service(
-        config,
-        YOUTUBE_SERVICE_KEY,
-        expected_type=YoutubeService
+        config, YOUTUBE_SERVICE_KEY, expected_type=YoutubeService
     )
 
     if service is None:
@@ -77,7 +77,7 @@ def _get_youtube_service(config: RunnableConfig) -> YoutubeService | None:
         logger.error(
             "Service %s invalide : %s reçu au lieu de YoutubeService.",
             YOUTUBE_SERVICE_KEY,
-            type(service).__name__
+            type(service).__name__,
         )
         return None
 
@@ -85,6 +85,7 @@ def _get_youtube_service(config: RunnableConfig) -> YoutubeService | None:
 
 
 # Statuts
+
 
 def _get_success_status(state: ChessAnalysisState) -> AnalysisStatus:
     """Retourne le statut applicable après une recherche réussie."""
@@ -98,9 +99,7 @@ def _get_success_status(state: ChessAnalysisState) -> AnalysisStatus:
     return AnalysisStatus.SUCCESS
 
 
-def _get_partial_success_status(
-    state: ChessAnalysisState
-) -> AnalysisStatus:
+def _get_partial_success_status(state: ChessAnalysisState) -> AnalysisStatus:
     """Retourne le statut applicable après une recherche dégradée."""
     if state.status is AnalysisStatus.FAILED:
         return AnalysisStatus.FAILED
@@ -109,6 +108,7 @@ def _get_partial_success_status(
 
 
 # Normalisation
+
 
 def _normalize_text(value: object) -> str | None:
     """Retourne une chaîne facultative nettoyée."""
@@ -121,9 +121,8 @@ def _normalize_text(value: object) -> str | None:
 
 # Sources
 
-def _get_opening_identity(
-    state: ChessAnalysisState
-) -> tuple[str | None, str | None]:
+
+def _get_opening_identity(state: ChessAnalysisState) -> tuple[str | None, str | None]:
     """Retourne le nom et le code ECO de l'ouverture détectée."""
     if state.opening is None:
         return None, None
@@ -132,9 +131,7 @@ def _get_opening_identity(
     return _normalize_text(opening.name), _normalize_text(opening.eco)
 
 
-def _get_wikichess_identity(
-    state: ChessAnalysisState
-) -> tuple[str | None, str | None]:
+def _get_wikichess_identity(state: ChessAnalysisState) -> tuple[str | None, str | None]:
     """Retourne le titre et le code ECO du document Wikichess retenu."""
     retrieval_context = state.retrieval_context
 
@@ -146,9 +143,7 @@ def _get_wikichess_identity(
 
     # Ces champs appartiennent au schéma Wikichess enrichi. ``getattr`` garde
     # le nœud compatible avec les anciens documents qui ne les possèdent pas.
-    wikichess_title = _normalize_text(
-        getattr(metadata, "wikichess_title", None)
-    )
+    wikichess_title = _normalize_text(getattr(metadata, "wikichess_title", None))
     title = wikichess_title or _normalize_text(document.title)
     eco = _normalize_text(getattr(metadata, "eco", None))
 
@@ -157,8 +152,9 @@ def _get_wikichess_identity(
 
 # Contexte de recherche
 
+
 def _build_lichess_search_context(
-    state: ChessAnalysisState
+    state: ChessAnalysisState,
 ) -> VideoSearchContext | None:
     """Construit le contexte YouTube depuis l'ouverture Lichess."""
     opening_name, opening_eco = _get_opening_identity(state)
@@ -166,20 +162,15 @@ def _build_lichess_search_context(
     if opening_name is None:
         return None
 
-    query = " ".join(
-        part for part in (opening_name, opening_eco) if part is not None
-    )
+    query = " ".join(part for part in (opening_name, opening_eco) if part is not None)
 
     return VideoSearchContext(
-        query=query,
-        title=opening_name,
-        eco=opening_eco,
-        source=SEARCH_SOURCE_LICHESS
+        query=query, title=opening_name, eco=opening_eco, source=SEARCH_SOURCE_LICHESS
     )
 
 
 def _build_wikichess_search_context(
-    state: ChessAnalysisState
+    state: ChessAnalysisState,
 ) -> VideoSearchContext | None:
     """Construit le contexte YouTube depuis le document Wikichess."""
     wikichess_title, wikichess_eco = _get_wikichess_identity(state)
@@ -189,21 +180,14 @@ def _build_wikichess_search_context(
 
     _, opening_eco = _get_opening_identity(state)
     eco = wikichess_eco or opening_eco
-    query = " ".join(
-        part for part in (wikichess_title, eco) if part is not None
-    )
+    query = " ".join(part for part in (wikichess_title, eco) if part is not None)
 
     return VideoSearchContext(
-        query=query,
-        title=wikichess_title,
-        eco=eco,
-        source=SEARCH_SOURCE_WIKICHESS
+        query=query, title=wikichess_title, eco=eco, source=SEARCH_SOURCE_WIKICHESS
     )
 
 
-def _build_search_context(
-    state: ChessAnalysisState
-) -> VideoSearchContext | None:
+def _build_search_context(state: ChessAnalysisState) -> VideoSearchContext | None:
     """Construit le meilleur contexte disponible pour YouTube."""
     lichess_context = _build_lichess_search_context(state)
 
@@ -215,12 +199,13 @@ def _build_search_context(
 
 # Recherche
 
+
 def _build_search_request(context: VideoSearchContext) -> VideoSearchRequest:
     """Construit la requête attendue par YoutubeService."""
     return VideoSearchRequest(
         query=context.query,
         max_results=settings.youtube_search_max_results,
-        language=settings.youtube_default_language
+        language=settings.youtube_default_language,
     )
 
 
@@ -232,19 +217,20 @@ def _select_videos(collection: VideoCollection) -> list[Video]:
 
 # Résumés
 
+
 def _build_video_summary(video: Video, index: int) -> str:
     """Construit le résumé factuel d'une vidéo."""
     lines = [
         f"Vidéo {index} :",
         f"- Titre : {video.title}",
         f"- Chaîne : {video.channel.name}",
-        f"- URL : {video.url}"
+        f"- URL : {video.url}",
     ]
 
     optional_values = (
         ("Miniature", video.thumbnail_url),
         ("Publication", video.published_at),
-        ("Langue", video.language)
+        ("Langue", video.language),
     )
 
     for label, value in optional_values:
@@ -269,8 +255,7 @@ def _build_videos_summary(videos: Sequence[Video]) -> str | None:
 
 
 def _build_workflow_context(
-    state: ChessAnalysisState,
-    videos: Sequence[Video]
+    state: ChessAnalysisState, videos: Sequence[Video]
 ) -> WorkflowContext:
     """Ajoute le résumé vidéo au contexte du workflow."""
     return state.workflow_context.model_copy(
@@ -280,12 +265,13 @@ def _build_workflow_context(
 
 # Mises à jour
 
+
 def _build_completed_update(
     state: ChessAnalysisState,
     *,
     status: AnalysisStatus,
     videos: Sequence[Video],
-    warnings: Sequence[WorkflowWarning]
+    warnings: Sequence[WorkflowWarning],
 ) -> StateUpdate:
     """Construit la mise à jour d'une étape YouTube terminée."""
     current_step = WorkflowStep.RETRIEVE_VIDEOS
@@ -296,45 +282,34 @@ def _build_completed_update(
         "current_step": current_step,
         "completed_steps": append_completed_step(state, current_step),
         "videos": selected_videos,
-        "workflow_context": _build_workflow_context(
-            state,
-            selected_videos
-        ),
+        "workflow_context": _build_workflow_context(state, selected_videos),
         "errors": list(state.errors),
-        "warnings": list(warnings)
+        "warnings": list(warnings),
     }
 
 
 def _build_success_update(
-    state: ChessAnalysisState,
-    videos: Sequence[Video]
+    state: ChessAnalysisState, videos: Sequence[Video]
 ) -> StateUpdate:
     """Construit la mise à jour après une recherche réussie."""
     return _build_completed_update(
-        state,
-        status=_get_success_status(state),
-        videos=videos,
-        warnings=state.warnings
+        state, status=_get_success_status(state), videos=videos, warnings=state.warnings
     )
 
 
 def _build_warning_update(
-    state: ChessAnalysisState,
-    warning: WorkflowWarning
+    state: ChessAnalysisState, warning: WorkflowWarning
 ) -> StateUpdate:
     """Construit la mise à jour après une indisponibilité de YouTube."""
     return _build_completed_update(
         state,
         status=_get_partial_success_status(state),
         videos=(),
-        warnings=(*state.warnings, warning)
+        warnings=(*state.warnings, warning),
     )
 
 
-def _build_error_update(
-    state: ChessAnalysisState,
-    error: WorkflowError
-) -> StateUpdate:
+def _build_error_update(state: ChessAnalysisState, error: WorkflowError) -> StateUpdate:
     """Construit la mise à jour après un échec bloquant."""
     return {
         "status": AnalysisStatus.FAILED,
@@ -344,16 +319,13 @@ def _build_error_update(
         "videos": [],
         "workflow_context": _build_workflow_context(state, ()),
         "errors": [*state.errors, error],
-        "warnings": list(state.warnings)
+        "warnings": list(state.warnings),
     }
 
 
 def _build_missing_service_update(state: ChessAnalysisState) -> StateUpdate:
     """Construit la mise à jour lorsque YoutubeService est indisponible."""
-    message = (
-        "YoutubeService est absent ou invalide dans la configuration "
-        "LangGraph."
-    )
+    message = "YoutubeService est absent ou invalide dans la configuration LangGraph."
 
     logger.error(message)
 
@@ -363,14 +335,13 @@ def _build_missing_service_update(state: ChessAnalysisState) -> StateUpdate:
             step=WorkflowStep.RETRIEVE_VIDEOS,
             code=ERROR_CONFIGURATION,
             message=message,
-            recoverable=False
-        )
+            recoverable=False,
+        ),
     )
 
 
 def _build_youtube_warning_update(
-    state: ChessAnalysisState,
-    error: YoutubeError
+    state: ChessAnalysisState, error: YoutubeError
 ) -> StateUpdate:
     """Construit la mise à jour après une erreur YouTube connue."""
     return _build_warning_update(
@@ -378,8 +349,8 @@ def _build_youtube_warning_update(
         WorkflowWarning(
             step=WorkflowStep.RETRIEVE_VIDEOS,
             code=ERROR_YOUTUBE_UNAVAILABLE,
-            message=str(error)
-        )
+            message=str(error),
+        ),
     )
 
 
@@ -390,20 +361,17 @@ def _build_unexpected_error_update(state: ChessAnalysisState) -> StateUpdate:
         WorkflowError(
             step=WorkflowStep.RETRIEVE_VIDEOS,
             code=ERROR_UNEXPECTED,
-            message=(
-                "Une erreur inattendue a empêché la récupération "
-                "des vidéos."
-            ),
-            recoverable=False
-        )
+            message=("Une erreur inattendue a empêché la récupération des vidéos."),
+            recoverable=False,
+        ),
     )
 
 
 # API publique
 
+
 async def retrieve_videos(
-    state: ChessAnalysisState,
-    config: RunnableConfig
+    state: ChessAnalysisState, config: RunnableConfig
 ) -> StateUpdate:
     """Recherche les vidéos pédagogiques associées à l'ouverture."""
     current_step = WorkflowStep.RETRIEVE_VIDEOS
@@ -415,18 +383,14 @@ async def retrieve_videos(
             "Recherche YouTube ignorée."
         )
 
-        return _build_success_update(
-            state,
-            ()
-        )
+        return _build_success_update(state, ())
 
     logger.info(
-        "Préparation de la recherche YouTube : titre=%r, eco=%r, "
-        "source=%s, query=%r.",
+        "Préparation de la recherche YouTube : titre=%r, eco=%r, source=%s, query=%r.",
         search_context.title,
         search_context.eco,
         search_context.source,
-        search_context.query
+        search_context.query,
     )
 
     youtube_service = _get_youtube_service(config)
@@ -436,38 +400,30 @@ async def retrieve_videos(
             step=current_step,
             service=ServiceType.YOUTUBE,
             status=WorkflowStepStatus.FAILED,
-            message="YoutubeService indisponible."
+            message="YoutubeService indisponible.",
         )
 
-        return _build_missing_service_update(
-            state
-        )
+        return _build_missing_service_update(state)
 
     try:
-        request = _build_search_request(
-            search_context
-        )
+        request = _build_search_request(search_context)
 
         emit_progress(
             step=current_step,
             service=ServiceType.YOUTUBE,
             status=WorkflowStepStatus.RUNNING,
-            message="Recherche de vidéos pédagogiques en cours."
+            message="Recherche de vidéos pédagogiques en cours.",
         )
 
-        collection = await youtube_service.search_videos(
-            request
-        )
+        collection = await youtube_service.search_videos(request)
 
-        videos = _select_videos(
-            collection
-        )
+        videos = _select_videos(collection)
 
         emit_progress(
             step=current_step,
             service=ServiceType.YOUTUBE,
             status=WorkflowStepStatus.COMPLETED,
-            message="Recherche de vidéos pédagogiques terminée."
+            message="Recherche de vidéos pédagogiques terminée.",
         )
 
     except YoutubeError as error:
@@ -475,48 +431,30 @@ async def retrieve_videos(
             step=current_step,
             service=ServiceType.YOUTUBE,
             status=WorkflowStepStatus.WARNING,
-            message="Recherche YouTube indisponible."
+            message="Recherche YouTube indisponible.",
         )
 
-        logger.warning(
-            "Recherche YouTube impossible : %s",
-            error
-        )
+        logger.warning("Recherche YouTube impossible : %s", error)
 
-        return _build_youtube_warning_update(
-            state,
-            error
-        )
+        return _build_youtube_warning_update(state, error)
 
     except Exception:
         emit_progress(
             step=current_step,
             service=ServiceType.YOUTUBE,
             status=WorkflowStepStatus.FAILED,
-            message=(
-                "Une erreur inattendue a interrompu "
-                "la recherche YouTube."
-            )
+            message=("Une erreur inattendue a interrompu la recherche YouTube."),
         )
 
-        logger.exception(
-            "Erreur inattendue durant la récupération "
-            "des vidéos."
-        )
+        logger.exception("Erreur inattendue durant la récupération des vidéos.")
 
-        return _build_unexpected_error_update(
-            state
-        )
+        return _build_unexpected_error_update(state)
 
     logger.info(
-        "%s vidéo(s) pédagogique(s) conservée(s) : "
-        "titre=%r, source=%s.",
+        "%s vidéo(s) pédagogique(s) conservée(s) : titre=%r, source=%s.",
         len(videos),
         search_context.title,
-        search_context.source
+        search_context.source,
     )
 
-    return _build_success_update(
-        state,
-        videos
-    )
+    return _build_success_update(state, videos)

@@ -7,13 +7,11 @@ import pytest
 
 # Constantes
 
-STARTING_FEN = (
-    "rnbqkbnr/pppppppp/8/8/8/8/"
-    "PPPPPPPP/RNBQKBNR w KQkq - 0 1"
-)
+STARTING_FEN = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
 
 
 # Tests
+
 
 @pytest.mark.deployment
 def test_position_validation_accepts_valid_fen(

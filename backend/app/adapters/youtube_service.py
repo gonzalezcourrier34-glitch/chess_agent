@@ -123,9 +123,7 @@ TOPIC_SCORE_INCREMENT = 0.03
 MAX_TOPIC_SCORE = 0.15
 
 
-YOUTUBE_PAYLOAD_ADAPTER: TypeAdapter[YoutubePayload] = TypeAdapter(
-    YoutubePayload
-)
+YOUTUBE_PAYLOAD_ADAPTER: TypeAdapter[YoutubePayload] = TypeAdapter(YoutubePayload)
 
 
 # Ces termes éliminent les résultats manifestement sans rapport avec
@@ -171,17 +169,13 @@ class YoutubeService:
 
         limits = httpx.Limits(
             max_connections=self._settings.http_max_connections,
-            max_keepalive_connections=(
-                self._settings.http_max_connections
-            ),
+            max_keepalive_connections=(self._settings.http_max_connections),
         )
 
         self._client = httpx.AsyncClient(
             base_url=self._settings.youtube_api_url,
             timeout=self._settings.youtube_timeout_seconds,
-            headers={
-                "User-Agent": self._settings.http_user_agent
-            },
+            headers={"User-Agent": self._settings.http_user_agent},
             limits=limits,
             follow_redirects=True,
         )
@@ -197,9 +191,7 @@ class YoutubeService:
 
     async def initialize(self) -> None:
         """Initialise le service."""
-        logger.info(
-            "Initialisation du client YouTube."
-        )
+        logger.info("Initialisation du client YouTube.")
 
     async def shutdown(self) -> None:
         """Libère les ressources du service."""
@@ -218,18 +210,14 @@ class YoutubeService:
                     lambda: self._active_operations == 0
                 )
 
-                logger.info(
-                    "Fermeture du client HTTP YouTube."
-                )
+                logger.info("Fermeture du client HTTP YouTube.")
 
                 await self._client.aclose()
 
             except Exception:
                 # Une erreur de fermeture ne doit pas masquer
                 # l'arrêt de l'application.
-                logger.exception(
-                    "Erreur lors de la fermeture du client YouTube."
-                )
+                logger.exception("Erreur lors de la fermeture du client YouTube.")
 
             finally:
                 self._closing = False
@@ -248,9 +236,7 @@ class YoutubeService:
                         service=SERVICE_NAME,
                         operation=name,
                     ),
-                    message=(
-                        "Le client HTTP YouTube est fermé."
-                    ),
+                    message=("Le client HTTP YouTube est fermé."),
                 )
 
             self._active_operations += 1
@@ -275,16 +261,10 @@ class YoutubeService:
                     service=SERVICE_NAME,
                     operation="_get_api_key",
                 ),
-                message=(
-                    "La clé API YouTube n'est pas configurée."
-                ),
+                message=("La clé API YouTube n'est pas configurée."),
             )
 
-        normalized_api_key = (
-            api_key
-            .get_secret_value()
-            .strip()
-        )
+        normalized_api_key = api_key.get_secret_value().strip()
 
         if not normalized_api_key:
             raise YoutubeConfigurationError(
@@ -292,9 +272,7 @@ class YoutubeService:
                     service=SERVICE_NAME,
                     operation="_get_api_key",
                 ),
-                message=(
-                    "La clé API YouTube est vide."
-                ),
+                message=("La clé API YouTube est vide."),
             )
 
         return normalized_api_key
@@ -323,9 +301,7 @@ class YoutubeService:
             params=request_params,
         )
 
-        return self._parse_response_payload(
-            response
-        )
+        return self._parse_response_payload(response)
 
     async def _execute_request(
         self,
@@ -334,10 +310,7 @@ class YoutubeService:
         params: YoutubeParams,
     ) -> httpx.Response:
         """Exécute une requête HTTP avec nouvelles tentatives."""
-        total_attempts = (
-            self._settings.http_max_retry_attempts
-            + 1
-        )
+        total_attempts = self._settings.http_max_retry_attempts + 1
 
         for attempt in range(
             1,
@@ -348,7 +321,7 @@ class YoutubeService:
                     endpoint,
                     params=params,
                 )
-                
+
                 if self._should_retry_status(
                     endpoint=endpoint,
                     status_code=response.status_code,
@@ -363,9 +336,7 @@ class YoutubeService:
                     continue
 
                 if response.is_error:
-                    self._raise_response_error(
-                        response
-                    )
+                    self._raise_response_error(response)
 
                 logger.debug(
                     "Réponse YouTube reçue : %s.",
@@ -382,9 +353,7 @@ class YoutubeService:
                     )
                     continue
 
-                logger.exception(
-                    "Timeout lors de l'appel à YouTube."
-                )
+                logger.exception("Timeout lors de l'appel à YouTube.")
 
                 raise YoutubeTimeoutError(
                     context=ErrorContext(
@@ -392,8 +361,7 @@ class YoutubeService:
                         operation=endpoint,
                     ),
                     message=(
-                        "Le service YouTube ne répond pas "
-                        "dans le délai configuré."
+                        "Le service YouTube ne répond pas dans le délai configuré."
                     ),
                     cause=error,
                 ) from error
@@ -409,18 +377,14 @@ class YoutubeService:
                     )
                     continue
 
-                logger.exception(
-                    "Erreur réseau lors de l'appel à YouTube."
-                )
+                logger.exception("Erreur réseau lors de l'appel à YouTube.")
 
                 raise YoutubeUnavailableError(
                     context=ErrorContext(
                         service=SERVICE_NAME,
                         operation=endpoint,
                     ),
-                    message=(
-                        "Impossible de contacter le service YouTube."
-                    ),
+                    message=("Impossible de contacter le service YouTube."),
                     cause=error,
                 ) from error
 
@@ -429,9 +393,7 @@ class YoutubeService:
                 service=SERVICE_NAME,
                 operation=endpoint,
             ),
-            message=(
-                "La requête YouTube n'a pas pu être exécutée."
-            ),
+            message=("La requête YouTube n'a pas pu être exécutée."),
         )
 
     def _parse_response_payload(
@@ -445,20 +407,14 @@ class YoutubeService:
                     service=SERVICE_NAME,
                     operation="_parse_response_payload",
                 ),
-                message=(
-                    "Réponse vide retournée par YouTube."
-                ),
+                message=("Réponse vide retournée par YouTube."),
             )
 
         try:
-            return YOUTUBE_PAYLOAD_ADAPTER.validate_json(
-                response.content
-            )
+            return YOUTUBE_PAYLOAD_ADAPTER.validate_json(response.content)
 
         except ValidationError as error:
-            logger.warning(
-                "Réponse JSON invalide retournée par YouTube."
-            )
+            logger.warning("Réponse JSON invalide retournée par YouTube.")
 
             raise YoutubeResponseError(
                 context=ErrorContext(
@@ -466,8 +422,7 @@ class YoutubeService:
                     operation="_parse_response_payload",
                 ),
                 message=(
-                    "La réponse retournée par YouTube "
-                    "n'est pas un objet JSON valide."
+                    "La réponse retournée par YouTube n'est pas un objet JSON valide."
                 ),
                 cause=error,
             ) from error
@@ -479,13 +434,9 @@ class YoutubeService:
         """Transforme une réponse HTTP en exception métier."""
         status_code = response.status_code
 
-        error_reason = self._extract_error_reason(
-            response
-        )
+        error_reason = self._extract_error_reason(response)
 
-        normalized_reason = (
-            error_reason.casefold()
-        )
+        normalized_reason = error_reason.casefold()
 
         error_context = ErrorContext(
             service=SERVICE_NAME,
@@ -496,23 +447,16 @@ class YoutubeService:
             },
         )
 
-        if (
-            status_code in {
-                403,
-                429,
-            }
-            and any(
-                marker.casefold()
-                in normalized_reason
-                for marker
-                in YOUTUBE_QUOTA_ERROR_MARKERS
-            )
+        if status_code in {
+            403,
+            429,
+        } and any(
+            marker.casefold() in normalized_reason
+            for marker in YOUTUBE_QUOTA_ERROR_MARKERS
         ):
             raise YoutubeQuotaError(
                 context=error_context,
-                message=(
-                    "Le quota de l'API YouTube est dépassé."
-                ),
+                message=("Le quota de l'API YouTube est dépassé."),
             )
 
         if status_code in {
@@ -523,8 +467,7 @@ class YoutubeService:
             raise YoutubeConfigurationError(
                 context=error_context,
                 message=(
-                    "La clé API YouTube est invalide, "
-                    "mal configurée ou non autorisée."
+                    "La clé API YouTube est invalide, mal configurée ou non autorisée."
                 ),
             )
 
@@ -534,29 +477,18 @@ class YoutubeService:
         }:
             raise YoutubeTimeoutError(
                 context=error_context,
-                message=(
-                    "Le délai d'attente de l'API "
-                    "YouTube est dépassé."
-                ),
+                message=("Le délai d'attente de l'API YouTube est dépassé."),
             )
 
-        if (
-            status_code == 429
-            or status_code >= 500
-        ):
+        if status_code == 429 or status_code >= 500:
             raise YoutubeUnavailableError(
                 context=error_context,
-                message=(
-                    "L'API YouTube est temporairement "
-                    "indisponible."
-                ),
+                message=("L'API YouTube est temporairement indisponible."),
             )
 
         raise YoutubeResponseError(
             context=error_context,
-            message=(
-                "L'API YouTube a retourné une erreur."
-            ),
+            message=("L'API YouTube a retourné une erreur."),
         )
 
     def _extract_error_reason(
@@ -565,18 +497,12 @@ class YoutubeService:
     ) -> str:
         """Retourne la raison structurée d'une erreur YouTube."""
         try:
-            payload = (
-                YOUTUBE_PAYLOAD_ADAPTER.validate_json(
-                    response.content
-                )
-            )
+            payload = YOUTUBE_PAYLOAD_ADAPTER.validate_json(response.content)
 
         except ValidationError:
             return response.text.strip()
 
-        error_payload = payload.get(
-            "error"
-        )
+        error_payload = payload.get("error")
 
         if not isinstance(
             error_payload,
@@ -584,9 +510,7 @@ class YoutubeService:
         ):
             return response.text.strip()
 
-        errors = error_payload.get(
-            "errors"
-        )
+        errors = error_payload.get("errors")
 
         if isinstance(errors, list):
             for error in errors:
@@ -596,21 +520,14 @@ class YoutubeService:
                 ):
                     continue
 
-                reason = self._get_text(
-                    error.get("reason")
-                )
+                reason = self._get_text(error.get("reason"))
 
                 if reason:
                     return reason
 
-        message = self._get_text(
-            error_payload.get("message")
-        )
+        message = self._get_text(error_payload.get("message"))
 
-        return (
-            message
-            or response.text.strip()
-        )
+        return message or response.text.strip()
 
     def _should_retry_status(
         self,
@@ -626,8 +543,7 @@ class YoutubeService:
             return False
 
         return (
-            status_code in YOUTUBE_RETRYABLE_STATUS_CODES
-            and attempt < total_attempts
+            status_code in YOUTUBE_RETRYABLE_STATUS_CODES and attempt < total_attempts
         )
 
     async def _wait_before_retry(
@@ -638,15 +554,10 @@ class YoutubeService:
         status_code: int | None = None,
     ) -> None:
         """Attend avant une nouvelle tentative HTTP."""
-        delay = (
-            self._settings.http_retry_delay_seconds
-            * 2 ** (attempt - 1)
-        )
+        delay = self._settings.http_retry_delay_seconds * 2 ** (attempt - 1)
 
         status_message = (
-            f" après le statut HTTP {status_code}"
-            if status_code is not None
-            else ""
+            f" après le statut HTTP {status_code}" if status_code is not None else ""
         )
 
         logger.warning(
@@ -659,9 +570,7 @@ class YoutubeService:
             status_message,
         )
 
-        await asyncio.sleep(
-            delay
-        )
+        await asyncio.sleep(delay)
 
     # Recherche
 
@@ -670,32 +579,14 @@ class YoutubeService:
         request: VideoSearchRequest,
     ) -> VideoCollection:
         """Recherche des vidéos pédagogiques."""
-        async with self._operation(
-            "search_videos"
-        ):
-            normalized_query = (
-                self._normalize_query(
-                    request.query
-                )
-            )
+        async with self._operation("search_videos"):
+            normalized_query = self._normalize_query(request.query)
 
-            normalized_limit = (
-                self._normalize_max_results(
-                    request.max_results
-                )
-            )
+            normalized_limit = self._normalize_max_results(request.max_results)
 
-            normalized_language = (
-                self._normalize_language(
-                    request.language
-                )
-            )
+            normalized_language = self._normalize_language(request.language)
 
-            search_query = (
-                self._build_search_query(
-                    normalized_query
-                )
-            )
+            search_query = self._build_search_query(normalized_query)
 
             logger.info(
                 "Recherche de vidéos YouTube pour : %s",
@@ -709,50 +600,33 @@ class YoutubeService:
                     "q": search_query,
                     "type": YOUTUBE_SEARCH_TYPE,
                     "order": YOUTUBE_SEARCH_ORDER,
-                    "safeSearch": (
-                        YOUTUBE_SEARCH_SAFE_SEARCH
-                    ),
-                    "videoDuration": (
-                        YOUTUBE_SEARCH_VIDEO_DURATION
-                    ),
-                    "relevanceLanguage": (
-                        normalized_language
-                    ),
-                    "regionCode": (
-                        self._settings.youtube_region_code
-                    ),
+                    "safeSearch": (YOUTUBE_SEARCH_SAFE_SEARCH),
+                    "videoDuration": (YOUTUBE_SEARCH_VIDEO_DURATION),
+                    "relevanceLanguage": (normalized_language),
+                    "regionCode": (self._settings.youtube_region_code),
                     "maxResults": normalized_limit,
                 },
             )
 
-            video_ids = self._extract_video_ids(
-                search_payload
-            )
+            video_ids = self._extract_video_ids(search_payload)
 
-            details = await self._get_video_details(
-                video_ids
-            )
+            details = await self._get_video_details(video_ids)
 
-            recommendations = (
-                self._build_recommendations(
-                    search_payload,
-                    details=details,
-                    query=normalized_query,
-                )
+            recommendations = self._build_recommendations(
+                search_payload,
+                details=details,
+                query=normalized_query,
             )
 
             logger.info(
-                "%s vidéo(s) YouTube conservée(s) "
-                "pour %s.",
+                "%s vidéo(s) YouTube conservée(s) pour %s.",
                 len(recommendations),
                 normalized_query,
             )
 
             return VideoCollection(
                 query=normalized_query,
-                total_results=len(
-                    recommendations
-                ),
+                total_results=len(recommendations),
                 videos=recommendations,
             )
 
@@ -767,18 +641,12 @@ class YoutubeService:
         payload = await self._request(
             YOUTUBE_VIDEOS_ENDPOINT,
             params={
-                "part": (
-                    YOUTUBE_VIDEO_DETAILS_PART
-                ),
-                "id": ",".join(
-                    video_ids
-                ),
+                "part": (YOUTUBE_VIDEO_DETAILS_PART),
+                "id": ",".join(video_ids),
             },
         )
 
-        return self._extract_video_details(
-            payload
-        )
+        return self._extract_video_details(payload)
 
     # Normalisation
 
@@ -796,15 +664,10 @@ class YoutubeService:
                     service=SERVICE_NAME,
                     operation="_normalize_query",
                 ),
-                message=(
-                    "La recherche YouTube doit être "
-                    "une chaîne de caractères."
-                ),
+                message=("La recherche YouTube doit être une chaîne de caractères."),
             )
 
-        normalized_query = " ".join(
-            query.split()
-        )
+        normalized_query = " ".join(query.split())
 
         if not normalized_query:
             raise InvalidRequestError(
@@ -812,10 +675,7 @@ class YoutubeService:
                     service=SERVICE_NAME,
                     operation="_normalize_query",
                 ),
-                message=(
-                    "La recherche YouTube ne peut "
-                    "pas être vide."
-                ),
+                message=("La recherche YouTube ne peut pas être vide."),
             )
 
         return normalized_query
@@ -831,32 +691,22 @@ class YoutubeService:
             else self._settings.youtube_search_max_results
         )
 
-        if (
-            isinstance(
-                normalized_limit,
-                bool,
-            )
-            or not isinstance(
-                normalized_limit,
-                int,
-            )
+        if isinstance(
+            normalized_limit,
+            bool,
+        ) or not isinstance(
+            normalized_limit,
+            int,
         ):
             raise InvalidRequestError(
                 context=ErrorContext(
                     service=SERVICE_NAME,
                     operation="_normalize_max_results",
                 ),
-                message=(
-                    "Le nombre maximal de vidéos "
-                    "doit être un entier."
-                ),
+                message=("Le nombre maximal de vidéos doit être un entier."),
             )
 
-        if not (
-            MIN_SEARCH_RESULTS
-            <= normalized_limit
-            <= MAX_SEARCH_RESULTS
-        ):
+        if not (MIN_SEARCH_RESULTS <= normalized_limit <= MAX_SEARCH_RESULTS):
             raise InvalidRequestError(
                 context=ErrorContext(
                     service=SERVICE_NAME,
@@ -892,23 +742,12 @@ class YoutubeService:
                     service=SERVICE_NAME,
                     operation="_normalize_language",
                 ),
-                message=(
-                    "La langue YouTube doit être "
-                    "une chaîne de caractères."
-                ),
+                message=("La langue YouTube doit être une chaîne de caractères."),
             )
 
-        normalized_language = (
-            normalized_language
-            .strip()
-            .lower()
-        )
+        normalized_language = normalized_language.strip().lower()
 
-        if not (
-            MIN_LANGUAGE_LENGTH
-            <= len(normalized_language)
-            <= MAX_LANGUAGE_LENGTH
-        ):
+        if not (MIN_LANGUAGE_LENGTH <= len(normalized_language) <= MAX_LANGUAGE_LENGTH):
             raise InvalidRequestError(
                 context=ErrorContext(
                     service=SERVICE_NAME,
@@ -928,10 +767,7 @@ class YoutubeService:
         query: str,
     ) -> str:
         """Construit une recherche pédagogique."""
-        return (
-            f"{query} "
-            f"{self._settings.youtube_query_suffix}"
-        )
+        return f"{query} {self._settings.youtube_query_suffix}"
 
     # Extraction
 
@@ -940,9 +776,7 @@ class YoutubeService:
         payload: YoutubePayload,
     ) -> list[str]:
         """Extrait les identifiants uniques des vidéos."""
-        items = payload.get(
-            "items"
-        )
+        items = payload.get("items")
 
         if not isinstance(
             items,
@@ -961,9 +795,7 @@ class YoutubeService:
             ):
                 continue
 
-            identifier = item.get(
-                "id"
-            )
+            identifier = item.get("id")
 
             if not isinstance(
                 identifier,
@@ -971,25 +803,14 @@ class YoutubeService:
             ):
                 continue
 
-            video_id = self._get_text(
-                identifier.get(
-                    "videoId"
-                )
-            )
+            video_id = self._get_text(identifier.get("videoId"))
 
-            if (
-                not video_id
-                or video_id in seen_video_ids
-            ):
+            if not video_id or video_id in seen_video_ids:
                 continue
 
-            seen_video_ids.add(
-                video_id
-            )
+            seen_video_ids.add(video_id)
 
-            video_ids.append(
-                video_id
-            )
+            video_ids.append(video_id)
 
         return video_ids
 
@@ -998,9 +819,7 @@ class YoutubeService:
         payload: YoutubePayload,
     ) -> dict[str, YoutubeVideoDetails]:
         """Extrait les métadonnées complémentaires."""
-        items = payload.get(
-            "items"
-        )
+        items = payload.get("items")
 
         if not isinstance(
             items,
@@ -1008,10 +827,7 @@ class YoutubeService:
         ):
             return {}
 
-        details: dict[
-            str,
-            YoutubeVideoDetails
-        ] = {}
+        details: dict[str, YoutubeVideoDetails] = {}
 
         for item in items:
             if not isinstance(
@@ -1020,20 +836,14 @@ class YoutubeService:
             ):
                 continue
 
-            video_id = self._get_text(
-                item.get("id")
-            )
+            video_id = self._get_text(item.get("id"))
 
             if not video_id:
                 continue
 
-            content_details = item.get(
-                "contentDetails"
-            )
+            content_details = item.get("contentDetails")
 
-            statistics = item.get(
-                "statistics"
-            )
+            statistics = item.get("statistics")
 
             duration_seconds: int | None = None
             view_count: int | None = None
@@ -1044,55 +854,23 @@ class YoutubeService:
                 content_details,
                 dict,
             ):
-                duration_seconds = (
-                    self._parse_duration(
-                        content_details.get(
-                            "duration"
-                        )
-                    )
-                )
+                duration_seconds = self._parse_duration(content_details.get("duration"))
 
             if isinstance(
                 statistics,
                 dict,
             ):
-                view_count = (
-                    self._parse_optional_int(
-                        statistics.get(
-                            "viewCount"
-                        )
-                    )
-                )
+                view_count = self._parse_optional_int(statistics.get("viewCount"))
 
-                like_count = (
-                    self._parse_optional_int(
-                        statistics.get(
-                            "likeCount"
-                        )
-                    )
-                )
+                like_count = self._parse_optional_int(statistics.get("likeCount"))
 
-                comment_count = (
-                    self._parse_optional_int(
-                        statistics.get(
-                            "commentCount"
-                        )
-                    )
-                )
+                comment_count = self._parse_optional_int(statistics.get("commentCount"))
 
             details[video_id] = {
-                "duration_seconds": (
-                    duration_seconds
-                ),
-                "view_count": (
-                    view_count
-                ),
-                "like_count": (
-                    like_count
-                ),
-                "comment_count": (
-                    comment_count
-                ),
+                "duration_seconds": (duration_seconds),
+                "view_count": (view_count),
+                "like_count": (like_count),
+                "comment_count": (comment_count),
             }
 
         return details
@@ -1110,9 +888,7 @@ class YoutubeService:
         query: str,
     ) -> list[VideoRecommendation]:
         """Construit les recommandations vidéo uniques."""
-        items = payload.get(
-            "items"
-        )
+        items = payload.get("items")
 
         if not isinstance(
             items,
@@ -1120,9 +896,7 @@ class YoutubeService:
         ):
             return []
 
-        recommendations: list[
-            VideoRecommendation
-        ] = []
+        recommendations: list[VideoRecommendation] = []
 
         seen_video_ids: set[str] = set()
 
@@ -1130,32 +904,24 @@ class YoutubeService:
             items,
             start=1,
         ):
-            recommendation = (
-                self._build_recommendation(
-                    item,
-                    details=details,
-                    query=query,
-                    rank=rank,
-                )
+            recommendation = self._build_recommendation(
+                item,
+                details=details,
+                query=query,
+                rank=rank,
             )
 
             if recommendation is None:
                 continue
 
-            video_id = (
-                recommendation.video.id
-            )
+            video_id = recommendation.video.id
 
             if video_id in seen_video_ids:
                 continue
 
-            seen_video_ids.add(
-                video_id
-            )
+            seen_video_ids.add(video_id)
 
-            recommendations.append(
-                recommendation
-            )
+            recommendations.append(recommendation)
 
         return recommendations
 
@@ -1177,52 +943,23 @@ class YoutubeService:
         ):
             return None
 
-        identifier = item.get(
-            "id"
-        )
+        identifier = item.get("id")
 
-        snippet = item.get(
-            "snippet"
-        )
+        snippet = item.get("snippet")
 
-        if (
-            not isinstance(identifier, dict)
-            or not isinstance(snippet, dict)
-        ):
+        if not isinstance(identifier, dict) or not isinstance(snippet, dict):
             return None
 
-        video_id = self._get_text(
-            identifier.get(
-                "videoId"
-            )
-        )
+        video_id = self._get_text(identifier.get("videoId"))
 
-        title = self._get_text(
-            snippet.get(
-                "title"
-            )
-        )
+        title = self._get_text(snippet.get("title"))
 
-        channel_name = self._get_text(
-            snippet.get(
-                "channelTitle"
-            )
-        )
+        channel_name = self._get_text(snippet.get("channelTitle"))
 
-        if (
-            not video_id
-            or not title
-            or not channel_name
-        ):
+        if not video_id or not title or not channel_name:
             return None
 
-        description = (
-            self._get_optional_text(
-                snippet.get(
-                    "description"
-                )
-            )
-        )
+        description = self._get_optional_text(snippet.get("description"))
 
         if not self._is_relevant_video(
             title=title,
@@ -1232,97 +969,47 @@ class YoutubeService:
         ):
             return None
 
-        channel_id = (
-            self._get_optional_text(
-                snippet.get(
-                    "channelId"
-                )
-            )
+        channel_id = self._get_optional_text(snippet.get("channelId"))
+
+        matching_topics = self._get_matching_topics(
+            title=title,
+            description=description,
+            query=query,
         )
 
-        matching_topics = (
-            self._get_matching_topics(
-                title=title,
-                description=description,
-                query=query,
-            )
-        )
-
-        video_details = details.get(
-            video_id
-        )
+        video_details = details.get(video_id)
 
         video = Video(
             id=video_id,
             platform=VideoPlatform.YOUTUBE,
             title=title,
             description=description,
-            url=(
-                YOUTUBE_VIDEO_URL_TEMPLATE.format(
-                    video_id=video_id
-                )
-            ),
-            thumbnail_url=(
-                self._get_thumbnail_url(
-                    snippet.get(
-                        "thumbnails"
-                    )
-                )
-            ),
+            url=(YOUTUBE_VIDEO_URL_TEMPLATE.format(video_id=video_id)),
+            thumbnail_url=(self._get_thumbnail_url(snippet.get("thumbnails"))),
             duration_seconds=(
-                video_details[
-                    "duration_seconds"
-                ]
-                if video_details is not None
-                else None
+                video_details["duration_seconds"] if video_details is not None else None
             ),
             view_count=(
-                video_details[
-                    "view_count"
-                ]
-                if video_details is not None
-                else None
+                video_details["view_count"] if video_details is not None else None
             ),
             like_count=(
-                video_details[
-                    "like_count"
-                ]
-                if video_details is not None
-                else None
+                video_details["like_count"] if video_details is not None else None
             ),
             comment_count=(
-                video_details[
-                    "comment_count"
-                ]
-                if video_details is not None
-                else None
+                video_details["comment_count"] if video_details is not None else None
             ),
-            published_at=(
-                self._get_optional_text(
-                    snippet.get(
-                        "publishedAt"
-                    )
-                )
-            ),
+            published_at=(self._get_optional_text(snippet.get("publishedAt"))),
             channel=VideoChannel(
                 id=channel_id,
                 name=channel_name,
                 url=(
-                    YOUTUBE_CHANNEL_URL_TEMPLATE.format(
-                        channel_id=channel_id
-                    )
+                    YOUTUBE_CHANNEL_URL_TEMPLATE.format(channel_id=channel_id)
                     if channel_id is not None
                     else None
                 ),
                 subscribers=None,
             ),
-            language=(
-                self._get_optional_text(
-                    snippet.get(
-                        "defaultLanguage"
-                    )
-                )
-            ),
+            language=(self._get_optional_text(snippet.get("defaultLanguage"))),
         )
 
         return VideoRecommendation(
@@ -1333,10 +1020,7 @@ class YoutubeService:
                     matching_topics=matching_topics,
                 )
             ),
-            reason=(
-                "Vidéo pédagogique correspondant "
-                "à l'ouverture analysée."
-            ),
+            reason=("Vidéo pédagogique correspondant à l'ouverture analysée."),
             matching_topics=matching_topics,
         )
 
@@ -1360,26 +1044,20 @@ class YoutubeService:
         ).casefold()
 
         has_chess_context = any(
-            term in searchable_text
-            for term in REQUIRED_CHESS_TERMS
+            term in searchable_text for term in REQUIRED_CHESS_TERMS
         )
 
         if not has_chess_context:
             return False
 
         query_terms = {
-            word
-            for word in query.casefold().split()
-            if len(word) >= MIN_TOPIC_LENGTH
+            word for word in query.casefold().split() if len(word) >= MIN_TOPIC_LENGTH
         }
 
         if not query_terms:
             return True
 
-        return any(
-            term in searchable_text
-            for term in query_terms
-        )
+        return any(term in searchable_text for term in query_terms)
 
     def _get_matching_topics(
         self,
@@ -1389,26 +1067,15 @@ class YoutubeService:
         query: str,
     ) -> list[str]:
         """Retourne les thèmes correspondant à la recherche."""
-        searchable_text = (
-            f"{title} {description or ''}"
-            .casefold()
-        )
+        searchable_text = f"{title} {description or ''}".casefold()
 
         topics = [
             word
-            for word
-            in query.casefold().split()
-            if (
-                len(word) >= MIN_TOPIC_LENGTH
-                and word in searchable_text
-            )
+            for word in query.casefold().split()
+            if (len(word) >= MIN_TOPIC_LENGTH and word in searchable_text)
         ]
 
-        return list(
-            dict.fromkeys(
-                topics
-            )
-        )
+        return list(dict.fromkeys(topics))
 
     def _calculate_relevance_score(
         self,
@@ -1418,15 +1085,12 @@ class YoutubeService:
     ) -> float:
         """Calcule un score simple de pertinence."""
         rank_score = max(
-            1.0
-            - (rank - 1)
-            * RANK_SCORE_DECREMENT,
+            1.0 - (rank - 1) * RANK_SCORE_DECREMENT,
             MIN_RELEVANCE_SCORE,
         )
 
         topic_bonus = min(
-            len(matching_topics)
-            * TOPIC_SCORE_INCREMENT,
+            len(matching_topics) * TOPIC_SCORE_INCREMENT,
             MAX_TOPIC_SCORE,
         )
 
@@ -1455,9 +1119,7 @@ class YoutubeService:
             "medium",
             "default",
         ):
-            thumbnail = thumbnails.get(
-                quality
-            )
+            thumbnail = thumbnails.get(quality)
 
             if not isinstance(
                 thumbnail,
@@ -1465,11 +1127,7 @@ class YoutubeService:
             ):
                 continue
 
-            url = self._get_optional_text(
-                thumbnail.get(
-                    "url"
-                )
-            )
+            url = self._get_optional_text(thumbnail.get("url"))
 
             if url:
                 return url
@@ -1481,18 +1139,12 @@ class YoutubeService:
         value: JsonValue | None,
     ) -> int | None:
         """Convertit une durée ISO 8601 en secondes."""
-        normalized_value = (
-            self._get_text(
-                value
-            )
-        )
+        normalized_value = self._get_text(value)
 
         if not normalized_value:
             return None
 
-        match = DURATION_PATTERN.fullmatch(
-            normalized_value
-        )
+        match = DURATION_PATTERN.fullmatch(normalized_value)
 
         if match is None:
             logger.debug(
@@ -1501,25 +1153,13 @@ class YoutubeService:
             )
             return None
 
-        days = int(
-            match.group("days")
-            or 0
-        )
+        days = int(match.group("days") or 0)
 
-        hours = int(
-            match.group("hours")
-            or 0
-        )
+        hours = int(match.group("hours") or 0)
 
-        minutes = int(
-            match.group("minutes")
-            or 0
-        )
+        minutes = int(match.group("minutes") or 0)
 
-        seconds = int(
-            match.group("seconds")
-            or 0
-        )
+        seconds = int(match.group("seconds") or 0)
 
         return (
             days * SECONDS_PER_DAY
@@ -1533,19 +1173,13 @@ class YoutubeService:
         value: JsonValue | None,
     ) -> int | None:
         """Convertit un compteur YouTube en entier."""
-        normalized_value = (
-            self._get_text(
-                value
-            )
-        )
+        normalized_value = self._get_text(value)
 
         if not normalized_value:
             return None
 
         try:
-            return int(
-                normalized_value
-            )
+            return int(normalized_value)
 
         except ValueError:
             logger.debug(
@@ -1565,19 +1199,14 @@ class YoutubeService:
         ):
             return ""
 
-        return " ".join(
-            value.split()
-        )
+        return " ".join(value.split())
 
     def _get_optional_text(
         self,
         value: JsonValue | None,
     ) -> str | None:
         """Retourne une chaîne nettoyée ou ``None``."""
-        return (
-            self._get_text(value)
-            or None
-        )
+        return self._get_text(value) or None
 
     # Informations
 
@@ -1587,10 +1216,7 @@ class YoutubeService:
 
     def is_ready(self) -> bool:
         """Indique si le service peut être utilisé."""
-        if (
-            self._closing
-            or self._client.is_closed
-        ):
+        if self._closing or self._client.is_closed:
             return False
 
         try:
@@ -1605,23 +1231,15 @@ class YoutubeService:
 
     async def ping(self) -> bool:
         """Vérifie que le service YouTube est prêt à être utilisé."""
-        if (
-            self._closing
-            or self._client.is_closed
-        ):
-            logger.error(
-                "Le client HTTP YouTube est fermé."
-            )
+        if self._closing or self._client.is_closed:
+            logger.error("Le client HTTP YouTube est fermé.")
             return False
 
         try:
             self._get_api_key()
 
         except YoutubeConfigurationError:
-            logger.info(
-                "Aucune clé API YouTube configurée. "
-                "Le service est désactivé."
-            )
+            logger.info("Aucune clé API YouTube configurée. Le service est désactivé.")
             return False
 
         return True
@@ -1637,40 +1255,16 @@ class YoutubeService:
             "is_ready": self.is_ready(),
             "is_closed": self.is_closed(),
             "available": available,
-            "base_url": str(
-                self._client.base_url
-            ),
-            "search_endpoint": (
-                YOUTUBE_SEARCH_ENDPOINT
-            ),
-            "videos_endpoint": (
-                YOUTUBE_VIDEOS_ENDPOINT
-            ),
-            "region_code": (
-                self._settings.youtube_region_code
-            ),
-            "default_language": (
-                self._settings.youtube_default_language
-            ),
-            "query_suffix": (
-                self._settings.youtube_query_suffix
-            ),
-            "max_results": (
-                self._settings.youtube_search_max_results
-            ),
-            "timeout_seconds": (
-                self._settings.youtube_timeout_seconds
-            ),
-            "max_retry_attempts": (
-                self._settings.http_max_retry_attempts
-            ),
-            "retry_delay_seconds": (
-                self._settings.http_retry_delay_seconds
-            ),
-            "max_connections": (
-                self._settings.http_max_connections
-            ),
-            "user_agent": (
-                self._settings.http_user_agent
-            ),
+            "base_url": str(self._client.base_url),
+            "search_endpoint": (YOUTUBE_SEARCH_ENDPOINT),
+            "videos_endpoint": (YOUTUBE_VIDEOS_ENDPOINT),
+            "region_code": (self._settings.youtube_region_code),
+            "default_language": (self._settings.youtube_default_language),
+            "query_suffix": (self._settings.youtube_query_suffix),
+            "max_results": (self._settings.youtube_search_max_results),
+            "timeout_seconds": (self._settings.youtube_timeout_seconds),
+            "max_retry_attempts": (self._settings.http_max_retry_attempts),
+            "retry_delay_seconds": (self._settings.http_retry_delay_seconds),
+            "max_connections": (self._settings.http_max_connections),
+            "user_agent": (self._settings.http_user_agent),
         }

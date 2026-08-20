@@ -18,6 +18,7 @@ from enum import StrEnum
 
 # Analyse
 
+
 class AnalysisStatus(StrEnum):
     """État global d'une analyse."""
 
@@ -29,6 +30,7 @@ class AnalysisStatus(StrEnum):
 
 # Workflow
 
+
 class WorkflowStep(StrEnum):
     """Étapes exécutables du workflow LangGraph."""
 
@@ -38,9 +40,7 @@ class WorkflowStep(StrEnum):
 
     ENGINE_ANALYSIS = "engine_analysis"
 
-    UNKNOWN_POSITION_ANALYSIS = (
-        "unknown_position_analysis"
-    )
+    UNKNOWN_POSITION_ANALYSIS = "unknown_position_analysis"
 
     RETRIEVE_CONTEXT = "retrieve_context"
 
@@ -49,6 +49,7 @@ class WorkflowStep(StrEnum):
     GENERATE_RESPONSE = "generate_response"
 
     SAVE_ANALYSIS = "save_analysis"
+
 
 # Progression
 
@@ -61,8 +62,10 @@ class WorkflowStepStatus(StrEnum):
     COMPLETED = "completed"
     WARNING = "warning"
     FAILED = "failed"
-    
+
+
 # Échecs
+
 
 class ChessColor(StrEnum):
     """Couleur d'un joueur."""
@@ -80,6 +83,7 @@ class MoveNotation(StrEnum):
 
 # Évaluation
 
+
 class EvaluationType(StrEnum):
     """Nature d'une évaluation Stockfish."""
 
@@ -89,17 +93,18 @@ class EvaluationType(StrEnum):
 
 # Services
 
+
 class ServiceType(StrEnum):
     """Services métier et d'infrastructure de l'application."""
 
     CHESS = "chess"
     STOCKFISH = "stockfish"
     LICHESS = "lichess"
-    
+
     VECTOR_SEARCH = "vector_search"
     EMBEDDING = "embedding"
     MILVUS = "milvus"
-    
+
     LLM = "llm"
     YOUTUBE = "youtube"
     MONGODB = "mongodb"
@@ -116,6 +121,7 @@ class ServiceStatus(StrEnum):
 
 # Documents
 
+
 class DocumentType(StrEnum):
     """Nature d'un document manipulé par le moteur RAG."""
 
@@ -127,6 +133,7 @@ class DocumentType(StrEnum):
 
 # Vidéos
 
+
 class VideoPlatform(StrEnum):
     """Plateforme vidéo supportée."""
 
@@ -134,6 +141,7 @@ class VideoPlatform(StrEnum):
 
 
 # Difficulté
+
 
 class DifficultyLevel(StrEnum):
     """Niveau de difficulté d'un contenu pédagogique."""

@@ -120,8 +120,7 @@ class StockfishService:
             # Le lancement et la configuration UCI sont synchrones dans
             # python-chess et doivent rester hors de la boucle événementielle.
             started_engine = await asyncio.to_thread(
-                chess.engine.SimpleEngine.popen_uci,
-                str(engine_path)
+                chess.engine.SimpleEngine.popen_uci, str(engine_path)
             )
             engine = started_engine
             await asyncio.to_thread(
@@ -129,7 +128,7 @@ class StockfishService:
                 {
                     "Threads": settings.stockfish_threads,
                     "Hash": settings.stockfish_hash_mb,
-                }
+                },
             )
         except Exception as error:
             logger.exception("Impossible de démarrer Stockfish.")
@@ -138,33 +137,26 @@ class StockfishService:
                 await self._close_failed_engine(engine)
 
             raise StockfishUnavailableError(
-                message="Le moteur Stockfish ne peut pas être démarré.",
-                cause=error
+                message="Le moteur Stockfish ne peut pas être démarré.", cause=error
             ) from error
 
         self._engine = started_engine
         logger.info("Stockfish est initialisé.")
         return started_engine
 
-    async def _close_failed_engine(
-        self,
-        engine: chess.engine.SimpleEngine
-    ) -> None:
+    async def _close_failed_engine(self, engine: chess.engine.SimpleEngine) -> None:
         """Ferme un moteur dont l'initialisation n'a pas abouti."""
         try:
             await asyncio.to_thread(engine.quit)
         except Exception:
             logger.exception(
-                "Impossible de fermer Stockfish après l'échec de son "
-                "initialisation."
+                "Impossible de fermer Stockfish après l'échec de son initialisation."
             )
 
             try:
                 await asyncio.to_thread(engine.close)
             except Exception:
-                logger.exception(
-                    "Impossible de forcer la fermeture de Stockfish."
-                )
+                logger.exception("Impossible de forcer la fermeture de Stockfish.")
 
     async def close(self) -> None:
         """Ferme proprement le moteur Stockfish."""
@@ -187,9 +179,7 @@ class StockfishService:
                 try:
                     await asyncio.to_thread(engine.close)
                 except Exception:
-                    logger.exception(
-                        "Impossible de forcer la fermeture de Stockfish."
-                    )
+                    logger.exception("Impossible de forcer la fermeture de Stockfish.")
 
     async def initialize(self) -> None:
         """Initialise le service pour les gestionnaires de cycle de vie."""
@@ -204,9 +194,7 @@ class StockfishService:
     def _get_engine(self) -> chess.engine.SimpleEngine:
         """Retourne le moteur initialisé."""
         if self._engine is None:
-            raise StockfishUnavailableError(
-                message="Stockfish n'est pas initialisé."
-            )
+            raise StockfishUnavailableError(message="Stockfish n'est pas initialisé.")
 
         return self._engine
 
@@ -216,8 +204,7 @@ class StockfishService:
             return await self._start_engine()
 
     def _normalize_analysis(
-        self,
-        analysis: StockfishAnalysis
+        self, analysis: StockfishAnalysis
     ) -> list[chess.engine.InfoDict]:
         """Normalise les réponses simple et MultiPV de python-chess."""
         if isinstance(analysis, list):
@@ -226,8 +213,7 @@ class StockfishService:
         return [analysis]
 
     def _get_principal_variation(
-        self,
-        evaluation: chess.engine.InfoDict
+        self, evaluation: chess.engine.InfoDict
     ) -> list[chess.Move]:
         """Retourne la variante principale fournie par Stockfish."""
         moves = evaluation.get("pv")
@@ -238,8 +224,7 @@ class StockfishService:
         return list(moves)
 
     def _get_principal_score(
-        self,
-        evaluation: Mapping[str, object]
+        self, evaluation: Mapping[str, object]
     ) -> chess.engine.PovScore:
         """Retourne le score obligatoire de l'évaluation principale."""
         score = evaluation.get("score")
@@ -251,26 +236,16 @@ class StockfishService:
 
         return score
 
-    def _get_nodes(
-        self,
-        evaluation: Mapping[str, object]
-    ) -> int | None:
+    def _get_nodes(self, evaluation: Mapping[str, object]) -> int | None:
         """Retourne un nombre de nœuds valide lorsqu'il est disponible."""
         nodes = evaluation.get("nodes")
 
-        if (
-            isinstance(nodes, bool)
-            or not isinstance(nodes, int)
-            or nodes < 0
-        ):
+        if isinstance(nodes, bool) or not isinstance(nodes, int) or nodes < 0:
             return None
 
         return nodes
 
-    def _get_engine_time_ms(
-        self,
-        evaluation: Mapping[str, object]
-    ) -> int | None:
+    def _get_engine_time_ms(self, evaluation: Mapping[str, object]) -> int | None:
         """Retourne le temps moteur en millisecondes."""
         engine_time = evaluation.get("time")
 
@@ -287,10 +262,7 @@ class StockfishService:
     # Analyse
 
     async def analyze_position(
-        self,
-        request: FenRequest,
-        *,
-        count: bool = True
+        self, request: FenRequest, *, count: bool = True
     ) -> PositionEvaluation:
         """Analyse une position avec Stockfish."""
         logger.debug("Analyse Stockfish de la position : %s", request.fen)
@@ -308,43 +280,31 @@ class StockfishService:
                 logger.exception("Timeout durant l'analyse Stockfish.")
                 raise StockfishTimeoutError(
                     message=(
-                        "L'analyse Stockfish a dépassé le temps maximal "
-                        "autorisé."
+                        "L'analyse Stockfish a dépassé le temps maximal autorisé."
                     ),
-                    cause=error
+                    cause=error,
                 ) from error
             except asyncio.CancelledError:
                 raise
             except Exception as error:
                 logger.exception("Erreur durant l'analyse Stockfish.")
                 raise StockfishAnalysisError(
-                    message="Impossible d'analyser la position.",
-                    cause=error
+                    message="Impossible d'analyser la position.", cause=error
                 ) from error
 
-            position_evaluation = self._build_evaluation(
-                board=board,
-                info=raw_analysis
-            )
+            position_evaluation = self._build_evaluation(board=board, info=raw_analysis)
 
             if count:
                 self._analyzed_positions += 1
 
-            duration_ms = (
-                perf_counter() - started_at
-            ) * MILLISECONDS_PER_SECOND
+            duration_ms = (perf_counter() - started_at) * MILLISECONDS_PER_SECOND
             self._last_analysis_duration_ms = duration_ms
 
-        logger.info(
-            "Analyse Stockfish terminée en %.2f ms.",
-            duration_ms
-        )
+        logger.info("Analyse Stockfish terminée en %.2f ms.", duration_ms)
         return position_evaluation
 
     async def _analyze_with_timeout(
-        self,
-        engine: chess.engine.SimpleEngine,
-        board: chess.Board
+        self, engine: chess.engine.SimpleEngine, board: chess.Board
     ) -> StockfishAnalysis:
         """Exécute l'analyse bloquante avec un délai maximal sûr."""
         analysis_task = asyncio.create_task(
@@ -354,7 +314,7 @@ class StockfishService:
         try:
             return await asyncio.wait_for(
                 asyncio.shield(analysis_task),
-                timeout=settings.stockfish_timeout_seconds
+                timeout=settings.stockfish_timeout_seconds,
             )
         except TimeoutError:
             await self._abort_analysis(engine, analysis_task)
@@ -364,21 +324,19 @@ class StockfishService:
             raise
 
     def _run_engine_analysis(
-        self,
-        engine: chess.engine.SimpleEngine,
-        board: chess.Board
+        self, engine: chess.engine.SimpleEngine, board: chess.Board
     ) -> StockfishAnalysis:
         """Exécute l'appel synchrone à python-chess."""
         return engine.analyse(
             board,
             chess.engine.Limit(depth=settings.stockfish_depth),
-            multipv=settings.top_moves
+            multipv=settings.top_moves,
         )
 
     async def _abort_analysis(
         self,
         engine: chess.engine.SimpleEngine,
-        analysis_task: asyncio.Task[StockfishAnalysis]
+        analysis_task: asyncio.Task[StockfishAnalysis],
     ) -> None:
         """Interrompt un moteur après un timeout ou une annulation."""
         if self._engine is engine:
@@ -389,9 +347,7 @@ class StockfishService:
             # actif. Fermer le transport interrompt réellement la commande UCI.
             await asyncio.to_thread(engine.close)
         except Exception:
-            logger.exception(
-                "Impossible de forcer l'arrêt d'une analyse Stockfish."
-            )
+            logger.exception("Impossible de forcer l'arrêt d'une analyse Stockfish.")
 
         analysis_task.cancel()
 
@@ -401,10 +357,7 @@ class StockfishService:
     # Construction
 
     def _build_evaluation(
-        self,
-        *,
-        board: chess.Board,
-        info: StockfishAnalysis
+        self, *, board: chess.Board, info: StockfishAnalysis
     ) -> PositionEvaluation:
         """Construit une évaluation complète."""
         evaluations = self._normalize_analysis(info)
@@ -416,10 +369,7 @@ class StockfishService:
 
         principal = evaluations[0]
         relative_score = self._get_principal_score(principal).relative
-        best_move = self._build_best_move(
-            board=board,
-            evaluation=principal
-        )
+        best_move = self._build_best_move(board=board, evaluation=principal)
 
         # Le schéma EngineAnalysis impose un meilleur coup. Une position sans
         # coup exploitable produit donc une erreur métier explicite.
@@ -432,10 +382,7 @@ class StockfishService:
             alternative
             for evaluation in evaluations[1:]
             if (
-                alternative := self._build_best_move(
-                    board=board,
-                    evaluation=evaluation
-                )
+                alternative := self._build_best_move(board=board, evaluation=evaluation)
             )
             is not None
         ]
@@ -444,29 +391,23 @@ class StockfishService:
             evaluation_type=self._get_score_type(relative_score),
             depth=self._get_depth(principal),
             nodes=self._get_nodes(principal),
-            time_ms=self._get_engine_time_ms(principal)
+            time_ms=self._get_engine_time_ms(principal),
         )
         principal_variation = PrincipalVariation(
-            moves=[
-                move.uci()
-                for move in self._get_principal_variation(principal)
-            ],
-            evaluation=evaluation
+            moves=[move.uci() for move in self._get_principal_variation(principal)],
+            evaluation=evaluation,
         )
         engine_analysis = EngineAnalysis(
             best_move=best_move,
             evaluation=evaluation,
             principal_variation=principal_variation,
-            alternatives=alternatives
+            alternatives=alternatives,
         )
 
         return PositionEvaluation(engine=engine_analysis)
 
     def _build_best_move(
-        self,
-        *,
-        board: chess.Board,
-        evaluation: chess.engine.InfoDict
+        self, *, board: chess.Board, evaluation: chess.engine.InfoDict
     ) -> BestMove | None:
         """Construit un meilleur coup depuis une évaluation."""
         principal_variation = self._get_principal_variation(evaluation)
@@ -487,10 +428,7 @@ class StockfishService:
         except (AssertionError, ValueError):
             # L'UCI reste un repli exploitable si une réponse moteur inattendue
             # ne peut pas être convertie en notation SAN.
-            logger.warning(
-                "Impossible de convertir le coup %s en SAN.",
-                move.uci()
-            )
+            logger.warning("Impossible de convertir le coup %s en SAN.", move.uci())
             san = move.uci()
 
         return BestMove(
@@ -502,9 +440,8 @@ class StockfishService:
             evaluation_type=self._get_score_type(relative_score),
             depth=self._get_depth(evaluation),
             principal_variation=[
-                variation_move.uci()
-                for variation_move in principal_variation
-            ]
+                variation_move.uci() for variation_move in principal_variation
+            ],
         )
 
     def _convert_score(self, score: chess.engine.Score) -> int:
@@ -516,10 +453,7 @@ class StockfishService:
         centipawns = score.score()
         return centipawns if centipawns is not None else 0
 
-    def _get_score_type(
-        self,
-        score: chess.engine.Score
-    ) -> EvaluationType:
+    def _get_score_type(self, score: chess.engine.Score) -> EvaluationType:
         """Retourne le type d'évaluation."""
         if score.is_mate():
             return EvaluationType.MATE
@@ -554,10 +488,7 @@ class StockfishService:
     async def ping(self) -> bool:
         """Vérifie que le moteur Stockfish peut analyser une position."""
         try:
-            await self.analyze_position(
-                FenRequest(fen=chess.STARTING_FEN),
-                count=False
-            )
+            await self.analyze_position(FenRequest(fen=chess.STARTING_FEN), count=False)
         except StockfishError:
             logger.exception("Le moteur Stockfish est indisponible.")
             return False
@@ -582,7 +513,5 @@ class StockfishService:
             "timeout_seconds": float(settings.stockfish_timeout_seconds),
             "top_moves": settings.top_moves,
             "analyzed_positions": self.get_analyzed_count(),
-            "last_analysis_duration_ms": (
-                self.get_last_analysis_duration()
-            ),
+            "last_analysis_duration_ms": (self.get_last_analysis_duration()),
         }

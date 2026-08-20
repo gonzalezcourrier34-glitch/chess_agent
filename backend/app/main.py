@@ -36,72 +36,43 @@ app = FastAPI(
     version=settings.app_version,
     debug=settings.app_debug,
     lifespan=lifespan,
-    docs_url=(
-        "/docs"
-        if settings.api_docs_enabled
-        else None
-    ),
-    redoc_url=(
-        "/redoc"
-        if settings.api_docs_enabled
-        else None
-    ),
-    openapi_url=(
-        "/openapi.json"
-        if settings.api_docs_enabled
-        else None
-    )
+    docs_url=("/docs" if settings.api_docs_enabled else None),
+    redoc_url=("/redoc" if settings.api_docs_enabled else None),
+    openapi_url=("/openapi.json" if settings.api_docs_enabled else None),
 )
 
 
 # CORS
 
-app.add_middleware(
-    RequestIdMiddleware
-)
+app.add_middleware(RequestIdMiddleware)
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[
-        "http://localhost:4200"
-    ],
+    allow_origins=["http://localhost:4200"],
     allow_credentials=True,
     allow_methods=["*"],
-    allow_headers=["*"]
+    allow_headers=["*"],
 )
 
 
 # Exceptions
 
-register_exception_handlers(
-    app
-)
+register_exception_handlers(app)
 
 
 # Routes
 
-app.include_router(
-    api_router,
-    prefix=API_PREFIX
-)
+app.include_router(api_router, prefix=API_PREFIX)
 
 
 # Racine
 
-@app.get(
-    "/",
-    include_in_schema=False
-)
+
+@app.get("/", include_in_schema=False)
 async def root() -> RedirectResponse:
     """Redirige vers la documentation de l'API."""
 
     if settings.api_docs_enabled:
-        return RedirectResponse(
-            url="/docs",
-            status_code=307
-        )
+        return RedirectResponse(url="/docs", status_code=307)
 
-    return RedirectResponse(
-        url="/redoc",
-        status_code=307
-    )
+    return RedirectResponse(url="/redoc", status_code=307)

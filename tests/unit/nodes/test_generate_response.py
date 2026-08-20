@@ -88,6 +88,7 @@ STARTING_FEN = chess.STARTING_FEN
 
 # Construction
 
+
 def build_engine(
     *,
     best_move_san: str | None = "e4",
@@ -207,16 +208,13 @@ def build_retrieval_context(
         SimpleNamespace(
             query="Ruy Lopez",
             documents=values,
-            total_results=(
-                len(values)
-                if total_results is None
-                else total_results
-            ),
+            total_results=(len(values) if total_results is None else total_results),
         ),
     )
 
 
 # Fixtures
+
 
 @pytest.fixture
 def state() -> ChessAnalysisState:
@@ -237,14 +235,13 @@ def complete_state(
         update={
             "opening": build_opening(),
             "engine_analysis": build_engine(),
-            "retrieval_context": (
-                build_retrieval_context()
-            ),
+            "retrieval_context": (build_retrieval_context()),
         }
     )
 
 
 # Service
+
 
 def test_get_llm_service_returns_service(
     monkeypatch: pytest.MonkeyPatch,
@@ -260,8 +257,7 @@ def test_get_llm_service_returns_service(
     )
 
     monkeypatch.setattr(
-        "app.agent.nodes.G_generate_response."
-        "get_configured_service",
+        "app.agent.nodes.G_generate_response.get_configured_service",
         configured_service,
     )
 
@@ -270,9 +266,7 @@ def test_get_llm_service_returns_service(
         {},
     )
 
-    result = _get_llm_service(
-        config
-    )
+    result = _get_llm_service(config)
 
     assert result is service
 
@@ -289,8 +283,7 @@ def test_get_llm_service_returns_none_when_missing(
     """Vérifie l'absence du LLMService."""
 
     monkeypatch.setattr(
-        "app.agent.nodes.G_generate_response."
-        "get_configured_service",
+        "app.agent.nodes.G_generate_response.get_configured_service",
         MagicMock(
             return_value=None,
         ),
@@ -313,8 +306,7 @@ def test_get_llm_service_rejects_invalid_type(
     """Vérifie le rejet d'un service incorrect."""
 
     monkeypatch.setattr(
-        "app.agent.nodes.G_generate_response."
-        "get_configured_service",
+        "app.agent.nodes.G_generate_response.get_configured_service",
         MagicMock(
             return_value=object(),
         ),
@@ -332,6 +324,7 @@ def test_get_llm_service_rejects_invalid_type(
 
 
 # Statuts
+
 
 @pytest.mark.parametrize(
     ("initial", "expected"),
@@ -367,12 +360,7 @@ def test_get_success_status(
         }
     )
 
-    assert (
-        _get_success_status(
-            current_state
-        )
-        == expected
-    )
+    assert _get_success_status(current_state) == expected
 
 
 @pytest.mark.parametrize(
@@ -409,15 +397,11 @@ def test_get_partial_success_status(
         }
     )
 
-    assert (
-        _get_partial_success_status(
-            current_state
-        )
-        == expected
-    )
+    assert _get_partial_success_status(current_state) == expected
 
 
 # Normalisation
+
 
 @pytest.mark.parametrize(
     ("value", "expected"),
@@ -450,10 +434,7 @@ def test_normalize_text(
 ) -> None:
     """Vérifie la normalisation textuelle."""
 
-    assert (
-        _normalize_text(value)
-        == expected
-    )
+    assert _normalize_text(value) == expected
 
 
 @pytest.mark.parametrize(
@@ -483,10 +464,7 @@ def test_normalize_language(
 ) -> None:
     """Vérifie la langue de réponse."""
 
-    assert (
-        _normalize_language(value)
-        == expected
-    )
+    assert _normalize_language(value) == expected
 
 
 @pytest.mark.parametrize(
@@ -524,12 +502,7 @@ def test_format_value(
 ) -> None:
     """Vérifie le formatage générique."""
 
-    default = (
-        "absent"
-        if value is None
-        and expected == "absent"
-        else "non disponible"
-    )
+    default = "absent" if value is None and expected == "absent" else "non disponible"
 
     assert (
         _format_value(
@@ -563,13 +536,11 @@ def test_format_percentage(
 ) -> None:
     """Vérifie le format des statistiques."""
 
-    assert (
-        _format_percentage(value)
-        == expected
-    )
+    assert _format_percentage(value) == expected
 
 
 # Préambule vectoriel
+
 
 @pytest.mark.parametrize(
     "prefix",
@@ -580,23 +551,13 @@ def test_is_vector_metadata_line(
 ) -> None:
     """Vérifie les préfixes techniques."""
 
-    assert (
-        _is_vector_metadata_line(
-            f"{prefix} valeur"
-        )
-        is True
-    )
+    assert _is_vector_metadata_line(f"{prefix} valeur") is True
 
 
 def test_is_vector_metadata_line_returns_false() -> None:
     """Vérifie une ligne pédagogique."""
 
-    assert (
-        _is_vector_metadata_line(
-            "Contrôler le centre."
-        )
-        is False
-    )
+    assert _is_vector_metadata_line("Contrôler le centre.") is False
 
 
 def test_strip_vector_content_header() -> None:
@@ -611,21 +572,14 @@ def test_strip_vector_content_header() -> None:
         "Développer les pièces."
     )
 
-    assert (
-        _strip_vector_content_header(
-            content
-        )
-        == "Développer les pièces."
-    )
+    assert _strip_vector_content_header(content) == "Développer les pièces."
 
 
 def test_strip_vector_content_header_without_header() -> None:
     """Vérifie un texte pédagogique direct."""
 
     assert (
-        _strip_vector_content_header(
-            "  Développer les pièces.  "
-        )
+        _strip_vector_content_header("  Développer les pièces.  ")
         == "Développer les pièces."
     )
 
@@ -633,44 +587,28 @@ def test_strip_vector_content_header_without_header() -> None:
 def test_strip_vector_content_header_returns_none_without_body() -> None:
     """Vérifie un préambule sans présentation."""
 
-    content = (
-        "Type : article\n"
-        "Ouverture : Ruy Lopez\n"
-        "Code ECO : C60"
-    )
+    content = "Type : article\nOuverture : Ruy Lopez\nCode ECO : C60"
 
-    assert (
-        _strip_vector_content_header(
-            content
-        )
-        is None
-    )
+    assert _strip_vector_content_header(content) is None
 
 
 def test_strip_vector_content_header_empty_string() -> None:
     """Vérifie un contenu vide."""
 
-    assert (
-        _strip_vector_content_header("")
-        is None
-    )
+    assert _strip_vector_content_header("") is None
 
 
 # Documents
+
 
 def test_extract_document_content() -> None:
     """Vérifie l'extraction pédagogique."""
 
     document = build_retrieved_document()
 
-    result = _extract_document_content(
-        document
-    )
+    result = _extract_document_content(document)
 
-    assert result == (
-        "Développer les pièces "
-        "et contrôler le centre."
-    )
+    assert result == ("Développer les pièces et contrôler le centre.")
 
 
 def test_extract_document_content_returns_none() -> None:
@@ -680,23 +618,13 @@ def test_extract_document_content_returns_none() -> None:
         content="   ",
     )
 
-    assert (
-        _extract_document_content(
-            document
-        )
-        is None
-    )
+    assert _extract_document_content(document) is None
 
 
 def test_get_document_eco() -> None:
     """Vérifie la récupération du code ECO."""
 
-    assert (
-        _get_document_eco(
-            build_retrieved_document()
-        )
-        == "C60"
-    )
+    assert _get_document_eco(build_retrieved_document()) == "C60"
 
 
 def test_get_document_eco_returns_none() -> None:
@@ -715,23 +643,14 @@ def test_get_document_eco_returns_none() -> None:
 def test_build_document_section() -> None:
     """Vérifie le contexte Wikichess."""
 
-    section = _build_document_section(
-        build_retrieved_document()
-    )
+    section = _build_document_section(build_retrieved_document())
 
     assert "Titre : Ruy Lopez" in section
     assert "Code ECO : C60" in section
 
-    assert (
-        "Présentation pédagogique :"
-        in section
-    )
+    assert "Présentation pédagogique :" in section
 
-    assert (
-        "Développer les pièces "
-        "et contrôler le centre."
-        in section
-    )
+    assert "Développer les pièces et contrôler le centre." in section
 
 
 def test_build_document_section_without_content() -> None:
@@ -743,11 +662,7 @@ def test_build_document_section_without_content() -> None:
         )
     )
 
-    assert (
-        "Aucune présentation pédagogique "
-        "disponible."
-        in section
-    )
+    assert "Aucune présentation pédagogique disponible." in section
 
 
 def test_build_documents_context_without_context(
@@ -755,12 +670,7 @@ def test_build_documents_context_without_context(
 ) -> None:
     """Vérifie l'absence de RAG."""
 
-    assert (
-        _build_documents_context(
-            state
-        )
-        is None
-    )
+    assert _build_documents_context(state) is None
 
 
 def test_build_documents_context_without_documents(
@@ -779,14 +689,8 @@ def test_build_documents_context_without_documents(
         }
     )
 
-    assert (
-        _build_documents_context(
-            current_state
-        )
-        == (
-            "Aucune présentation pédagogique "
-            "Wikichess n'a été trouvée."
-        )
+    assert _build_documents_context(current_state) == (
+        "Aucune présentation pédagogique Wikichess n'a été trouvée."
     )
 
 
@@ -797,15 +701,11 @@ def test_build_documents_context_with_document(
 
     current_state = state.model_copy(
         update={
-            "retrieval_context": (
-                build_retrieval_context()
-            ),
+            "retrieval_context": (build_retrieval_context()),
         }
     )
 
-    result = _build_documents_context(
-        current_state
-    )
+    result = _build_documents_context(current_state)
 
     assert result is not None
     assert "Titre : Ruy Lopez" in result
@@ -814,17 +714,13 @@ def test_build_documents_context_with_document(
 
 # Continuations Wikichess
 
+
 def test_get_wikichess_continuations_without_context(
     state: ChessAnalysisState,
 ) -> None:
     """Vérifie l'absence de continuations."""
 
-    assert (
-        _get_wikichess_continuations(
-            state
-        )
-        == frozenset()
-    )
+    assert _get_wikichess_continuations(state) == frozenset()
 
 
 def test_get_wikichess_continuations(
@@ -860,16 +756,11 @@ def test_get_wikichess_continuations(
         }
     )
 
-    assert (
-        _get_wikichess_continuations(
-            current_state
-        )
-        == frozenset(
-            {
-                "e4",
-                "d4",
-            }
-        )
+    assert _get_wikichess_continuations(current_state) == frozenset(
+        {
+            "e4",
+            "d4",
+        }
     )
 
 
@@ -916,27 +807,18 @@ def test_get_wikichess_continuations_ignores_string(
         }
     )
 
-    assert (
-        _get_wikichess_continuations(
-            current_state
-        )
-        == frozenset()
-    )
+    assert _get_wikichess_continuations(current_state) == frozenset()
 
 
 # Lichess
+
 
 def test_build_opening_context_without_opening(
     state: ChessAnalysisState,
 ) -> None:
     """Vérifie l'absence d'ouverture."""
 
-    assert (
-        _build_opening_context(
-            state
-        )
-        is None
-    )
+    assert _build_opening_context(state) is None
 
 
 def test_build_opening_context(
@@ -950,30 +832,20 @@ def test_build_opening_context(
         }
     )
 
-    result = _build_opening_context(
-        current_state
-    )
+    result = _build_opening_context(current_state)
 
     assert result is not None
     assert "Parties : 1000" in result
 
-    assert (
-        "Victoires blanches : 40.0 %"
-        in result
-    )
+    assert "Victoires blanches : 40.0 %" in result
 
-    assert (
-        "Parties nulles : 30.0 %"
-        in result
-    )
+    assert "Parties nulles : 30.0 %" in result
 
-    assert (
-        "Victoires noires : 30.0 %"
-        in result
-    )
+    assert "Victoires noires : 30.0 %" in result
 
 
 # Stockfish
+
 
 def test_get_engine_from_evaluation(
     state: ChessAnalysisState,
@@ -993,12 +865,7 @@ def test_get_engine_from_evaluation(
         }
     )
 
-    assert (
-        _get_engine(
-            current_state
-        )
-        is engine
-    )
+    assert _get_engine(current_state) is engine
 
 
 def test_get_engine_from_engine_analysis(
@@ -1014,12 +881,7 @@ def test_get_engine_from_engine_analysis(
         }
     )
 
-    assert (
-        _get_engine(
-            current_state
-        )
-        is engine
-    )
+    assert _get_engine(current_state) is engine
 
 
 def test_get_engine_returns_none(
@@ -1027,10 +889,7 @@ def test_get_engine_returns_none(
 ) -> None:
     """Vérifie l'absence d'analyse Stockfish."""
 
-    assert (
-        _get_engine(state)
-        is None
-    )
+    assert _get_engine(state) is None
 
 
 def test_get_engine_rejects_invalid_value(
@@ -1044,12 +903,7 @@ def test_get_engine_rejects_invalid_value(
         }
     )
 
-    assert (
-        _get_engine(
-            current_state
-        )
-        is None
-    )
+    assert _get_engine(current_state) is None
 
 
 def test_append_best_move() -> None:
@@ -1129,10 +983,7 @@ def test_append_wikichess_matches(
         build_engine(),
     )
 
-    assert (
-        "Correspondances Wikichess :"
-        in lines
-    )
+    assert "Correspondances Wikichess :" in lines
 
     assert "- e4 : oui" in lines
     assert "- d4 : non" in lines
@@ -1150,9 +1001,7 @@ def test_build_engine_context(
         }
     )
 
-    result = _build_engine_context(
-        current_state
-    )
+    result = _build_engine_context(current_state)
 
     assert result is not None
     assert "Meilleur coup : e4" in result
@@ -1165,14 +1014,10 @@ def test_build_engine_context_ignored_for_unknown_position(
 ) -> None:
     """Vérifie que le contexte inconnu remplace le contexte moteur."""
 
-    workflow_context = (
-        state.workflow_context.model_copy(
-            update={
-                "unknown_position_context": (
-                    "Contexte position inconnue."
-                ),
-            }
-        )
+    workflow_context = state.workflow_context.model_copy(
+        update={
+            "unknown_position_context": ("Contexte position inconnue."),
+        }
     )
 
     current_state = state.model_copy(
@@ -1183,29 +1028,21 @@ def test_build_engine_context_ignored_for_unknown_position(
         }
     )
 
-    assert (
-        _build_engine_context(
-            current_state
-        )
-        is None
-    )
+    assert _build_engine_context(current_state) is None
 
 
 # Position inconnue
+
 
 def test_get_unknown_position_context_returns_none_with_opening(
     state: ChessAnalysisState,
 ) -> None:
     """Vérifie qu'une ouverture connue désactive ce contexte."""
 
-    workflow_context = (
-        state.workflow_context.model_copy(
-            update={
-                "unknown_position_context": (
-                    "Contexte inconnu."
-                ),
-            }
-        )
+    workflow_context = state.workflow_context.model_copy(
+        update={
+            "unknown_position_context": ("Contexte inconnu."),
+        }
     )
 
     current_state = state.model_copy(
@@ -1215,12 +1052,7 @@ def test_get_unknown_position_context_returns_none_with_opening(
         }
     )
 
-    assert (
-        _get_unknown_position_context(
-            current_state
-        )
-        is None
-    )
+    assert _get_unknown_position_context(current_state) is None
 
 
 def test_get_unknown_position_context(
@@ -1228,14 +1060,10 @@ def test_get_unknown_position_context(
 ) -> None:
     """Vérifie le contexte de position inconnue."""
 
-    workflow_context = (
-        state.workflow_context.model_copy(
-            update={
-                "unknown_position_context": (
-                    "  Contexte inconnu.  "
-                ),
-            }
-        )
+    workflow_context = state.workflow_context.model_copy(
+        update={
+            "unknown_position_context": ("  Contexte inconnu.  "),
+        }
     )
 
     current_state = state.model_copy(
@@ -1244,15 +1072,11 @@ def test_get_unknown_position_context(
         }
     )
 
-    assert (
-        _get_unknown_position_context(
-            current_state
-        )
-        == "Contexte inconnu."
-    )
+    assert _get_unknown_position_context(current_state) == "Contexte inconnu."
 
 
 # Prompt
+
 
 def test_append_prompt_section() -> None:
     """Vérifie l'ajout d'une section."""
@@ -1266,13 +1090,7 @@ def test_append_prompt_section() -> None:
         "Règles",
     )
 
-    assert sections == [
-        (
-            "# Test\n\n"
-            "Contenu\n\n"
-            "Règles"
-        )
-    ]
+    assert sections == [("# Test\n\nContenu\n\nRègles")]
 
 
 def test_append_prompt_section_skips_empty_content() -> None:
@@ -1294,9 +1112,7 @@ def test_build_system_prompt(
 ) -> None:
     """Vérifie le prompt complet transmis au modèle."""
 
-    prompt = _build_system_prompt(
-        complete_state
-    )
+    prompt = _build_system_prompt(complete_state)
 
     assert GENERAL_RULES in prompt
     assert "# Wikichess" in prompt
@@ -1306,12 +1122,7 @@ def test_build_system_prompt(
     assert "# Stockfish" in prompt
     assert STOCKFISH_RULES in prompt
 
-    assert (
-        RESPONSE_RULES.format(
-            language="fr"
-        )
-        in prompt
-    )
+    assert RESPONSE_RULES.format(language="fr") in prompt
 
 
 def test_build_system_prompt_unknown_position(
@@ -1319,14 +1130,10 @@ def test_build_system_prompt_unknown_position(
 ) -> None:
     """Vérifie le prompt pour une position inconnue."""
 
-    workflow_context = (
-        state.workflow_context.model_copy(
-            update={
-                "unknown_position_context": (
-                    "Contexte Stockfish préparé."
-                ),
-            }
-        )
+    workflow_context = state.workflow_context.model_copy(
+        update={
+            "unknown_position_context": ("Contexte Stockfish préparé."),
+        }
     )
 
     current_state = state.model_copy(
@@ -1335,21 +1142,13 @@ def test_build_system_prompt_unknown_position(
         }
     )
 
-    prompt = _build_system_prompt(
-        current_state
-    )
+    prompt = _build_system_prompt(current_state)
 
     assert "# Position inconnue" in prompt
 
-    assert (
-        UNKNOWN_POSITION_RULES
-        in prompt
-    )
+    assert UNKNOWN_POSITION_RULES in prompt
 
-    assert (
-        "Contexte Stockfish préparé."
-        in prompt
-    )
+    assert "Contexte Stockfish préparé." in prompt
 
 
 def test_build_system_prompt_uses_requested_language(
@@ -1367,19 +1166,13 @@ def test_build_system_prompt_uses_requested_language(
         }
     )
 
-    prompt = _build_system_prompt(
-        current_state
-    )
+    prompt = _build_system_prompt(current_state)
 
-    assert (
-        RESPONSE_RULES.format(
-            language="en"
-        )
-        in prompt
-    )
+    assert RESPONSE_RULES.format(language="en") in prompt
 
 
 # Extraction
+
 
 def test_extract_opening_name(
     state: ChessAnalysisState,
@@ -1392,12 +1185,7 @@ def test_extract_opening_name(
         }
     )
 
-    assert (
-        _extract_opening_name(
-            current_state
-        )
-        == "Ruy Lopez"
-    )
+    assert _extract_opening_name(current_state) == "Ruy Lopez"
 
 
 def test_extract_opening_name_returns_none(
@@ -1405,10 +1193,7 @@ def test_extract_opening_name_returns_none(
 ) -> None:
     """Vérifie l'absence d'ouverture."""
 
-    assert (
-        _extract_opening_name(state)
-        is None
-    )
+    assert _extract_opening_name(state) is None
 
 
 def test_extract_best_move(
@@ -1422,12 +1207,7 @@ def test_extract_best_move(
         }
     )
 
-    assert (
-        _extract_best_move(
-            current_state
-        )
-        == "e4"
-    )
+    assert _extract_best_move(current_state) == "e4"
 
 
 def test_extract_best_move_uses_uci_fallback(
@@ -1445,12 +1225,7 @@ def test_extract_best_move_uses_uci_fallback(
         }
     )
 
-    assert (
-        _extract_best_move(
-            current_state
-        )
-        == "e2e4"
-    )
+    assert _extract_best_move(current_state) == "e2e4"
 
 
 def test_extract_best_move_returns_none(
@@ -1458,10 +1233,7 @@ def test_extract_best_move_returns_none(
 ) -> None:
     """Vérifie l'absence de moteur."""
 
-    assert (
-        _extract_best_move(state)
-        is None
-    )
+    assert _extract_best_move(state) is None
 
 
 def test_get_retrieved_document_count_without_context(
@@ -1469,12 +1241,7 @@ def test_get_retrieved_document_count_without_context(
 ) -> None:
     """Vérifie l'absence de documents."""
 
-    assert (
-        _get_retrieved_document_count(
-            state
-        )
-        == 0
-    )
+    assert _get_retrieved_document_count(state) == 0
 
 
 def test_get_retrieved_document_count(
@@ -1492,15 +1259,11 @@ def test_get_retrieved_document_count(
         }
     )
 
-    assert (
-        _get_retrieved_document_count(
-            current_state
-        )
-        == 3
-    )
+    assert _get_retrieved_document_count(current_state) == 3
 
 
 # Réponse de secours
+
 
 def test_append_position_status_checkmate(
     state: ChessAnalysisState,
@@ -1524,12 +1287,7 @@ def test_append_position_status_checkmate(
         current_state,
     )
 
-    assert sections == [
-        (
-            "La position est indiquée "
-            "comme un échec et mat."
-        )
-    ]
+    assert sections == [("La position est indiquée comme un échec et mat.")]
 
 
 def test_append_position_status_stalemate(
@@ -1554,9 +1312,7 @@ def test_append_position_status_stalemate(
         current_state,
     )
 
-    assert sections == [
-        "La position est indiquée comme un pat."
-    ]
+    assert sections == ["La position est indiquée comme un pat."]
 
 
 def test_append_position_status_check(
@@ -1581,12 +1337,7 @@ def test_append_position_status_check(
         current_state,
     )
 
-    assert sections == [
-        (
-            "Le joueur au trait est indiqué "
-            "comme étant en échec."
-        )
-    ]
+    assert sections == [("Le joueur au trait est indiqué comme étant en échec.")]
 
 
 def test_build_fallback_response(
@@ -1594,30 +1345,18 @@ def test_build_fallback_response(
 ) -> None:
     """Vérifie la réponse de secours minimale."""
 
-    response = _build_fallback_response(
-        state
-    )
+    response = _build_fallback_response(state)
 
     assert (
         "La génération de la réponse pédagogique "
-        "par le modèle de langage n'est pas disponible."
-        in response
+        "par le modèle de langage n'est pas disponible." in response
     )
 
-    assert (
-        f"Position FEN analysée : {STARTING_FEN}."
-        in response
-    )
+    assert f"Position FEN analysée : {STARTING_FEN}." in response
 
-    assert (
-        "Aucune ouverture connue n'a été détectée."
-        in response
-    )
+    assert "Aucune ouverture connue n'a été détectée." in response
 
-    assert (
-        "Les résultats détaillés restent disponibles"
-        in response
-    )
+    assert "Les résultats détaillés restent disponibles" in response
 
 
 def test_build_fallback_response_with_all_data(
@@ -1642,71 +1381,46 @@ def test_build_fallback_response_with_all_data(
         }
     )
 
-    response = _build_fallback_response(
-        current_state
-    )
+    response = _build_fallback_response(current_state)
 
-    assert (
-        "Ouverture détectée : Ruy Lopez."
-        in response
-    )
+    assert "Ouverture détectée : Ruy Lopez." in response
 
-    assert (
-        "Meilleur coup retourné "
-        "par Stockfish : e4."
-        in response
-    )
+    assert "Meilleur coup retourné par Stockfish : e4." in response
 
-    assert (
-        "2 document(s) Wikichess "
-        "ont été retrouvés."
-        in response
-    )
+    assert "2 document(s) Wikichess ont été retrouvés." in response
 
-    assert (
-        "1 vidéo(s) pédagogique(s) "
-        "ont été sélectionnée(s)."
-        in response
-    )
+    assert "1 vidéo(s) pédagogique(s) ont été sélectionnée(s)." in response
 
 
 # WorkflowContext
+
 
 def test_build_updated_workflow_context(
     state: ChessAnalysisState,
 ) -> None:
     """Vérifie l'enregistrement du résumé final."""
 
-    context = (
-        _build_updated_workflow_context(
-            state,
-            "Réponse finale.",
-        )
+    context = _build_updated_workflow_context(
+        state,
+        "Réponse finale.",
     )
 
-    assert (
-        context.final_summary
-        == "Réponse finale."
-    )
+    assert context.final_summary == "Réponse finale."
 
-    assert (
-        state.workflow_context.final_summary
-        is None
-    )
+    assert state.workflow_context.final_summary is None
 
 
 # Updates
+
 
 def test_build_success_update(
     state: ChessAnalysisState,
 ) -> None:
     """Vérifie une génération réussie."""
 
-    context = (
-        _build_updated_workflow_context(
-            state,
-            "Réponse.",
-        )
+    context = _build_updated_workflow_context(
+        state,
+        "Réponse.",
     )
 
     update = _build_success_update(
@@ -1715,32 +1429,15 @@ def test_build_success_update(
         context,
     )
 
-    assert (
-        update["status"]
-        == AnalysisStatus.SUCCESS
-    )
+    assert update["status"] == AnalysisStatus.SUCCESS
 
-    assert (
-        update["current_step"]
-        == WorkflowStep.GENERATE_RESPONSE
-    )
+    assert update["current_step"] == WorkflowStep.GENERATE_RESPONSE
 
-    assert (
-        WorkflowStep.GENERATE_RESPONSE
-        in update["completed_steps"]
-    )
+    assert WorkflowStep.GENERATE_RESPONSE in update["completed_steps"]
 
-    assert (
-        update["response"]
-        == "Réponse."
-    )
+    assert update["response"] == "Réponse."
 
-    assert (
-        update[
-            "workflow_context"
-        ].final_summary
-        == "Réponse."
-    )
+    assert update["workflow_context"].final_summary == "Réponse."
 
 
 def test_build_warning_update(
@@ -1754,11 +1451,9 @@ def test_build_warning_update(
         message="LLM indisponible.",
     )
 
-    context = (
-        _build_updated_workflow_context(
-            state,
-            "Secours.",
-        )
+    context = _build_updated_workflow_context(
+        state,
+        "Secours.",
     )
 
     update = _build_warning_update(
@@ -1768,20 +1463,11 @@ def test_build_warning_update(
         context,
     )
 
-    assert (
-        update["status"]
-        == AnalysisStatus.PARTIAL_SUCCESS
-    )
+    assert update["status"] == AnalysisStatus.PARTIAL_SUCCESS
 
-    assert (
-        WorkflowStep.GENERATE_RESPONSE
-        in update["completed_steps"]
-    )
+    assert WorkflowStep.GENERATE_RESPONSE in update["completed_steps"]
 
-    assert (
-        update["response"]
-        == "Secours."
-    )
+    assert update["response"] == "Secours."
 
     assert update["warnings"] == [
         warning,
@@ -1799,32 +1485,19 @@ def test_build_fallback_update(
         LLM_CONFIGURATION_MESSAGE,
     )
 
-    assert (
-        update["status"]
-        == AnalysisStatus.PARTIAL_SUCCESS
-    )
+    assert update["status"] == AnalysisStatus.PARTIAL_SUCCESS
 
-    assert (
-        update["warnings"][-1].code
-        == ERROR_CONFIGURATION
-    )
+    assert update["warnings"][-1].code == ERROR_CONFIGURATION
 
-    assert (
-        update["warnings"][-1].message
-        == LLM_CONFIGURATION_MESSAGE
-    )
+    assert update["warnings"][-1].message == LLM_CONFIGURATION_MESSAGE
 
     assert update["response"]
 
-    assert (
-        update[
-            "workflow_context"
-        ].final_summary
-        == update["response"]
-    )
+    assert update["workflow_context"].final_summary == update["response"]
 
 
 # Génération LLM
+
 
 @pytest.mark.asyncio
 async def test_generate_llm_response(
@@ -1848,8 +1521,7 @@ async def test_generate_llm_response(
     )
 
     monkeypatch.setattr(
-        "app.agent.nodes.G_generate_response."
-        "_build_system_prompt",
+        "app.agent.nodes.G_generate_response._build_system_prompt",
         build_prompt,
     )
 
@@ -1893,6 +1565,7 @@ async def test_generate_llm_response_rejects_empty_response(
 
 # API publique
 
+
 @pytest.mark.asyncio
 async def test_generate_response_success(
     state: ChessAnalysisState,
@@ -1915,20 +1588,17 @@ async def test_generate_response_success(
     emit_progress = MagicMock()
 
     monkeypatch.setattr(
-        "app.agent.nodes.G_generate_response."
-        "_get_llm_service",
+        "app.agent.nodes.G_generate_response._get_llm_service",
         get_service,
     )
 
     monkeypatch.setattr(
-        "app.agent.nodes.G_generate_response."
-        "_generate_llm_response",
+        "app.agent.nodes.G_generate_response._generate_llm_response",
         generate_llm,
     )
 
     monkeypatch.setattr(
-        "app.agent.nodes.G_generate_response."
-        "emit_progress",
+        "app.agent.nodes.G_generate_response.emit_progress",
         emit_progress,
     )
 
@@ -1940,27 +1610,13 @@ async def test_generate_response_success(
         ),
     )
 
-    assert (
-        update["status"]
-        == AnalysisStatus.SUCCESS
-    )
+    assert update["status"] == AnalysisStatus.SUCCESS
 
-    assert (
-        update["response"]
-        == "Réponse pédagogique."
-    )
+    assert update["response"] == "Réponse pédagogique."
 
-    assert (
-        update[
-            "workflow_context"
-        ].final_summary
-        == "Réponse pédagogique."
-    )
+    assert update["workflow_context"].final_summary == "Réponse pédagogique."
 
-    assert (
-        WorkflowStep.GENERATE_RESPONSE
-        in update["completed_steps"]
-    )
+    assert WorkflowStep.GENERATE_RESPONSE in update["completed_steps"]
 
     generate_llm.assert_awaited_once_with(
         service,
@@ -1980,16 +1636,14 @@ async def test_generate_response_missing_service(
     emit_progress = MagicMock()
 
     monkeypatch.setattr(
-        "app.agent.nodes.G_generate_response."
-        "_get_llm_service",
+        "app.agent.nodes.G_generate_response._get_llm_service",
         MagicMock(
             return_value=None,
         ),
     )
 
     monkeypatch.setattr(
-        "app.agent.nodes.G_generate_response."
-        "emit_progress",
+        "app.agent.nodes.G_generate_response.emit_progress",
         emit_progress,
     )
 
@@ -2001,20 +1655,11 @@ async def test_generate_response_missing_service(
         ),
     )
 
-    assert (
-        update["status"]
-        == AnalysisStatus.PARTIAL_SUCCESS
-    )
+    assert update["status"] == AnalysisStatus.PARTIAL_SUCCESS
 
-    assert (
-        update["warnings"][-1].code
-        == ERROR_CONFIGURATION
-    )
+    assert update["warnings"][-1].code == ERROR_CONFIGURATION
 
-    assert (
-        update["warnings"][-1].message
-        == LLM_CONFIGURATION_MESSAGE
-    )
+    assert update["warnings"][-1].message == LLM_CONFIGURATION_MESSAGE
 
     assert update["response"]
 
@@ -2033,30 +1678,25 @@ async def test_generate_response_handles_generation_error(
     )
 
     generate_llm = AsyncMock(
-        side_effect=RuntimeError(
-            "LLM failure"
-        ),
+        side_effect=RuntimeError("LLM failure"),
     )
 
     emit_progress = MagicMock()
 
     monkeypatch.setattr(
-        "app.agent.nodes.G_generate_response."
-        "_get_llm_service",
+        "app.agent.nodes.G_generate_response._get_llm_service",
         MagicMock(
             return_value=service,
         ),
     )
 
     monkeypatch.setattr(
-        "app.agent.nodes.G_generate_response."
-        "_generate_llm_response",
+        "app.agent.nodes.G_generate_response._generate_llm_response",
         generate_llm,
     )
 
     monkeypatch.setattr(
-        "app.agent.nodes.G_generate_response."
-        "emit_progress",
+        "app.agent.nodes.G_generate_response.emit_progress",
         emit_progress,
     )
 
@@ -2068,27 +1708,15 @@ async def test_generate_response_handles_generation_error(
         ),
     )
 
-    assert (
-        update["status"]
-        == AnalysisStatus.PARTIAL_SUCCESS
-    )
+    assert update["status"] == AnalysisStatus.PARTIAL_SUCCESS
 
-    assert (
-        update["warnings"][-1].code
-        == ERROR_UNEXPECTED
-    )
+    assert update["warnings"][-1].code == ERROR_UNEXPECTED
 
-    assert (
-        update["warnings"][-1].message
-        == LLM_GENERATION_ERROR_MESSAGE
-    )
+    assert update["warnings"][-1].message == LLM_GENERATION_ERROR_MESSAGE
 
     assert update["response"]
 
-    assert (
-        WorkflowStep.GENERATE_RESPONSE
-        in update["completed_steps"]
-    )
+    assert WorkflowStep.GENERATE_RESPONSE in update["completed_steps"]
 
     assert emit_progress.call_count == 2
 
@@ -2102,9 +1730,7 @@ async def test_generate_response_preserves_partial_status(
 
     partial_state = state.model_copy(
         update={
-            "status": (
-                AnalysisStatus.PARTIAL_SUCCESS
-            ),
+            "status": (AnalysisStatus.PARTIAL_SUCCESS),
         }
     )
 
@@ -2113,24 +1739,21 @@ async def test_generate_response_preserves_partial_status(
     )
 
     monkeypatch.setattr(
-        "app.agent.nodes.G_generate_response."
-        "_get_llm_service",
+        "app.agent.nodes.G_generate_response._get_llm_service",
         MagicMock(
             return_value=service,
         ),
     )
 
     monkeypatch.setattr(
-        "app.agent.nodes.G_generate_response."
-        "_generate_llm_response",
+        "app.agent.nodes.G_generate_response._generate_llm_response",
         AsyncMock(
             return_value="Réponse.",
         ),
     )
 
     monkeypatch.setattr(
-        "app.agent.nodes.G_generate_response."
-        "emit_progress",
+        "app.agent.nodes.G_generate_response.emit_progress",
         MagicMock(),
     )
 
@@ -2142,7 +1765,4 @@ async def test_generate_response_preserves_partial_status(
         ),
     )
 
-    assert (
-        update["status"]
-        == AnalysisStatus.PARTIAL_SUCCESS
-    )
+    assert update["status"] == AnalysisStatus.PARTIAL_SUCCESS

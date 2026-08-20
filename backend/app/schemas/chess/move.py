@@ -15,38 +15,25 @@ from app.schemas.common.enums import EvaluationType
 
 # Coup
 
+
 class Move(BaseModel):
     """Représente un coup d'échecs."""
 
-    model_config = ConfigDict(
-        extra="forbid",
-        frozen=True
-    )
+    model_config = ConfigDict(extra="forbid", frozen=True)
 
     # Informations communes à tous les coups manipulés
     # par l'application.
-    uci: str = Field(
-        ...,
-        min_length=4,
-        max_length=5
-    )
+    uci: str = Field(..., min_length=4, max_length=5)
 
     san: str
 
-    from_square: str = Field(
-        ...,
-        min_length=2,
-        max_length=2
-    )
+    from_square: str = Field(..., min_length=2, max_length=2)
 
-    to_square: str = Field(
-        ...,
-        min_length=2,
-        max_length=2
-    )
+    to_square: str = Field(..., min_length=2, max_length=2)
 
 
 # Coup légal
+
 
 class LegalMove(Move):
     """Coup légal."""
@@ -64,6 +51,7 @@ class LegalMove(Move):
 
 # Coup joué
 
+
 class PlayedMove(Move):
     """Coup joué."""
 
@@ -73,13 +61,11 @@ class PlayedMove(Move):
 
     after_fen: str
 
-    move_number: int = Field(
-        ...,
-        ge=1
-    )
+    move_number: int = Field(..., ge=1)
 
 
 # Coup recommandé
+
 
 class BestMove(Move):
     """Meilleur coup proposé."""
@@ -89,24 +75,18 @@ class BestMove(Move):
 
     evaluation_type: EvaluationType
 
-    depth: int = Field(
-        ...,
-        ge=1
-    )
+    depth: int = Field(..., ge=1)
 
-    principal_variation: list[str] = Field(
-        default_factory=list
-    )
+    principal_variation: list[str] = Field(default_factory=list)
 
 
 # Recommandation
 
+
 class MoveSuggestion(BaseModel):
     """Recommandation d'un coup."""
 
-    model_config = ConfigDict(
-        extra="forbid"
-    )
+    model_config = ConfigDict(extra="forbid")
 
     # Ce modèle regroupe le meilleur coup proposé
     # ainsi que son explication pédagogique.
@@ -114,51 +94,27 @@ class MoveSuggestion(BaseModel):
 
     explanation: str
 
-    advantages: list[str] = Field(
-        default_factory=list
-    )
+    advantages: list[str] = Field(default_factory=list)
 
-    risks: list[str] = Field(
-        default_factory=list
-    )
+    risks: list[str] = Field(default_factory=list)
 
 
 # Statistiques
 
+
 class MoveStatistics(BaseModel):
     """Statistiques d'un coup."""
 
-    model_config = ConfigDict(
-        extra="forbid",
-        frozen=True
-    )
+    model_config = ConfigDict(extra="forbid", frozen=True)
 
     # Ces statistiques proviennent d'une base de parties
     # lorsqu'elles sont disponibles.
-    games: int = Field(
-        default=0,
-        ge=0
-    )
+    games: int = Field(default=0, ge=0)
 
-    white_win_rate: float = Field(
-        default=0.0,
-        ge=0,
-        le=100
-    )
+    white_win_rate: float = Field(default=0.0, ge=0, le=100)
 
-    black_win_rate: float = Field(
-        default=0.0,
-        ge=0,
-        le=100
-    )
+    black_win_rate: float = Field(default=0.0, ge=0, le=100)
 
-    draw_rate: float = Field(
-        default=0.0,
-        ge=0,
-        le=100
-    )
+    draw_rate: float = Field(default=0.0, ge=0, le=100)
 
-    average_rating: int | None = Field(
-        default=None,
-        ge=0
-    )
+    average_rating: int | None = Field(default=None, ge=0)

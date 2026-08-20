@@ -42,11 +42,10 @@ router = APIRouter()
         "meilleurs coups proposés."
     ),
     response_description="Évaluation technique de la position.",
-    responses=STOCKFISH_ERROR_RESPONSES
+    responses=STOCKFISH_ERROR_RESPONSES,
 )
 async def evaluate_position(
-    payload: FenRequest,
-    service: StockfishServiceDependency
+    payload: FenRequest, service: StockfishServiceDependency
 ) -> PositionEvaluation:
     """Évalue une position avec Stockfish.
 
@@ -62,6 +61,4 @@ async def evaluate_position(
         Évaluation technique produite par le moteur.
     """
 
-    return await service.analyze_position(
-        payload
-    )
+    return await service.analyze_position(payload)

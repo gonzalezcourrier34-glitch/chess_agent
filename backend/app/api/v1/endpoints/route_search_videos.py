@@ -28,6 +28,7 @@ router = APIRouter()
 
 # Recherche par ouverture
 
+
 @router.get(
     "/videos/{opening}",
     response_model=VideoCollection,
@@ -54,12 +55,11 @@ async def search_videos_by_opening(
         query=opening,
     )
 
-    return await service.search_videos(
-        request
-    )
+    return await service.search_videos(request)
 
 
 # Recherche avancée
+
 
 @router.post(
     "/videos",
@@ -79,6 +79,4 @@ async def search_videos(
     service: YoutubeServiceDependency,
 ) -> VideoCollection:
     """Recherche des vidéos pédagogiques."""
-    return await service.search_videos(
-        payload
-    )
+    return await service.search_videos(payload)

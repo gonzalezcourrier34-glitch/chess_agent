@@ -96,16 +96,11 @@ JSON_OBJECT_ADAPTER: TypeAdapter[JsonObject] = TypeAdapter(JsonObject)
 # Expressions régulières
 
 THINK_BLOCK_PATTERN = re.compile(
-    r"<think\b[^>]*>.*?</think\s*>",
-    flags=re.IGNORECASE | re.DOTALL
+    r"<think\b[^>]*>.*?</think\s*>", flags=re.IGNORECASE | re.DOTALL
 )
-THINK_PREFIX_PATTERN = re.compile(
-    r"\A.*?</think\s*>",
-    flags=re.IGNORECASE | re.DOTALL
-)
+THINK_PREFIX_PATTERN = re.compile(r"\A.*?</think\s*>", flags=re.IGNORECASE | re.DOTALL)
 THINK_SUFFIX_PATTERN = re.compile(
-    r"<think\b[^>]*>.*\Z",
-    flags=re.IGNORECASE | re.DOTALL
+    r"<think\b[^>]*>.*\Z", flags=re.IGNORECASE | re.DOTALL
 )
 THINK_TAG_PATTERN = re.compile(r"</?think\b[^>]*>", flags=re.IGNORECASE)
 
@@ -145,8 +140,7 @@ class LLMService:
             model_name = self._get_model_name()
 
             logger.info(
-                "Initialisation du service LLM Ollama avec le modèle %s.",
-                model_name
+                "Initialisation du service LLM Ollama avec le modèle %s.", model_name
             )
 
             client = self._create_client(base_url)
@@ -159,15 +153,12 @@ class LLMService:
                     error_message=(
                         "Erreur lors de la fermeture du client Ollama après "
                         "un échec d'initialisation."
-                    )
+                    ),
                 )
                 raise
 
             self._client = client
-            logger.info(
-                "Service LLM Ollama initialisé avec le modèle %s.",
-                model_name
-            )
+            logger.info("Service LLM Ollama initialisé avec le modèle %s.", model_name)
 
     async def close(self) -> None:
         """Ferme proprement le client HTTP Ollama."""
@@ -187,7 +178,7 @@ class LLMService:
                 logger.info("Fermeture du client Ollama.")
                 await self._close_client(
                     client,
-                    error_message="Erreur lors de la fermeture du client Ollama."
+                    error_message="Erreur lors de la fermeture du client Ollama.",
                 )
 
     async def initialize(self) -> None:
@@ -199,10 +190,7 @@ class LLMService:
         await self.close()
 
     async def _close_client(
-        self,
-        client: httpx.AsyncClient,
-        *,
-        error_message: str
+        self, client: httpx.AsyncClient, *, error_message: str
     ) -> None:
         """Ferme un client sans masquer l'arrêt ou l'erreur d'origine."""
         try:
@@ -223,9 +211,9 @@ class LLMService:
             context=ErrorContext(
                 service=SERVICE_NAME,
                 operation="_validate_provider",
-                metadata={"provider": provider}
+                metadata={"provider": provider},
             ),
-            message="LLMService nécessite le fournisseur 'ollama'."
+            message="LLMService nécessite le fournisseur 'ollama'.",
         )
 
     def _get_base_url(self) -> str:
@@ -234,11 +222,8 @@ class LLMService:
 
         if not base_url:
             raise ConfigurationError(
-                context=ErrorContext(
-                    service=SERVICE_NAME,
-                    operation="_get_base_url"
-                ),
-                message="L'URL du serveur Ollama n'est pas configurée."
+                context=ErrorContext(service=SERVICE_NAME, operation="_get_base_url"),
+                message="L'URL du serveur Ollama n'est pas configurée.",
             )
 
         return base_url.rstrip("/")
@@ -249,11 +234,8 @@ class LLMService:
 
         if not model_name:
             raise ConfigurationError(
-                context=ErrorContext(
-                    service=SERVICE_NAME,
-                    operation="_get_model_name"
-                ),
-                message="Le modèle Ollama n'est pas configuré."
+                context=ErrorContext(service=SERVICE_NAME, operation="_get_model_name"),
+                message="Le modèle Ollama n'est pas configuré.",
             )
 
         return model_name
@@ -269,14 +251,14 @@ class LLMService:
                 timeout=httpx.Timeout(self._settings.llm_timeout_seconds),
                 limits=httpx.Limits(
                     max_connections=maximum_connections,
-                    max_keepalive_connections=maximum_connections
+                    max_keepalive_connections=maximum_connections,
                 ),
                 headers={
                     "Accept": "application/json",
                     "Content-Type": "application/json",
                     "User-Agent": self._settings.http_user_agent,
                 },
-                follow_redirects=True
+                follow_redirects=True,
             )
         except Exception as error:
             logger.exception("Impossible d'initialiser le client Ollama.")
@@ -284,21 +266,18 @@ class LLMService:
                 context=ErrorContext(
                     service=SERVICE_NAME,
                     operation="_create_client",
-                    metadata={"base_url": base_url}
+                    metadata={"base_url": base_url},
                 ),
                 message="Impossible d'initialiser le client Ollama.",
-                cause=error
+                cause=error,
             ) from error
 
     def _get_client(self) -> httpx.AsyncClient:
         """Retourne le client Ollama initialisé."""
         if self._client is None:
             raise ConfigurationError(
-                context=ErrorContext(
-                    service=SERVICE_NAME,
-                    operation="_get_client"
-                ),
-                message="Le client Ollama n'est pas initialisé."
+                context=ErrorContext(service=SERVICE_NAME, operation="_get_client"),
+                message="Le client Ollama n'est pas initialisé.",
             )
 
         return self._client
@@ -313,11 +292,7 @@ class LLMService:
     # Normalisation
 
     def _normalize_required_text(
-        self,
-        value: object,
-        *,
-        field_name: str,
-        operation: str
+        self, value: object, *, field_name: str, operation: str
     ) -> str:
         """Valide et normalise une valeur textuelle obligatoire."""
         if not isinstance(value, str):
@@ -325,9 +300,9 @@ class LLMService:
                 context=ErrorContext(
                     service=SERVICE_NAME,
                     operation=operation,
-                    metadata={"field": field_name}
+                    metadata={"field": field_name},
                 ),
-                message=f"{field_name} doit être une chaîne de caractères."
+                message=f"{field_name} doit être une chaîne de caractères.",
             )
 
         normalized_value = value.strip()
@@ -337,9 +312,9 @@ class LLMService:
                 context=ErrorContext(
                     service=SERVICE_NAME,
                     operation=operation,
-                    metadata={"field": field_name}
+                    metadata={"field": field_name},
                 ),
-                message=f"{field_name} ne peut pas être vide."
+                message=f"{field_name} ne peut pas être vide.",
             )
 
         return normalized_value
@@ -360,8 +335,7 @@ class LLMService:
     # Modèles Ollama
 
     async def _request_available_models(
-        self,
-        client: httpx.AsyncClient
+        self, client: httpx.AsyncClient
     ) -> httpx.Response:
         """Interroge le catalogue des modèles Ollama."""
         try:
@@ -371,31 +345,28 @@ class LLMService:
         except httpx.TimeoutException as error:
             raise OllamaTimeoutError(
                 context=ErrorContext(
-                    service=SERVICE_NAME,
-                    operation="_get_available_models"
+                    service=SERVICE_NAME, operation="_get_available_models"
                 ),
-                cause=error
+                cause=error,
             ) from error
         except httpx.HTTPStatusError as error:
             raise OllamaResponseError(
                 context=ErrorContext(
                     service=SERVICE_NAME,
                     operation="_get_available_models",
-                    metadata={"status_code": error.response.status_code}
+                    metadata={"status_code": error.response.status_code},
                 ),
                 message=(
-                    "Ollama a retourné une erreur pendant la récupération "
-                    "des modèles."
+                    "Ollama a retourné une erreur pendant la récupération des modèles."
                 ),
-                cause=error
+                cause=error,
             ) from error
         except httpx.HTTPError as error:
             raise OllamaConnectionError(
                 context=ErrorContext(
-                    service=SERVICE_NAME,
-                    operation="_get_available_models"
+                    service=SERVICE_NAME, operation="_get_available_models"
                 ),
-                cause=error
+                cause=error,
             ) from error
 
     def _extract_model_names(self, payload: JsonObject) -> set[str]:
@@ -405,10 +376,9 @@ class LLMService:
         if not isinstance(models, list):
             raise OllamaResponseError(
                 context=ErrorContext(
-                    service=SERVICE_NAME,
-                    operation="_get_available_models"
+                    service=SERVICE_NAME, operation="_get_available_models"
                 ),
-                message="Ollama a retourné une liste de modèles invalide."
+                message="Ollama a retourné une liste de modèles invalide.",
             )
 
         available_models: set[str] = set()
@@ -425,19 +395,13 @@ class LLMService:
 
         return available_models
 
-    async def _get_available_models(
-        self,
-        client: httpx.AsyncClient
-    ) -> set[str]:
+    async def _get_available_models(self, client: httpx.AsyncClient) -> set[str]:
         """Retourne les modèles installés dans Ollama."""
         response = await self._request_available_models(client)
         payload = self._extract_json_mapping(response)
         return self._extract_model_names(payload)
 
-    async def _ensure_model_available(
-        self,
-        client: httpx.AsyncClient
-    ) -> None:
+    async def _ensure_model_available(self, client: httpx.AsyncClient) -> None:
         """Vérifie que le modèle configuré est installé."""
         model_name = self._get_model_name()
         available_models = await self._get_available_models(client)
@@ -454,12 +418,9 @@ class LLMService:
                 metadata={
                     "model": model_name,
                     "available_models": sorted(available_models),
-                }
+                },
             ),
-            message=(
-                "Le modèle Ollama configuré n'est pas installé : "
-                f"{model_name}."
-            )
+            message=(f"Le modèle Ollama configuré n'est pas installé : {model_name}."),
         )
 
     # Requête de génération
@@ -477,11 +438,7 @@ class LLMService:
         }
 
     async def _send_chat_request(
-        self,
-        *,
-        client: httpx.AsyncClient,
-        payload: OllamaChatPayload,
-        model_name: str
+        self, *, client: httpx.AsyncClient, payload: OllamaChatPayload, model_name: str
     ) -> httpx.Response:
         """Envoie une requête de génération et traduit les erreurs HTTP."""
         try:
@@ -494,9 +451,9 @@ class LLMService:
                 context=ErrorContext(
                     service=SERVICE_NAME,
                     operation="generate",
-                    metadata={"model": model_name}
+                    metadata={"model": model_name},
                 ),
-                cause=error
+                cause=error,
             ) from error
         except httpx.ConnectError as error:
             logger.warning("Connexion au serveur Ollama impossible.")
@@ -504,14 +461,13 @@ class LLMService:
                 context=ErrorContext(
                     service=SERVICE_NAME,
                     operation="generate",
-                    metadata={"base_url": self._get_base_url()}
+                    metadata={"base_url": self._get_base_url()},
                 ),
-                cause=error
+                cause=error,
             ) from error
         except httpx.HTTPStatusError as error:
             logger.warning(
-                "Erreur HTTP %s retournée par Ollama.",
-                error.response.status_code
+                "Erreur HTTP %s retournée par Ollama.", error.response.status_code
             )
             raise OllamaResponseError(
                 context=ErrorContext(
@@ -520,28 +476,22 @@ class LLMService:
                     metadata={
                         "status_code": error.response.status_code,
                         "model": model_name,
-                    }
+                    },
                 ),
                 message="Ollama a retourné une erreur HTTP.",
-                cause=error
+                cause=error,
             ) from error
         except httpx.HTTPError as error:
             logger.exception("Erreur HTTP durant la génération Ollama.")
             raise OllamaConnectionError(
-                context=ErrorContext(
-                    service=SERVICE_NAME,
-                    operation="generate"
-                ),
-                cause=error
+                context=ErrorContext(service=SERVICE_NAME, operation="generate"),
+                cause=error,
             ) from error
         except Exception as error:
             logger.exception("Erreur inattendue durant la génération LLM.")
             raise LLMGenerationError(
-                context=ErrorContext(
-                    service=SERVICE_NAME,
-                    operation="generate"
-                ),
-                cause=error
+                context=ErrorContext(service=SERVICE_NAME, operation="generate"),
+                cause=error,
             ) from error
 
     # Validation des réponses
@@ -551,10 +501,9 @@ class LLMService:
         if not response.content:
             raise OllamaResponseError(
                 context=ErrorContext(
-                    service=SERVICE_NAME,
-                    operation="_extract_json_mapping"
+                    service=SERVICE_NAME, operation="_extract_json_mapping"
                 ),
-                message="Ollama a retourné une réponse vide."
+                message="Ollama a retourné une réponse vide.",
             )
 
         try:
@@ -562,11 +511,10 @@ class LLMService:
         except ValidationError as error:
             raise OllamaResponseError(
                 context=ErrorContext(
-                    service=SERVICE_NAME,
-                    operation="_extract_json_mapping"
+                    service=SERVICE_NAME, operation="_extract_json_mapping"
                 ),
                 message="Ollama a retourné une réponse JSON invalide.",
-                cause=error
+                cause=error,
             ) from error
 
     def _extract_response_text(self, payload: JsonObject) -> str:
@@ -576,10 +524,9 @@ class LLMService:
         if not isinstance(message, dict):
             raise InvalidLLMResponseError(
                 context=ErrorContext(
-                    service=SERVICE_NAME,
-                    operation="_extract_response_text"
+                    service=SERVICE_NAME, operation="_extract_response_text"
                 ),
-                message="Ollama n'a pas retourné de message exploitable."
+                message="Ollama n'a pas retourné de message exploitable.",
             )
 
         output_text = message.get("content")
@@ -587,10 +534,9 @@ class LLMService:
         if not isinstance(output_text, str):
             raise InvalidLLMResponseError(
                 context=ErrorContext(
-                    service=SERVICE_NAME,
-                    operation="_extract_response_text"
+                    service=SERVICE_NAME, operation="_extract_response_text"
                 ),
-                message="Ollama n'a pas retourné de contenu textuel."
+                message="Ollama n'a pas retourné de contenu textuel.",
             )
 
         normalized_text = self._remove_thinking_blocks(output_text)
@@ -598,12 +544,9 @@ class LLMService:
         if not normalized_text:
             raise InvalidLLMResponseError(
                 context=ErrorContext(
-                    service=SERVICE_NAME,
-                    operation="_extract_response_text"
+                    service=SERVICE_NAME, operation="_extract_response_text"
                 ),
-                message=(
-                    "Ollama a retourné une réponse vide après normalisation."
-                )
+                message=("Ollama a retourné une réponse vide après normalisation."),
             )
 
         return normalized_text
@@ -613,9 +556,7 @@ class LLMService:
     async def generate(self, *, prompt: str) -> str:
         """Génère un contenu textuel depuis un prompt complet."""
         normalized_prompt = self._normalize_required_text(
-            prompt,
-            field_name="Le prompt",
-            operation="generate"
+            prompt, field_name="Le prompt", operation="generate"
         )
 
         async with self._generation_lock:
@@ -626,16 +567,14 @@ class LLMService:
             logger.debug(
                 "Génération avec le modèle %s : prompt=%d caractères.",
                 model_name,
-                len(normalized_prompt)
+                len(normalized_prompt),
             )
 
             started_at = perf_counter()
 
             try:
                 response = await self._send_chat_request(
-                    client=client,
-                    payload=payload,
-                    model_name=model_name
+                    client=client, payload=payload, model_name=model_name
                 )
                 response_payload = self._extract_json_mapping(response)
                 generated_text = self._extract_response_text(response_payload)
@@ -644,14 +583,12 @@ class LLMService:
                 LLMGenerationError,
                 OllamaConnectionError,
                 OllamaResponseError,
-                OllamaTimeoutError
+                OllamaTimeoutError,
             ):
                 self._failed_generations += 1
                 raise
 
-            duration_ms = (
-                perf_counter() - started_at
-            ) * MILLISECONDS_PER_SECOND
+            duration_ms = (perf_counter() - started_at) * MILLISECONDS_PER_SECOND
             self._generated_responses += 1
             self._total_generation_duration_ms += duration_ms
 
@@ -693,7 +630,7 @@ class LLMService:
             OllamaConnectionError,
             OllamaModelUnavailableError,
             OllamaResponseError,
-            OllamaTimeoutError
+            OllamaTimeoutError,
         ):
             logger.exception("Le service Ollama est indisponible.")
             return False
@@ -716,8 +653,5 @@ class LLMService:
             "timeout_seconds": self._settings.llm_timeout_seconds,
             "generated_responses": self.get_generated_count(),
             "failed_generations": self.get_failed_count(),
-            "average_generation_duration_ms": round(
-                self.get_average_duration_ms(),
-                2
-            ),
+            "average_generation_duration_ms": round(self.get_average_duration_ms(), 2),
         }

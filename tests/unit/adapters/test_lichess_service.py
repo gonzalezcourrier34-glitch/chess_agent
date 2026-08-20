@@ -28,10 +28,7 @@ from pydantic import SecretStr
 
 # Constantes
 
-VALID_FEN = (
-    "r1bqkbnr/pppp1ppp/2n5/1B2p3/"
-    "4P3/5N2/PPPP1PPP/RNBQK2R b KQkq - 3 3"
-)
+VALID_FEN = "r1bqkbnr/pppp1ppp/2n5/1B2p3/4P3/5N2/PPPP1PPP/RNBQK2R b KQkq - 3 3"
 
 VALID_PAYLOAD: LichessPayload = {
     "white": 40,
@@ -53,6 +50,7 @@ EMPTY_OPENING_PAYLOAD: LichessPayload = {
 
 # Fixtures
 
+
 @pytest.fixture
 def service() -> LichessService:
     """Construit un service Lichess."""
@@ -64,14 +62,11 @@ def service() -> LichessService:
 def response() -> MagicMock:
     """Construit une réponse HTTP simulée."""
 
-    mocked_response = MagicMock(
-        spec=httpx.Response
-    )
+    mocked_response = MagicMock(spec=httpx.Response)
 
     mocked_response.status_code = 200
     mocked_response.content = (
-        b'{"white":40,"draws":20,"black":40,'
-        b'"opening":{"eco":"C60","name":"Ruy Lopez"}}'
+        b'{"white":40,"draws":20,"black":40,"opening":{"eco":"C60","name":"Ruy Lopez"}}'
     )
 
     mocked_response.raise_for_status.return_value = None
@@ -80,6 +75,7 @@ def response() -> MagicMock:
 
 
 # Construction
+
 
 def test_service_is_ready_after_creation(
     service: LichessService,
@@ -119,9 +115,7 @@ def test_get_token_returns_secret_value(
 
     test_settings = service._settings.model_copy(
         update={
-            "lichess_token": SecretStr(
-                "token-value"
-            ),
+            "lichess_token": SecretStr("token-value"),
         }
     )
 
@@ -154,7 +148,9 @@ def test_get_token_returns_none_for_empty_secret(
 
     assert service._get_token() is None
 
+
 # Cycle de vie
+
 
 @pytest.mark.asyncio
 async def test_close_closes_http_client(
@@ -197,16 +193,13 @@ async def test_close_ignores_closing_error(
 ) -> None:
     """Vérifie qu'une erreur de fermeture n'est pas propagée."""
 
-    service._client.aclose = AsyncMock(
-        side_effect=RuntimeError(
-            "close failure"
-        )
-    )
+    service._client.aclose = AsyncMock(side_effect=RuntimeError("close failure"))
 
     await service.close()
 
 
 # Requête générique
+
 
 @pytest.mark.asyncio
 async def test_request_returns_parsed_payload(
@@ -216,9 +209,7 @@ async def test_request_returns_parsed_payload(
 ) -> None:
     """Vérifie qu'une requête retourne le payload validé."""
 
-    execute_request = AsyncMock(
-        return_value=response
-    )
+    execute_request = AsyncMock(return_value=response)
 
     monkeypatch.setattr(
         service,
@@ -241,15 +232,14 @@ async def test_request_returns_parsed_payload(
 
 # Parsing
 
+
 def test_parse_response_payload_returns_json_object(
     service: LichessService,
     response: MagicMock,
 ) -> None:
     """Vérifie le parsing d'une réponse JSON valide."""
 
-    payload = service._parse_response_payload(
-        response
-    )
+    payload = service._parse_response_payload(response)
 
     assert payload["white"] == 40
     assert payload["draws"] == 20
@@ -264,12 +254,8 @@ def test_parse_response_payload_rejects_empty_response(
 
     response.content = b""
 
-    with pytest.raises(
-        LichessResponseError
-    ):
-        service._parse_response_payload(
-            response
-        )
+    with pytest.raises(LichessResponseError):
+        service._parse_response_payload(response)
 
 
 def test_parse_response_payload_rejects_invalid_json(
@@ -280,12 +266,8 @@ def test_parse_response_payload_rejects_invalid_json(
 
     response.content = b"not-json"
 
-    with pytest.raises(
-        LichessResponseError
-    ):
-        service._parse_response_payload(
-            response
-        )
+    with pytest.raises(LichessResponseError):
+        service._parse_response_payload(response)
 
 
 def test_parse_response_payload_rejects_non_object_json(
@@ -296,15 +278,12 @@ def test_parse_response_payload_rejects_non_object_json(
 
     response.content = b'["not", "an", "object"]'
 
-    with pytest.raises(
-        LichessResponseError
-    ):
-        service._parse_response_payload(
-            response
-        )
+    with pytest.raises(LichessResponseError):
+        service._parse_response_payload(response)
 
 
 # Retry
+
 
 @pytest.mark.parametrize(
     "status_code",
@@ -316,11 +295,14 @@ def test_should_retry_status_accepts_retryable_status(
 ) -> None:
     """Vérifie les statuts HTTP temporaires."""
 
-    assert service._should_retry_status(
-        status_code=status_code,
-        attempt=1,
-        total_attempts=2,
-    ) is True
+    assert (
+        service._should_retry_status(
+            status_code=status_code,
+            attempt=1,
+            total_attempts=2,
+        )
+        is True
+    )
 
 
 def test_should_retry_status_rejects_non_retryable_status(
@@ -328,11 +310,14 @@ def test_should_retry_status_rejects_non_retryable_status(
 ) -> None:
     """Vérifie qu'un statut permanent n'est pas retenté."""
 
-    assert service._should_retry_status(
-        status_code=404,
-        attempt=1,
-        total_attempts=2,
-    ) is False
+    assert (
+        service._should_retry_status(
+            status_code=404,
+            attempt=1,
+            total_attempts=2,
+        )
+        is False
+    )
 
 
 def test_should_retry_status_stops_on_last_attempt(
@@ -340,11 +325,14 @@ def test_should_retry_status_stops_on_last_attempt(
 ) -> None:
     """Vérifie qu'aucun retry n'est réalisé après la dernière tentative."""
 
-    assert service._should_retry_status(
-        status_code=503,
-        attempt=2,
-        total_attempts=2,
-    ) is False
+    assert (
+        service._should_retry_status(
+            status_code=503,
+            attempt=2,
+            total_attempts=2,
+        )
+        is False
+    )
 
 
 @pytest.mark.asyncio
@@ -372,19 +360,18 @@ async def test_wait_before_retry_uses_exponential_delay(
         "_settings",
         test_settings,
     )
-    
+
     await service._wait_before_retry(
         attempt=3,
         endpoint=MASTER_DATABASE_ENDPOINT,
         status_code=503,
     )
 
-    sleep.assert_awaited_once_with(
-        8.0
-    )
+    sleep.assert_awaited_once_with(8.0)
 
 
 # Exécution HTTP
+
 
 @pytest.mark.asyncio
 async def test_execute_request_returns_successful_response(
@@ -395,9 +382,7 @@ async def test_execute_request_returns_successful_response(
     """Vérifie une requête HTTP réussie."""
 
     client = MagicMock()
-    client.get = AsyncMock(
-        return_value=response
-    )
+    client.get = AsyncMock(return_value=response)
 
     monkeypatch.setattr(
         service,
@@ -422,15 +407,11 @@ async def test_execute_request_retries_retryable_status(
 ) -> None:
     """Vérifie une nouvelle tentative après une erreur temporaire."""
 
-    first_response = MagicMock(
-        spec=httpx.Response
-    )
+    first_response = MagicMock(spec=httpx.Response)
     first_response.status_code = 503
     first_response.raise_for_status.return_value = None
 
-    second_response = MagicMock(
-        spec=httpx.Response
-    )
+    second_response = MagicMock(spec=httpx.Response)
     second_response.status_code = 200
     second_response.raise_for_status.return_value = None
 
@@ -496,9 +477,7 @@ async def test_execute_request_raises_timeout_after_last_attempt(
     )
 
     client = MagicMock()
-    client.get = AsyncMock(
-        side_effect=timeout_error
-    )
+    client.get = AsyncMock(side_effect=timeout_error)
 
     monkeypatch.setattr(
         service,
@@ -517,10 +496,8 @@ async def test_execute_request_raises_timeout_after_last_attempt(
         "_settings",
         test_settings,
     )
-    
-    with pytest.raises(
-        LichessTimeoutError
-    ):
+
+    with pytest.raises(LichessTimeoutError):
         await service._execute_request(
             MASTER_DATABASE_ENDPOINT,
             params=None,
@@ -570,7 +547,7 @@ async def test_execute_request_retries_timeout(
         "_settings",
         test_settings,
     )
-    
+
     wait = AsyncMock()
 
     monkeypatch.setattr(
@@ -607,9 +584,7 @@ async def test_execute_request_translates_http_status_error(
     )
 
     client = MagicMock()
-    client.get = AsyncMock(
-        return_value=response
-    )
+    client.get = AsyncMock(return_value=response)
 
     monkeypatch.setattr(
         service,
@@ -617,9 +592,7 @@ async def test_execute_request_translates_http_status_error(
         client,
     )
 
-    with pytest.raises(
-        LichessError
-    ):
+    with pytest.raises(LichessError):
         await service._execute_request(
             MASTER_DATABASE_ENDPOINT,
             params=None,
@@ -644,9 +617,7 @@ async def test_execute_request_translates_network_error(
     )
 
     client = MagicMock()
-    client.get = AsyncMock(
-        side_effect=error
-    )
+    client.get = AsyncMock(side_effect=error)
 
     monkeypatch.setattr(
         service,
@@ -666,9 +637,7 @@ async def test_execute_request_translates_network_error(
         test_settings,
     )
 
-    with pytest.raises(
-        LichessError
-    ):
+    with pytest.raises(LichessError):
         await service._execute_request(
             MASTER_DATABASE_ENDPOINT,
             params=None,
@@ -677,6 +646,7 @@ async def test_execute_request_translates_network_error(
 
 # Accès aux bases Lichess
 
+
 @pytest.mark.asyncio
 async def test_get_master_database_uses_expected_parameters(
     service: LichessService,
@@ -684,9 +654,7 @@ async def test_get_master_database_uses_expected_parameters(
 ) -> None:
     """Vérifie l'appel à la base maîtres."""
 
-    request = AsyncMock(
-        return_value=VALID_PAYLOAD
-    )
+    request = AsyncMock(return_value=VALID_PAYLOAD)
 
     monkeypatch.setattr(
         service,
@@ -694,9 +662,7 @@ async def test_get_master_database_uses_expected_parameters(
         request,
     )
 
-    result = await service._get_master_database(
-        fen=VALID_FEN
-    )
+    result = await service._get_master_database(fen=VALID_FEN)
 
     assert result == VALID_PAYLOAD
 
@@ -716,9 +682,7 @@ async def test_get_user_database_uses_optional_filters(
 ) -> None:
     """Vérifie l'appel à la base joueurs."""
 
-    request = AsyncMock(
-        return_value=VALID_PAYLOAD
-    )
+    request = AsyncMock(return_value=VALID_PAYLOAD)
 
     monkeypatch.setattr(
         service,
@@ -747,6 +711,7 @@ async def test_get_user_database_uses_optional_filters(
 
 # Détection d'ouverture
 
+
 @pytest.mark.asyncio
 async def test_detect_opening_returns_opening_details(
     service: LichessService,
@@ -754,9 +719,7 @@ async def test_detect_opening_returns_opening_details(
 ) -> None:
     """Vérifie la détection d'une ouverture connue."""
 
-    get_master_database = AsyncMock(
-        return_value=VALID_PAYLOAD
-    )
+    get_master_database = AsyncMock(return_value=VALID_PAYLOAD)
 
     monkeypatch.setattr(
         service,
@@ -764,11 +727,7 @@ async def test_detect_opening_returns_opening_details(
         get_master_database,
     )
 
-    result = await service.detect_opening(
-        FenRequest(
-            fen=VALID_FEN
-        )
-    )
+    result = await service.detect_opening(FenRequest(fen=VALID_FEN))
 
     assert result.opening.eco == "C60"
     assert result.opening.name == "Ruy Lopez"
@@ -776,15 +735,9 @@ async def test_detect_opening_returns_opening_details(
 
     assert result.statistics is not None
     assert result.statistics.games == 100
-    assert result.statistics.white_win_rate == pytest.approx(
-        40.0
-    )
-    assert result.statistics.black_win_rate == pytest.approx(
-        40.0
-    )
-    assert result.statistics.draw_rate == pytest.approx(
-        20.0
-    )
+    assert result.statistics.white_win_rate == pytest.approx(40.0)
+    assert result.statistics.black_win_rate == pytest.approx(40.0)
+    assert result.statistics.draw_rate == pytest.approx(20.0)
 
 
 @pytest.mark.asyncio
@@ -794,9 +747,7 @@ async def test_detect_opening_raises_when_opening_is_missing(
 ) -> None:
     """Vérifie l'absence d'ouverture."""
 
-    get_master_database = AsyncMock(
-        return_value=EMPTY_OPENING_PAYLOAD
-    )
+    get_master_database = AsyncMock(return_value=EMPTY_OPENING_PAYLOAD)
 
     monkeypatch.setattr(
         service,
@@ -804,17 +755,12 @@ async def test_detect_opening_raises_when_opening_is_missing(
         get_master_database,
     )
 
-    with pytest.raises(
-        OpeningNotFoundError
-    ):
-        await service.detect_opening(
-            FenRequest(
-                fen=VALID_FEN
-            )
-        )
+    with pytest.raises(OpeningNotFoundError):
+        await service.detect_opening(FenRequest(fen=VALID_FEN))
 
 
 # Construction d'ouverture
+
 
 def test_build_opening_returns_expected_model(
     service: LichessService,
@@ -854,25 +800,18 @@ def test_build_opening_uses_unknown_name_when_missing(
 
 # Statistiques
 
+
 def test_build_statistics_returns_expected_rates(
     service: LichessService,
 ) -> None:
     """Vérifie le calcul des statistiques."""
 
-    statistics = service._build_statistics(
-        VALID_PAYLOAD
-    )
+    statistics = service._build_statistics(VALID_PAYLOAD)
 
     assert statistics.games == 100
-    assert statistics.white_win_rate == pytest.approx(
-        40.0
-    )
-    assert statistics.black_win_rate == pytest.approx(
-        40.0
-    )
-    assert statistics.draw_rate == pytest.approx(
-        20.0
-    )
+    assert statistics.white_win_rate == pytest.approx(40.0)
+    assert statistics.black_win_rate == pytest.approx(40.0)
+    assert statistics.draw_rate == pytest.approx(20.0)
 
 
 def test_build_statistics_returns_empty_statistics_when_no_games(
@@ -896,18 +835,22 @@ def test_build_statistics_returns_empty_statistics_when_no_games(
 
 # Présence d'ouverture
 
+
 def test_has_opening_returns_true_with_name(
     service: LichessService,
 ) -> None:
     """Vérifie la détection par nom."""
 
-    assert service._has_opening(
-        {
-            "opening": {
-                "name": "Ruy Lopez",
-            },
-        }
-    ) is True
+    assert (
+        service._has_opening(
+            {
+                "opening": {
+                    "name": "Ruy Lopez",
+                },
+            }
+        )
+        is True
+    )
 
 
 def test_has_opening_returns_true_with_eco(
@@ -915,13 +858,16 @@ def test_has_opening_returns_true_with_eco(
 ) -> None:
     """Vérifie la détection par ECO."""
 
-    assert service._has_opening(
-        {
-            "opening": {
-                "eco": "C60",
-            },
-        }
-    ) is True
+    assert (
+        service._has_opening(
+            {
+                "opening": {
+                    "eco": "C60",
+                },
+            }
+        )
+        is True
+    )
 
 
 def test_has_opening_returns_false_without_opening(
@@ -929,14 +875,18 @@ def test_has_opening_returns_false_without_opening(
 ) -> None:
     """Vérifie l'absence d'ouverture."""
 
-    assert service._has_opening(
-        {
-            "opening": {},
-        }
-    ) is False
+    assert (
+        service._has_opening(
+            {
+                "opening": {},
+            }
+        )
+        is False
+    )
 
 
 # Helpers JSON
+
 
 def test_get_object_returns_nested_object(
     service: LichessService,
@@ -1002,6 +952,7 @@ def test_get_string_returns_default_for_invalid_value(
 
 # Conversion des entiers
 
+
 @pytest.mark.parametrize(
     ("value", "expected"),
     [
@@ -1019,9 +970,12 @@ def test_parse_integer_accepts_valid_values(
 ) -> None:
     """Vérifie les représentations numériques valides."""
 
-    assert service._parse_integer(
-        value  # type: ignore[arg-type]
-    ) == expected
+    assert (
+        service._parse_integer(
+            value  # type: ignore[arg-type]
+        )
+        == expected
+    )
 
 
 @pytest.mark.parametrize(
@@ -1045,9 +999,12 @@ def test_parse_integer_rejects_invalid_values(
 ) -> None:
     """Vérifie les représentations numériques invalides."""
 
-    assert service._parse_integer(
-        value  # type: ignore[arg-type]
-    ) is None
+    assert (
+        service._parse_integer(
+            value  # type: ignore[arg-type]
+        )
+        is None
+    )
 
 
 def test_get_integer_returns_zero_for_invalid_value(
@@ -1067,6 +1024,7 @@ def test_get_integer_returns_zero_for_invalid_value(
 
 # Santé
 
+
 @pytest.mark.asyncio
 async def test_ping_returns_true_when_lichess_responds(
     service: LichessService,
@@ -1074,9 +1032,7 @@ async def test_ping_returns_true_when_lichess_responds(
 ) -> None:
     """Vérifie un ping réussi."""
 
-    get_master_database = AsyncMock(
-        return_value=VALID_PAYLOAD
-    )
+    get_master_database = AsyncMock(return_value=VALID_PAYLOAD)
 
     monkeypatch.setattr(
         service,
@@ -1086,9 +1042,7 @@ async def test_ping_returns_true_when_lichess_responds(
 
     assert await service.ping() is True
 
-    get_master_database.assert_awaited_once_with(
-        fen=DEFAULT_STARTING_FEN
-    )
+    get_master_database.assert_awaited_once_with(fen=DEFAULT_STARTING_FEN)
 
 
 @pytest.mark.asyncio
@@ -1117,11 +1071,7 @@ async def test_ping_returns_false_on_lichess_error(
 ) -> None:
     """Vérifie le ping lorsque Lichess échoue."""
 
-    get_master_database = AsyncMock(
-        side_effect=LichessError(
-            message="failure"
-        )
-    )
+    get_master_database = AsyncMock(side_effect=LichessError(message="failure"))
 
     monkeypatch.setattr(
         service,
@@ -1139,11 +1089,7 @@ async def test_ping_returns_false_on_unexpected_error(
 ) -> None:
     """Vérifie la protection contre une erreur inattendue."""
 
-    get_master_database = AsyncMock(
-        side_effect=RuntimeError(
-            "unexpected"
-        )
-    )
+    get_master_database = AsyncMock(side_effect=RuntimeError("unexpected"))
 
     monkeypatch.setattr(
         service,
@@ -1161,9 +1107,7 @@ async def test_health_returns_service_status(
 ) -> None:
     """Vérifie l'état de santé détaillé."""
 
-    ping = AsyncMock(
-        return_value=True
-    )
+    ping = AsyncMock(return_value=True)
 
     monkeypatch.setattr(
         service,
@@ -1178,34 +1122,18 @@ async def test_health_returns_service_status(
     assert status["is_closed"] is False
     assert status["available"] is True
 
-    assert status["base_url"] == str(
-        service._client.base_url
-    )
+    assert status["base_url"] == str(service._client.base_url)
 
-    assert status["endpoint"] == (
-        MASTER_DATABASE_ENDPOINT
-    )
+    assert status["endpoint"] == (MASTER_DATABASE_ENDPOINT)
 
-    assert status["timeout_seconds"] == (
-        service._settings.lichess_timeout_seconds
-    )
+    assert status["timeout_seconds"] == (service._settings.lichess_timeout_seconds)
 
-    assert status["max_moves"] == (
-        service._settings.lichess_max_moves
-    )
+    assert status["max_moves"] == (service._settings.lichess_max_moves)
 
-    assert status["max_retry_attempts"] == (
-        service._settings.http_max_retry_attempts
-    )
+    assert status["max_retry_attempts"] == (service._settings.http_max_retry_attempts)
 
-    assert status["retry_delay_seconds"] == (
-        service._settings.http_retry_delay_seconds
-    )
+    assert status["retry_delay_seconds"] == (service._settings.http_retry_delay_seconds)
 
-    assert status["max_connections"] == (
-        service._settings.http_max_connections
-    )
+    assert status["max_connections"] == (service._settings.http_max_connections)
 
-    assert status["user_agent"] == (
-        service._settings.http_user_agent
-    )
+    assert status["user_agent"] == (service._settings.http_user_agent)

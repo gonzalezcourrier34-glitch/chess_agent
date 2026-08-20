@@ -16,43 +16,23 @@ from app.services.chess_service import ChessService
 
 STARTING_FEN = chess.STARTING_FEN
 
-BLACK_TO_MOVE_FEN = (
-    "rnbqkbnr/pppppppp/8/8/8/8/"
-    "PPPPPPPP/RNBQKBNR b KQkq - 0 1"
-)
+BLACK_TO_MOVE_FEN = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR b KQkq - 0 1"
 
-EN_PASSANT_FEN = (
-    "rnbqkbnr/ppp1p1pp/8/3pPp2/8/8/"
-    "PPPP1PPP/RNBQKBNR w KQkq f6 0 3"
-)
+EN_PASSANT_FEN = "rnbqkbnr/ppp1p1pp/8/3pPp2/8/8/PPPP1PPP/RNBQKBNR w KQkq f6 0 3"
 
-CASTLING_FEN = (
-    "r3k2r/8/8/8/8/8/8/R3K2R "
-    "w KQkq - 0 1"
-)
+CASTLING_FEN = "r3k2r/8/8/8/8/8/8/R3K2R w KQkq - 0 1"
 
-PROMOTION_FEN = (
-    "7k/P7/8/8/8/8/8/7K "
-    "w - - 0 1"
-)
+PROMOTION_FEN = "7k/P7/8/8/8/8/8/7K w - - 0 1"
 
-STALEMATE_FEN = (
-    "7k/5Q2/6K1/8/8/8/8/8 "
-    "b - - 0 1"
-)
+STALEMATE_FEN = "7k/5Q2/6K1/8/8/8/8/8 b - - 0 1"
 
-CHECKMATE_FEN = (
-    "7k/6Q1/6K1/8/8/8/8/8 "
-    "b - - 0 1"
-)
+CHECKMATE_FEN = "7k/6Q1/6K1/8/8/8/8/8 b - - 0 1"
 
-INSUFFICIENT_MATERIAL_FEN = (
-    "7k/8/8/8/8/8/8/K7 "
-    "w - - 0 1"
-)
+INSUFFICIENT_MATERIAL_FEN = "7k/8/8/8/8/8/8/K7 w - - 0 1"
 
 
 # Fixtures
+
 
 @pytest.fixture
 def service() -> ChessService:
@@ -63,14 +43,13 @@ def service() -> ChessService:
 
 # Construction de l'échiquier
 
+
 def test_create_board(
     service: ChessService,
 ) -> None:
     """Vérifie la création d'un échiquier depuis une FEN."""
 
-    board = service._create_board(
-        STARTING_FEN
-    )
+    board = service._create_board(STARTING_FEN)
 
     assert isinstance(
         board,
@@ -82,6 +61,7 @@ def test_create_board(
 
 # Position
 
+
 def test_get_position(
     service: ChessService,
 ) -> None:
@@ -91,16 +71,11 @@ def test_get_position(
         fen=STARTING_FEN,
     )
 
-    result = service.get_position(
-        request
-    )
+    result = service.get_position(request)
 
     assert result.fen == STARTING_FEN
 
-    assert (
-        result.active_color
-        is ChessColor.WHITE
-    )
+    assert result.active_color is ChessColor.WHITE
 
     assert result.fullmove_number == 1
     assert result.halfmove_clock == 0
@@ -117,20 +92,13 @@ def test_build_position(
 ) -> None:
     """Vérifie la conversion d'un board en BoardPosition."""
 
-    board = chess.Board(
-        BLACK_TO_MOVE_FEN
-    )
+    board = chess.Board(BLACK_TO_MOVE_FEN)
 
-    result = service.build_position(
-        board
-    )
+    result = service.build_position(board)
 
     assert result.fen == BLACK_TO_MOVE_FEN
 
-    assert (
-        result.active_color
-        is ChessColor.BLACK
-    )
+    assert result.active_color is ChessColor.BLACK
 
 
 def test_build_position_with_en_passant(
@@ -145,27 +113,19 @@ def test_build_position_with_en_passant(
     board.push_uci("e4e5")
     board.push_uci("f7f5")
 
-    result = service.build_position(
-        board
-    )
+    result = service.build_position(board)
 
-    assert (
-        result.en_passant_square
-        == "f6"
-    )
+    assert result.en_passant_square == "f6"
+
 
 def test_build_position_without_castling_rights(
     service: ChessService,
 ) -> None:
     """Vérifie l'absence de droits de roque."""
 
-    board = chess.Board(
-        INSUFFICIENT_MATERIAL_FEN
-    )
+    board = chess.Board(INSUFFICIENT_MATERIAL_FEN)
 
-    result = service.build_position(
-        board
-    )
+    result = service.build_position(board)
 
     assert result.castling_rights == "-"
 
@@ -175,11 +135,7 @@ def test_build_position_checkmate(
 ) -> None:
     """Vérifie une position d'échec et mat."""
 
-    result = service.build_position(
-        chess.Board(
-            CHECKMATE_FEN
-        )
-    )
+    result = service.build_position(chess.Board(CHECKMATE_FEN))
 
     assert result.is_check is True
     assert result.is_checkmate is True
@@ -191,11 +147,7 @@ def test_build_position_stalemate(
 ) -> None:
     """Vérifie une position de pat."""
 
-    result = service.build_position(
-        chess.Board(
-            STALEMATE_FEN
-        )
-    )
+    result = service.build_position(chess.Board(STALEMATE_FEN))
 
     assert result.is_stalemate is True
     assert result.is_game_over is True
@@ -203,17 +155,13 @@ def test_build_position_stalemate(
 
 # Couleur
 
+
 def test_get_active_color_white(
     service: ChessService,
 ) -> None:
     """Vérifie le trait aux blancs."""
 
-    assert (
-        service.get_active_color(
-            STARTING_FEN
-        )
-        is ChessColor.WHITE
-    )
+    assert service.get_active_color(STARTING_FEN) is ChessColor.WHITE
 
 
 def test_get_active_color_black(
@@ -221,12 +169,7 @@ def test_get_active_color_black(
 ) -> None:
     """Vérifie le trait aux noirs."""
 
-    assert (
-        service.get_active_color(
-            BLACK_TO_MOVE_FEN
-        )
-        is ChessColor.BLACK
-    )
+    assert service.get_active_color(BLACK_TO_MOVE_FEN) is ChessColor.BLACK
 
 
 def test_get_board_color_white(
@@ -234,16 +177,9 @@ def test_get_board_color_white(
 ) -> None:
     """Vérifie la conversion interne du trait blanc."""
 
-    board = chess.Board(
-        STARTING_FEN
-    )
+    board = chess.Board(STARTING_FEN)
 
-    assert (
-        service._get_board_color(
-            board
-        )
-        is ChessColor.WHITE
-    )
+    assert service._get_board_color(board) is ChessColor.WHITE
 
 
 def test_get_board_color_black(
@@ -251,19 +187,13 @@ def test_get_board_color_black(
 ) -> None:
     """Vérifie la conversion interne du trait noir."""
 
-    board = chess.Board(
-        BLACK_TO_MOVE_FEN
-    )
+    board = chess.Board(BLACK_TO_MOVE_FEN)
 
-    assert (
-        service._get_board_color(
-            board
-        )
-        is ChessColor.BLACK
-    )
+    assert service._get_board_color(board) is ChessColor.BLACK
 
 
 # Contexte
+
 
 def test_get_context(
     service: ChessService,
@@ -274,9 +204,7 @@ def test_get_context(
         fen=STARTING_FEN,
     )
 
-    context = service.get_context(
-        request
-    )
+    context = service.get_context(request)
 
     assert context.board.fen == STARTING_FEN
     assert len(context.legal_moves) == 20
@@ -286,6 +214,7 @@ def test_get_context(
 
 # Nulle
 
+
 def test_is_draw_false(
     service: ChessService,
 ) -> None:
@@ -293,10 +222,7 @@ def test_is_draw_false(
 
     board = chess.Board()
 
-    assert (
-        service._is_draw(board)
-        is False
-    )
+    assert service._is_draw(board) is False
 
 
 def test_is_draw_for_insufficient_material(
@@ -304,14 +230,9 @@ def test_is_draw_for_insufficient_material(
 ) -> None:
     """Vérifie une nulle par matériel insuffisant."""
 
-    board = chess.Board(
-        INSUFFICIENT_MATERIAL_FEN
-    )
+    board = chess.Board(INSUFFICIENT_MATERIAL_FEN)
 
-    assert (
-        service._is_draw(board)
-        is True
-    )
+    assert service._is_draw(board) is True
 
 
 def test_is_draw_for_stalemate(
@@ -319,17 +240,13 @@ def test_is_draw_for_stalemate(
 ) -> None:
     """Vérifie une nulle par pat."""
 
-    board = chess.Board(
-        STALEMATE_FEN
-    )
+    board = chess.Board(STALEMATE_FEN)
 
-    assert (
-        service._is_draw(board)
-        is True
-    )
+    assert service._is_draw(board) is True
 
 
 # Coups légaux
+
 
 def test_build_legal_moves(
     service: ChessService,
@@ -338,21 +255,13 @@ def test_build_legal_moves(
 
     board = chess.Board()
 
-    moves = service._build_legal_moves(
-        board
-    )
+    moves = service._build_legal_moves(board)
 
     assert len(moves) == 20
 
-    assert any(
-        move.uci == "e2e4"
-        for move in moves
-    )
+    assert any(move.uci == "e2e4" for move in moves)
 
-    assert any(
-        move.san == "e4"
-        for move in moves
-    )
+    assert any(move.san == "e4" for move in moves)
 
 
 def test_get_legal_moves(
@@ -364,9 +273,7 @@ def test_get_legal_moves(
         fen=STARTING_FEN,
     )
 
-    moves = service.get_legal_moves(
-        request
-    )
+    moves = service.get_legal_moves(request)
 
     assert len(moves) == 20
 
@@ -415,6 +322,7 @@ def test_is_legal_move_returns_false(
 
 # Validation du coup
 
+
 def test_ensure_legal_move_accepts_legal_move(
     service: ChessService,
 ) -> None:
@@ -422,9 +330,7 @@ def test_ensure_legal_move_accepts_legal_move(
 
     board = chess.Board()
 
-    move = chess.Move.from_uci(
-        "e2e4"
-    )
+    move = chess.Move.from_uci("e2e4")
 
     result = service._ensure_legal_move(
         board,
@@ -441,9 +347,7 @@ def test_ensure_legal_move_rejects_illegal_move(
 
     board = chess.Board()
 
-    move = chess.Move.from_uci(
-        "e2e5"
-    )
+    move = chess.Move.from_uci("e2e5")
 
     with pytest.raises(
         InvalidMoveError,
@@ -457,6 +361,7 @@ def test_ensure_legal_move_rejects_illegal_move(
 
 # Construction d'un coup
 
+
 def test_build_move(
     service: ChessService,
 ) -> None:
@@ -464,9 +369,7 @@ def test_build_move(
 
     board = chess.Board()
 
-    move = chess.Move.from_uci(
-        "e2e4"
-    )
+    move = chess.Move.from_uci("e2e4")
 
     result = service.build_move(
         board,
@@ -495,9 +398,7 @@ def test_build_move_capture(
     board.push_uci("e2e4")
     board.push_uci("d7d5")
 
-    move = chess.Move.from_uci(
-        "e4d5"
-    )
+    move = chess.Move.from_uci("e4d5")
 
     result = service.build_move(
         board,
@@ -513,13 +414,9 @@ def test_build_move_castling(
 ) -> None:
     """Vérifie la détection du roque."""
 
-    board = chess.Board(
-        CASTLING_FEN
-    )
+    board = chess.Board(CASTLING_FEN)
 
-    move = chess.Move.from_uci(
-        "e1g1"
-    )
+    move = chess.Move.from_uci("e1g1")
 
     result = service.build_move(
         board,
@@ -535,13 +432,9 @@ def test_build_move_promotion(
 ) -> None:
     """Vérifie la promotion."""
 
-    board = chess.Board(
-        PROMOTION_FEN
-    )
+    board = chess.Board(PROMOTION_FEN)
 
-    move = chess.Move.from_uci(
-        "a7a8q"
-    )
+    move = chess.Move.from_uci("a7a8q")
 
     result = service.build_move(
         board,
@@ -550,13 +443,11 @@ def test_build_move_promotion(
 
     assert result.is_promotion is True
 
-    assert (
-        result.promotion_piece
-        == "queen"
-    )
+    assert result.promotion_piece == "queen"
 
 
 # Analyse automatique SAN / UCI
+
 
 def test_parse_move_uci(
     service: ChessService,
@@ -595,9 +486,7 @@ def test_parse_move_rejects_invalid_move(
 
     board = chess.Board()
 
-    with pytest.raises(
-        InvalidMoveError
-    ):
+    with pytest.raises(InvalidMoveError):
         service.parse_move(
             board,
             "not-a-move",
@@ -605,6 +494,7 @@ def test_parse_move_rejects_invalid_move(
 
 
 # UCI
+
 
 def test_parse_uci_move(
     service: ChessService,
@@ -657,6 +547,7 @@ def test_parse_uci_move_rejects_illegal_move(
 
 # SAN
 
+
 def test_parse_san_move(
     service: ChessService,
 ) -> None:
@@ -699,6 +590,7 @@ def test_parse_san_move_rejects_invalid_move(
 
 
 # Conversion
+
 
 def test_convert_move_uci_to_san(
     service: ChessService,
@@ -790,22 +682,20 @@ def test_convert_to_uci(
 
 # Historique
 
+
 def test_convert_uci_history_to_san(
     service: ChessService,
 ) -> None:
     """Vérifie la conversion d'un historique complet."""
 
-    result = (
-        service
-        .convert_uci_history_to_san(
-            [
-                "e2e4",
-                "e7e5",
-                "g1f3",
-                "b8c6",
-                "f1b5",
-            ]
-        )
+    result = service.convert_uci_history_to_san(
+        [
+            "e2e4",
+            "e7e5",
+            "g1f3",
+            "b8c6",
+            "f1b5",
+        ]
     )
 
     assert result == [
@@ -822,11 +712,7 @@ def test_convert_uci_history_to_san_empty(
 ) -> None:
     """Vérifie un historique vide."""
 
-    assert (
-        service
-        .convert_uci_history_to_san([])
-        == []
-    )
+    assert service.convert_uci_history_to_san([]) == []
 
 
 def test_convert_uci_history_to_san_rejects_invalid_sequence(
@@ -834,9 +720,7 @@ def test_convert_uci_history_to_san_rejects_invalid_sequence(
 ) -> None:
     """Vérifie un historique incohérent."""
 
-    with pytest.raises(
-        InvalidMoveError
-    ):
+    with pytest.raises(InvalidMoveError):
         service.convert_uci_history_to_san(
             [
                 "e2e4",
@@ -846,6 +730,7 @@ def test_convert_uci_history_to_san_rejects_invalid_sequence(
 
 
 # Application
+
 
 def test_apply_move_uci(
     service: ChessService,
@@ -892,17 +777,13 @@ def test_apply_move_resulting_fen(
 
     board = chess.Board()
 
-    board.push_uci(
-        "e2e4"
-    )
+    board.push_uci("e2e4")
 
-    assert (
-        result.after_fen
-        == board.fen()
-    )
+    assert result.after_fen == board.fen()
 
 
 # FEN résultante
+
 
 def test_get_resulting_fen_uci(
     service: ChessService,
@@ -916,9 +797,7 @@ def test_get_resulting_fen_uci(
 
     board = chess.Board()
 
-    board.push_uci(
-        "e2e4"
-    )
+    board.push_uci("e2e4")
 
     assert result == board.fen()
 
@@ -935,14 +814,13 @@ def test_get_resulting_fen_san(
 
     board = chess.Board()
 
-    board.push_san(
-        "e4"
-    )
+    board.push_san("e4")
 
     assert result == board.fen()
 
 
 # Disponibilité
+
 
 def test_ping_returns_true(
     service: ChessService,
@@ -971,13 +849,10 @@ def test_ping_returns_false_on_exception(
     ) -> None:
         del board
 
-        raise RuntimeError(
-            "python-chess failure"
-        )
+        raise RuntimeError("python-chess failure")
 
     monkeypatch.setattr(
-        "app.services.chess_service."
-        "validate_board",
+        "app.services.chess_service.validate_board",
         fail_validation,
     )
 
@@ -985,6 +860,7 @@ def test_ping_returns_false_on_exception(
 
 
 # Santé
+
 
 def test_health(
     service: ChessService,
@@ -1021,7 +897,4 @@ def test_health_when_ping_fails(
     assert result["available"] is False
     assert result["library"] == "python-chess"
 
-    assert (
-        result["version"]
-        == chess.__version__
-    )
+    assert result["version"] == chess.__version__

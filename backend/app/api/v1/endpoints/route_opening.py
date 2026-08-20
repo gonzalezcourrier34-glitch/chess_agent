@@ -39,9 +39,7 @@ router = APIRouter()
         "le nom, le code ECO, les statistiques globales et les réponses "
         "principales jouées depuis la position."
     ),
-    response_description=(
-        "Informations disponibles sur l'ouverture détectée."
-    ),
+    response_description=("Informations disponibles sur l'ouverture détectée."),
     responses=LICHESS_ERROR_RESPONSES,
 )
 async def detect_opening(
@@ -59,6 +57,4 @@ async def detect_opening(
         principales disponibles.
     """
 
-    return await service.detect_opening(
-        payload
-    )
+    return await service.detect_opening(payload)

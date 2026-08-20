@@ -21,80 +21,39 @@ from urllib.parse import urljoin
 
 # Chemins
 
-BACKEND_DIRECTORY = Path(
-    __file__
-).resolve().parents[2]
+BACKEND_DIRECTORY = Path(__file__).resolve().parents[2]
 
-PROJECT_DIRECTORY = (
-    BACKEND_DIRECTORY.parent
-)
+PROJECT_DIRECTORY = BACKEND_DIRECTORY.parent
 
-WIKICHESS_DIRECTORY = (
-    PROJECT_DIRECTORY
-    / "data"
-    / "raw"
-    / "wikichess"
-)
+WIKICHESS_DIRECTORY = PROJECT_DIRECTORY / "data" / "raw" / "wikichess"
 
-OPENINGS_FILE = (
-    Path(__file__)
-    .resolve()
-    .parent
-    / "openings.json"
-)
+OPENINGS_FILE = Path(__file__).resolve().parent / "openings.json"
 
-MANIFEST_FILE = (
-    WIKICHESS_DIRECTORY
-    / "manifest.json"
-)
+MANIFEST_FILE = WIKICHESS_DIRECTORY / "manifest.json"
 
-PROCESSED_DIRECTORY = (
-    PROJECT_DIRECTORY
-    / "data"
-    / "processed"
-    / "chunks"
-)
+PROCESSED_DIRECTORY = PROJECT_DIRECTORY / "data" / "processed" / "chunks"
 
-PROCESSED_FILE = (
-    PROCESSED_DIRECTORY
-    / "wikichess_chunks.json"
-)
+PROCESSED_FILE = PROCESSED_DIRECTORY / "wikichess_chunks.json"
 
 
 # Wikichess
 
-WIKICHESS_BASE_URL = (
-    "https://ficgs.com/"
-)
+WIKICHESS_BASE_URL = "https://ficgs.com/"
 
-WIKICHESS_START_URL = urljoin(
-    WIKICHESS_BASE_URL,
-    "wikichess.html"
-)
+WIKICHESS_START_URL = urljoin(WIKICHESS_BASE_URL, "wikichess.html")
 
-WIKICHESS_ROBOTS_URL = urljoin(
-    WIKICHESS_BASE_URL,
-    "robots.txt"
-)
+WIKICHESS_ROBOTS_URL = urljoin(WIKICHESS_BASE_URL, "robots.txt")
 
 WIKICHESS_SOURCE = "wikichess"
 
-WIKICHESS_FILTER = (
-    'source == "wikichess"'
-)
+WIKICHESS_FILTER = 'source == "wikichess"'
 
 
 # HTTP
 
-USER_AGENT = (
-    "ChessAgentWikichessCollector/1.0 "
-    "(educational RAG dataset)"
-)
+USER_AGENT = "ChessAgentWikichessCollector/1.0 (educational RAG dataset)"
 
-ACCEPTED_CONTENT_TYPES = (
-    "text/html",
-    "application/xhtml+xml"
-)
+ACCEPTED_CONTENT_TYPES = ("text/html", "application/xhtml+xml")
 
 
 # Fichiers
@@ -114,64 +73,38 @@ REMOVED_TAGS = (
     "canvas",
     "iframe",
     "form",
-    "button"
+    "button",
 )
 
 
 # Expressions communes
 
-MULTIPLE_SPACES_PATTERN = re.compile(
-    r"[ \t\u00a0]+"
-)
+MULTIPLE_SPACES_PATTERN = re.compile(r"[ \t\u00a0]+")
 
-MULTIPLE_NEWLINES_PATTERN = re.compile(
-    r"\n{3,}"
-)
+MULTIPLE_NEWLINES_PATTERN = re.compile(r"\n{3,}")
 
-ECO_PATTERN = re.compile(
-    r"\b[A-E][0-9]{2}\b"
-)
+ECO_PATTERN = re.compile(r"\b[A-E][0-9]{2}\b")
 
 
 # Expressions Wikichess
 
-SEPARATOR_PATTERN = re.compile(
-    r"^=+$"
-)
+SEPARATOR_PATTERN = re.compile(r"^=+$")
 
-OPENING_PATTERN = re.compile(
-    r'\[Opening\s+"([^"]+)"\]',
-    flags=re.IGNORECASE
-)
+OPENING_PATTERN = re.compile(r'\[Opening\s+"([^"]+)"\]', flags=re.IGNORECASE)
 
-ECO_METADATA_PATTERN = re.compile(
-    r'\[ECO\s+"([^"]+)"\]',
-    flags=re.IGNORECASE
-)
+ECO_METADATA_PATTERN = re.compile(r'\[ECO\s+"([^"]+)"\]', flags=re.IGNORECASE)
 
-CONTRIBUTORS_PATTERN = re.compile(
-    r"^Contributors?\s*:\s*(.+)$",
-    flags=re.IGNORECASE
-)
+CONTRIBUTORS_PATTERN = re.compile(r"^Contributors?\s*:\s*(.+)$", flags=re.IGNORECASE)
 
 POSITION_MARKER_PATTERN = re.compile(
-    r"^Position\s+after\s*:\s*(.*)$",
-    flags=re.IGNORECASE
+    r"^Position\s+after\s*:\s*(.*)$", flags=re.IGNORECASE
 )
 
-EDITOR_PATTERN = re.compile(
-    r"last\s+edited\s+by",
-    flags=re.IGNORECASE
-)
+EDITOR_PATTERN = re.compile(r"last\s+edited\s+by", flags=re.IGNORECASE)
 
-DATE_LINE_PATTERN = re.compile(
-    r"^\[[^\]]+\]$"
-)
+DATE_LINE_PATTERN = re.compile(r"^\[[^\]]+\]$")
 
-ARTICLE_START_PATTERN = re.compile(
-    r"Position\s+after\s*:",
-    flags=re.IGNORECASE
-)
+ARTICLE_START_PATTERN = re.compile(r"Position\s+after\s*:", flags=re.IGNORECASE)
 
 ARTICLE_END_PATTERNS = (
     re.compile(
@@ -179,30 +112,19 @@ ARTICLE_END_PATTERNS = (
             r"See\s+this\s+chess\s+line\s+with\s+the\s+"
             r"javascript\s+viewer"
         ),
-        flags=re.IGNORECASE
+        flags=re.IGNORECASE,
     ),
-    re.compile(
-        r"Play\s+this\s+chess\s+position",
-        flags=re.IGNORECASE
-    ),
-    re.compile(
-        r"Back\s+to\s+Wikichess",
-        flags=re.IGNORECASE
-    )
+    re.compile(r"Play\s+this\s+chess\s+position", flags=re.IGNORECASE),
+    re.compile(r"Back\s+to\s+Wikichess", flags=re.IGNORECASE),
 )
 
 WIKICHESS_PAGE_PATTERN = re.compile(
-    r"/wikichess(?:_\d+)?\.html(?:\?.*)?$",
-    flags=re.IGNORECASE
+    r"/wikichess(?:_\d+)?\.html(?:\?.*)?$", flags=re.IGNORECASE
 )
 
-MOVE_NUMBER_PATTERN = re.compile(
-    r"^\d+\.(?:\.\.)?"
-)
+MOVE_NUMBER_PATTERN = re.compile(r"^\d+\.(?:\.\.)?")
 
-MOVE_SUFFIX_PATTERN = re.compile(
-    r"[?!+#]+$"
-)
+MOVE_SUFFIX_PATTERN = re.compile(r"[?!+#]+$")
 
 
 # Identifiants vectoriels

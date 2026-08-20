@@ -70,17 +70,13 @@ class ContainerHealthStatus(TypedDict):
 
 
 async def _ping_service(
-    service_name: str,
-    service: PingableService
+    service_name: str, service: PingableService
 ) -> tuple[str, bool]:
     """Vérifie un service sans interrompre les autres contrôles."""
     try:
         available = await service.ping()
     except Exception:
-        logger.exception(
-            "État indisponible pour le service %s.",
-            service_name
-        )
+        logger.exception("État indisponible pour le service %s.", service_name)
         available = False
 
     return service_name, available
@@ -133,7 +129,7 @@ class ApplicationContainer:
             vector_search_service=self.vector_search,
             llm_service=self.llm,
             youtube_service=self.youtube,
-            mongodb_service=self.mongodb
+            mongodb_service=self.mongodb,
         )
 
     # Construction
@@ -146,15 +142,9 @@ class ApplicationContainer:
 
         if any(
             component is not None
-            for component in (
-                self.agent_graph,
-                self.analysis,
-                self.healthcheck
-            )
+            for component in (self.agent_graph, self.analysis, self.healthcheck)
         ):
-            logger.warning(
-                "État partiel détecté durant la construction du workflow."
-            )
+            logger.warning("État partiel détecté durant la construction du workflow.")
 
         logger.debug("Construction du workflow LangGraph.")
 
@@ -163,10 +153,9 @@ class ApplicationContainer:
         # partiellement opérationnel.
         graph = build_agent_graph()
         analysis = AnalysisService(
-            graph=graph,
-            dependencies=self.to_graph_dependencies()
+            graph=graph, dependencies=self.to_graph_dependencies()
         )
-        
+
         healthcheck = HealthcheckService(
             mongodb_service=self.mongodb,
             milvus_service=self.milvus,
@@ -175,9 +164,9 @@ class ApplicationContainer:
             lichess_service=self.lichess,
             youtube_service=self.youtube,
             llm_service=self.llm,
-            analysis_service=analysis
+            analysis_service=analysis,
         )
-        
+
         self.agent_graph = graph
         self.analysis = analysis
         self.healthcheck = healthcheck
@@ -226,7 +215,7 @@ class ApplicationContainer:
             ("stockfish", self.stockfish),
             ("lichess", self.lichess),
             ("youtube", self.youtube),
-            ("llm", self.llm)
+            ("llm", self.llm),
         )
         service_statuses = dict(
             await asyncio.gather(
@@ -248,7 +237,7 @@ class ApplicationContainer:
             "llm": service_statuses["llm"],
             "graph": self.is_graph_ready(),
             "analysis": self.is_analysis_ready(),
-            "healthcheck": self.is_healthcheck_ready()
+            "healthcheck": self.is_healthcheck_ready(),
         }
 
 
@@ -265,8 +254,7 @@ def create_application_container() -> ApplicationContainer:
     embedding_service = EmbeddingService()
     milvus_service = MilvusService()
     vector_search_service = VectorSearchService(
-        embedding_service=embedding_service,
-        milvus_service=milvus_service
+        embedding_service=embedding_service, milvus_service=milvus_service
     )
 
     llm_service = LLMService()
@@ -282,5 +270,5 @@ def create_application_container() -> ApplicationContainer:
         milvus=milvus_service,
         llm=llm_service,
         youtube=youtube_service,
-        mongodb=mongodb_service
+        mongodb=mongodb_service,
     )

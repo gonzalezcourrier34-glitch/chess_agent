@@ -110,9 +110,7 @@ async def get_history(
         Analyse correspondant à l'identifiant fourni.
     """
 
-    return await service.get_required_analysis(
-        analysis_id
-    )
+    return await service.get_required_analysis(analysis_id)
 
 
 # Suppression
@@ -149,10 +147,6 @@ async def delete_history(
         Réponse HTTP vide confirmant la suppression.
     """
 
-    await service.delete_required_analysis(
-        analysis_id
-    )
+    await service.delete_required_analysis(analysis_id)
 
-    return Response(
-        status_code=status.HTTP_204_NO_CONTENT
-    )
+    return Response(status_code=status.HTTP_204_NO_CONTENT)

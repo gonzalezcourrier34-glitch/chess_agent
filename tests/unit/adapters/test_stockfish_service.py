@@ -30,16 +30,13 @@ from app.schemas.common.enums import EvaluationType
 
 STARTING_FEN = chess.STARTING_FEN
 
-BEST_MOVE = chess.Move.from_uci(
-    "e2e4"
-)
+BEST_MOVE = chess.Move.from_uci("e2e4")
 
-SECOND_MOVE = chess.Move.from_uci(
-    "d2d4"
-)
+SECOND_MOVE = chess.Move.from_uci("d2d4")
 
 
 # Helpers
+
 
 def build_cp_score(
     centipawns: int = 25,
@@ -47,9 +44,7 @@ def build_cp_score(
     """Construit un score centipawn du point de vue des Blancs."""
 
     return chess.engine.PovScore(
-        chess.engine.Cp(
-            centipawns
-        ),
+        chess.engine.Cp(centipawns),
         chess.WHITE,
     )
 
@@ -60,9 +55,7 @@ def build_mate_score(
     """Construit un score de mat du point de vue des Blancs."""
 
     return chess.engine.PovScore(
-        chess.engine.Mate(
-            moves
-        ),
+        chess.engine.Mate(moves),
         chess.WHITE,
     )
 
@@ -78,11 +71,7 @@ def build_info(
     """Construit une réponse Stockfish typée."""
 
     payload: dict[str, object] = {
-        "score": (
-            score
-            if score is not None
-            else build_cp_score()
-        ),
+        "score": (score if score is not None else build_cp_score()),
         "pv": [
             move,
         ],
@@ -99,6 +88,7 @@ def build_info(
 
 # Fixtures
 
+
 @pytest.fixture
 def service() -> StockfishService:
     """Construit un service Stockfish non initialisé."""
@@ -110,9 +100,7 @@ def service() -> StockfishService:
 def engine() -> MagicMock:
     """Construit un faux moteur Stockfish."""
 
-    mocked_engine = MagicMock(
-        spec=chess.engine.SimpleEngine
-    )
+    mocked_engine = MagicMock(spec=chess.engine.SimpleEngine)
 
     mocked_engine.quit = MagicMock()
     mocked_engine.close = MagicMock()
@@ -126,12 +114,11 @@ def engine() -> MagicMock:
 def board() -> chess.Board:
     """Construit la position initiale."""
 
-    return chess.Board(
-        STARTING_FEN
-    )
+    return chess.Board(STARTING_FEN)
 
 
 # État initial
+
 
 def test_service_is_not_ready_after_creation(
     service: StockfishService,
@@ -140,22 +127,18 @@ def test_service_is_not_ready_after_creation(
 
     assert service.is_ready() is False
     assert service.get_analyzed_count() == 0
-    assert (
-        service.get_last_analysis_duration()
-        is None
-    )
+    assert service.get_last_analysis_duration() is None
 
 
 # Moteur
+
 
 def test_get_engine_rejects_uninitialized_service(
     service: StockfishService,
 ) -> None:
     """Vérifie l'absence de moteur."""
 
-    with pytest.raises(
-        StockfishUnavailableError
-    ):
+    with pytest.raises(StockfishUnavailableError):
         service._get_engine()
 
 
@@ -170,10 +153,7 @@ def test_get_engine_returns_initialized_engine(
         engine,
     )
 
-    assert (
-        service._get_engine()
-        is engine
-    )
+    assert service._get_engine() is engine
 
 
 @pytest.mark.asyncio
@@ -184,9 +164,7 @@ async def test_ensure_engine_returns_started_engine(
 ) -> None:
     """Vérifie l'initialisation automatique du moteur."""
 
-    start_engine = AsyncMock(
-        return_value=engine
-    )
+    start_engine = AsyncMock(return_value=engine)
 
     monkeypatch.setattr(
         service,
@@ -203,6 +181,7 @@ async def test_ensure_engine_returns_started_engine(
 
 # Démarrage
 
+
 @pytest.mark.asyncio
 async def test_start_calls_start_engine(
     service: StockfishService,
@@ -211,9 +190,7 @@ async def test_start_calls_start_engine(
 ) -> None:
     """Vérifie le démarrage public."""
 
-    start_engine = AsyncMock(
-        return_value=engine
-    )
+    start_engine = AsyncMock(return_value=engine)
 
     monkeypatch.setattr(
         service,
@@ -254,9 +231,7 @@ async def test_start_engine_rejects_missing_executable(
 
     test_settings = settings.model_copy(
         update={
-            "stockfish_path": (
-                "missing-stockfish-binary"
-            ),
+            "stockfish_path": ("missing-stockfish-binary"),
         }
     )
 
@@ -265,9 +240,7 @@ async def test_start_engine_rejects_missing_executable(
         test_settings,
     )
 
-    with pytest.raises(
-        StockfishConfigurationError
-    ):
+    with pytest.raises(StockfishConfigurationError):
         await service._start_engine()
 
 
@@ -280,10 +253,7 @@ async def test_start_engine_initializes_and_configures_engine(
 ) -> None:
     """Vérifie le lancement et la configuration du moteur."""
 
-    executable = (
-        tmp_path
-        / "stockfish"
-    )
+    executable = tmp_path / "stockfish"
 
     executable.write_text(
         "fake",
@@ -294,9 +264,7 @@ async def test_start_engine_initializes_and_configures_engine(
 
     test_settings = settings.model_copy(
         update={
-            "stockfish_path": str(
-                executable
-            ),
+            "stockfish_path": str(executable),
             "stockfish_threads": 2,
             "stockfish_hash_mb": 128,
         }
@@ -307,13 +275,10 @@ async def test_start_engine_initializes_and_configures_engine(
         test_settings,
     )
 
-    popen_uci = MagicMock(
-        return_value=engine
-    )
+    popen_uci = MagicMock(return_value=engine)
 
     monkeypatch.setattr(
-        "app.adapters.stockfish_service."
-        "chess.engine.SimpleEngine.popen_uci",
+        "app.adapters.stockfish_service.chess.engine.SimpleEngine.popen_uci",
         popen_uci,
     )
 
@@ -322,9 +287,7 @@ async def test_start_engine_initializes_and_configures_engine(
     assert result is engine
     assert service._engine is engine
 
-    popen_uci.assert_called_once_with(
-        str(executable)
-    )
+    popen_uci.assert_called_once_with(str(executable))
 
     engine.configure.assert_called_once_with(
         {
@@ -342,10 +305,7 @@ async def test_start_engine_translates_startup_error(
 ) -> None:
     """Vérifie une erreur pendant le démarrage du moteur."""
 
-    executable = (
-        tmp_path
-        / "stockfish"
-    )
+    executable = tmp_path / "stockfish"
 
     executable.write_text(
         "fake",
@@ -356,9 +316,7 @@ async def test_start_engine_translates_startup_error(
 
     test_settings = settings.model_copy(
         update={
-            "stockfish_path": str(
-                executable
-            ),
+            "stockfish_path": str(executable),
         }
     )
 
@@ -368,22 +326,16 @@ async def test_start_engine_translates_startup_error(
     )
 
     monkeypatch.setattr(
-        "app.adapters.stockfish_service."
-        "chess.engine.SimpleEngine.popen_uci",
-        MagicMock(
-            side_effect=RuntimeError(
-                "startup failure"
-            )
-        ),
+        "app.adapters.stockfish_service.chess.engine.SimpleEngine.popen_uci",
+        MagicMock(side_effect=RuntimeError("startup failure")),
     )
 
-    with pytest.raises(
-        StockfishUnavailableError
-    ):
+    with pytest.raises(StockfishUnavailableError):
         await service._start_engine()
 
 
 # Fermeture
+
 
 @pytest.mark.asyncio
 async def test_close_releases_engine(
@@ -423,9 +375,7 @@ async def test_close_uses_close_when_quit_fails(
 ) -> None:
     """Vérifie la fermeture forcée après échec de quit."""
 
-    engine.quit.side_effect = RuntimeError(
-        "quit failure"
-    )
+    engine.quit.side_effect = RuntimeError("quit failure")
 
     service._engine = cast(
         chess.engine.SimpleEngine,
@@ -463,9 +413,7 @@ async def test_close_failed_engine_uses_close_when_quit_fails(
 ) -> None:
     """Vérifie la fermeture forcée d'un moteur mal initialisé."""
 
-    engine.quit.side_effect = RuntimeError(
-        "quit failure"
-    )
+    engine.quit.side_effect = RuntimeError("quit failure")
 
     await service._close_failed_engine(
         cast(
@@ -519,6 +467,7 @@ async def test_shutdown_calls_close(
 
 # Normalisation des analyses
 
+
 def test_normalize_analysis_wraps_single_info(
     service: StockfishService,
 ) -> None:
@@ -526,9 +475,7 @@ def test_normalize_analysis_wraps_single_info(
 
     info = build_info()
 
-    result = service._normalize_analysis(
-        info
-    )
+    result = service._normalize_analysis(info)
 
     assert result == [
         info,
@@ -550,9 +497,7 @@ def test_normalize_analysis_keeps_multipv_list(
         second,
     ]
 
-    result = service._normalize_analysis(
-        raw
-    )
+    result = service._normalize_analysis(raw)
 
     assert result == [
         first,
@@ -562,6 +507,7 @@ def test_normalize_analysis_keeps_multipv_list(
 
 # Variante principale
 
+
 def test_get_principal_variation_returns_moves(
     service: StockfishService,
 ) -> None:
@@ -569,11 +515,7 @@ def test_get_principal_variation_returns_moves(
 
     info = build_info()
 
-    result = (
-        service._get_principal_variation(
-            info
-        )
-    )
+    result = service._get_principal_variation(info)
 
     assert result == [
         BEST_MOVE,
@@ -590,15 +532,11 @@ def test_get_principal_variation_returns_empty_list_when_missing(
         {},
     )
 
-    assert (
-        service._get_principal_variation(
-            info
-        )
-        == []
-    )
+    assert service._get_principal_variation(info) == []
 
 
 # Score
+
 
 def test_get_principal_score_returns_pov_score(
     service: StockfishService,
@@ -611,12 +549,7 @@ def test_get_principal_score_returns_pov_score(
         "score": score,
     }
 
-    assert (
-        service._get_principal_score(
-            info
-        )
-        is score
-    )
+    assert service._get_principal_score(info) is score
 
 
 @pytest.mark.parametrize(
@@ -634,9 +567,7 @@ def test_get_principal_score_rejects_invalid_value(
 ) -> None:
     """Vérifie qu'un PovScore est obligatoire."""
 
-    with pytest.raises(
-        StockfishResponseError
-    ):
+    with pytest.raises(StockfishResponseError):
         service._get_principal_score(
             {
                 "score": value,
@@ -645,6 +576,7 @@ def test_get_principal_score_rejects_invalid_value(
 
 
 # Nodes
+
 
 @pytest.mark.parametrize(
     ("value", "expected"),
@@ -676,6 +608,7 @@ def test_get_nodes(
 
 
 # Temps moteur
+
 
 @pytest.mark.parametrize(
     ("value", "expected"),
@@ -710,6 +643,7 @@ def test_get_engine_time_ms(
 
 # Analyse synchrone
 
+
 def test_run_engine_analysis_calls_python_chess(
     service: StockfishService,
     engine: MagicMock,
@@ -736,6 +670,7 @@ def test_run_engine_analysis_calls_python_chess(
 
 # Construction du meilleur coup
 
+
 def test_build_best_move_returns_expected_move(
     service: StockfishService,
     board: chess.Board,
@@ -744,9 +679,7 @@ def test_build_best_move_returns_expected_move(
 
     info = build_info(
         move=BEST_MOVE,
-        score=build_cp_score(
-            35
-        ),
+        score=build_cp_score(35),
         depth=15,
     )
 
@@ -761,10 +694,7 @@ def test_build_best_move_returns_expected_move(
     assert result.from_square == "e2"
     assert result.to_square == "e4"
     assert result.score == 35.0
-    assert (
-        result.evaluation_type
-        == EvaluationType.CENTIPAWN
-    )
+    assert result.evaluation_type == EvaluationType.CENTIPAWN
     assert result.depth == 15
 
     assert result.principal_variation == [
@@ -828,11 +758,7 @@ def test_build_best_move_uses_uci_when_san_fails(
     monkeypatch.setattr(
         board,
         "san",
-        MagicMock(
-            side_effect=ValueError(
-                "invalid SAN"
-            )
-        ),
+        MagicMock(side_effect=ValueError("invalid SAN")),
     )
 
     result = service._build_best_move(
@@ -846,21 +772,15 @@ def test_build_best_move_uses_uci_when_san_fails(
 
 # Conversion du score
 
+
 def test_convert_score_returns_centipawns(
     service: StockfishService,
 ) -> None:
     """Vérifie la conversion d'un score centipawn."""
 
-    score = chess.engine.Cp(
-        42
-    )
+    score = chess.engine.Cp(42)
 
-    assert (
-        service._convert_score(
-            score
-        )
-        == 42
-    )
+    assert service._convert_score(score) == 42
 
 
 def test_convert_score_returns_mate_distance(
@@ -868,16 +788,9 @@ def test_convert_score_returns_mate_distance(
 ) -> None:
     """Vérifie la conversion d'un score de mat."""
 
-    score = chess.engine.Mate(
-        3
-    )
+    score = chess.engine.Mate(3)
 
-    assert (
-        service._convert_score(
-            score
-        )
-        == 3
-    )
+    assert service._convert_score(score) == 3
 
 
 def test_get_score_type_returns_centipawn(
@@ -885,16 +798,9 @@ def test_get_score_type_returns_centipawn(
 ) -> None:
     """Vérifie le type centipawn."""
 
-    result = service._get_score_type(
-        chess.engine.Cp(
-            10
-        )
-    )
+    result = service._get_score_type(chess.engine.Cp(10))
 
-    assert (
-        result
-        == EvaluationType.CENTIPAWN
-    )
+    assert result == EvaluationType.CENTIPAWN
 
 
 def test_get_score_type_returns_mate(
@@ -902,19 +808,13 @@ def test_get_score_type_returns_mate(
 ) -> None:
     """Vérifie le type mat."""
 
-    result = service._get_score_type(
-        chess.engine.Mate(
-            2
-        )
-    )
+    result = service._get_score_type(chess.engine.Mate(2))
 
-    assert (
-        result
-        == EvaluationType.MATE
-    )
+    assert result == EvaluationType.MATE
 
 
 # Profondeur
+
 
 @pytest.mark.parametrize(
     ("value", "expected"),
@@ -947,6 +847,7 @@ def test_get_depth(
 
 # Évaluation complète
 
+
 def test_build_evaluation_returns_position_evaluation(
     service: StockfishService,
     board: chess.Board,
@@ -955,16 +856,12 @@ def test_build_evaluation_returns_position_evaluation(
 
     principal = build_info(
         move=BEST_MOVE,
-        score=build_cp_score(
-            30
-        ),
+        score=build_cp_score(30),
     )
 
     alternative = build_info(
         move=SECOND_MOVE,
-        score=build_cp_score(
-            20
-        ),
+        score=build_cp_score(20),
     )
 
     raw: StockfishAnalysis = [
@@ -978,24 +875,13 @@ def test_build_evaluation_returns_position_evaluation(
     )
 
     assert result.engine.best_move.uci == "e2e4"
-    assert (
-        result.engine.evaluation.score
-        == 30.0
-    )
+    assert result.engine.evaluation.score == 30.0
 
-    assert (
-        result.engine.evaluation.evaluation_type
-        == EvaluationType.CENTIPAWN
-    )
+    assert result.engine.evaluation.evaluation_type == EvaluationType.CENTIPAWN
 
-    assert len(
-        result.engine.alternatives
-    ) == 1
+    assert len(result.engine.alternatives) == 1
 
-    assert (
-        result.engine.alternatives[0].uci
-        == "d2d4"
-    )
+    assert result.engine.alternatives[0].uci == "d2d4"
 
 
 def test_build_evaluation_rejects_empty_analysis(
@@ -1004,9 +890,7 @@ def test_build_evaluation_rejects_empty_analysis(
 ) -> None:
     """Vérifie le rejet d'une analyse vide."""
 
-    with pytest.raises(
-        StockfishResponseError
-    ):
+    with pytest.raises(StockfishResponseError):
         service._build_evaluation(
             board=board,
             info=[],
@@ -1027,9 +911,7 @@ def test_build_evaluation_rejects_missing_best_move(
         },
     )
 
-    with pytest.raises(
-        StockfishResponseError
-    ):
+    with pytest.raises(StockfishResponseError):
         service._build_evaluation(
             board=board,
             info=info,
@@ -1051,9 +933,7 @@ def test_build_evaluation_rejects_missing_score(
         },
     )
 
-    with pytest.raises(
-        StockfishResponseError
-    ):
+    with pytest.raises(StockfishResponseError):
         service._build_evaluation(
             board=board,
             info=info,
@@ -1061,6 +941,7 @@ def test_build_evaluation_rejects_missing_score(
 
 
 # Analyse publique
+
 
 @pytest.mark.asyncio
 async def test_analyze_position_returns_evaluation_and_counts(
@@ -1088,26 +969,13 @@ async def test_analyze_position_returns_evaluation_and_counts(
         ),
     )
 
-    result = await service.analyze_position(
-        FenRequest(
-            fen=STARTING_FEN
-        )
-    )
+    result = await service.analyze_position(FenRequest(fen=STARTING_FEN))
 
-    assert (
-        result.engine.best_move.uci
-        == "e2e4"
-    )
+    assert result.engine.best_move.uci == "e2e4"
 
-    assert (
-        service.get_analyzed_count()
-        == 1
-    )
+    assert service.get_analyzed_count() == 1
 
-    assert (
-        service.get_last_analysis_duration()
-        is not None
-    )
+    assert service.get_last_analysis_duration() is not None
 
 
 @pytest.mark.asyncio
@@ -1135,16 +1003,11 @@ async def test_analyze_position_does_not_count_when_disabled(
     )
 
     await service.analyze_position(
-        FenRequest(
-            fen=STARTING_FEN
-        ),
+        FenRequest(fen=STARTING_FEN),
         count=False,
     )
 
-    assert (
-        service.get_analyzed_count()
-        == 0
-    )
+    assert service.get_analyzed_count() == 0
 
 
 @pytest.mark.asyncio
@@ -1171,14 +1034,8 @@ async def test_analyze_position_translates_timeout(
         ),
     )
 
-    with pytest.raises(
-        StockfishTimeoutError
-    ):
-        await service.analyze_position(
-            FenRequest(
-                fen=STARTING_FEN
-            )
-        )
+    with pytest.raises(StockfishTimeoutError):
+        await service.analyze_position(FenRequest(fen=STARTING_FEN))
 
 
 @pytest.mark.asyncio
@@ -1201,23 +1058,16 @@ async def test_analyze_position_translates_unexpected_error(
         service,
         "_analyze_with_timeout",
         AsyncMock(
-            side_effect=RuntimeError(
-                "analysis failure"
-            ),
+            side_effect=RuntimeError("analysis failure"),
         ),
     )
 
-    with pytest.raises(
-        StockfishAnalysisError
-    ):
-        await service.analyze_position(
-            FenRequest(
-                fen=STARTING_FEN
-            )
-        )
+    with pytest.raises(StockfishAnalysisError):
+        await service.analyze_position(FenRequest(fen=STARTING_FEN))
 
 
 # Abort
+
 
 @pytest.mark.asyncio
 async def test_abort_analysis_releases_engine(
@@ -1234,15 +1084,11 @@ async def test_abort_analysis_releases_engine(
     service._engine = typed_engine
 
     async def pending_analysis() -> StockfishAnalysis:
-        await asyncio.sleep(
-            10
-        )
+        await asyncio.sleep(10)
 
         return build_info()
 
-    task = asyncio.create_task(
-        pending_analysis()
-    )
+    task = asyncio.create_task(pending_analysis())
 
     await service._abort_analysis(
         typed_engine,
@@ -1275,6 +1121,7 @@ async def test_ping_returns_true_on_success(
 
     analyze_position.assert_awaited_once()
 
+
 @pytest.mark.asyncio
 async def test_ping_returns_false_on_stockfish_error(
     service: StockfishService,
@@ -1286,9 +1133,7 @@ async def test_ping_returns_false_on_stockfish_error(
         service,
         "analyze_position",
         AsyncMock(
-            side_effect=StockfishUnavailableError(
-                message="unavailable"
-            ),
+            side_effect=StockfishUnavailableError(message="unavailable"),
         ),
     )
 
@@ -1306,9 +1151,7 @@ async def test_ping_returns_false_on_unexpected_error(
         service,
         "analyze_position",
         AsyncMock(
-            side_effect=RuntimeError(
-                "unexpected"
-            ),
+            side_effect=RuntimeError("unexpected"),
         ),
     )
 
@@ -1341,23 +1184,14 @@ async def test_health_returns_service_status(
 
     status = await service.health()
 
-    assert (
-        status["service"]
-        == SERVICE_NAME
-    )
+    assert status["service"] == SERVICE_NAME
 
     assert status["is_ready"] is True
     assert status["available"] is True
 
-    assert (
-        status["analyzed_positions"]
-        == 4
-    )
+    assert status["analyzed_positions"] == 4
 
-    assert (
-        status["last_analysis_duration_ms"]
-        == 125.5
-    )
+    assert status["last_analysis_duration_ms"] == 125.5
 
     assert status["depth"] >= 1
     assert status["threads"] >= 1

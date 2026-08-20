@@ -50,12 +50,11 @@ MAX_CONTEXT_VARIATIONS = 5
 
 # Services
 
+
 def _get_lichess_service(config: RunnableConfig) -> LichessService | None:
     """Retourne le service Lichess configuré avec un type vérifié."""
     service = get_configured_service(
-        config,
-        LICHESS_SERVICE_KEY,
-        expected_type=LichessService
+        config, LICHESS_SERVICE_KEY, expected_type=LichessService
     )
 
     if service is None:
@@ -65,7 +64,7 @@ def _get_lichess_service(config: RunnableConfig) -> LichessService | None:
         logger.error(
             "Service %s invalide : %s reçu au lieu de LichessService.",
             LICHESS_SERVICE_KEY,
-            type(service).__name__
+            type(service).__name__,
         )
         return None
 
@@ -74,9 +73,8 @@ def _get_lichess_service(config: RunnableConfig) -> LichessService | None:
 
 # Statuts
 
-def _get_partial_success_status(
-    state: ChessAnalysisState
-) -> AnalysisStatus:
+
+def _get_partial_success_status(state: ChessAnalysisState) -> AnalysisStatus:
     """Retourne le statut dégradé applicable au workflow."""
     if state.status is AnalysisStatus.FAILED:
         return AnalysisStatus.FAILED
@@ -86,29 +84,24 @@ def _get_partial_success_status(
 
 # Résumés
 
+
 def _build_opening_summary(opening_details: OpeningDetails) -> str:
     """Construit un résumé factuel de l'ouverture détectée."""
     opening = opening_details.opening
-    sections = [
-        f"Ouverture : {opening.name}.",
-        f"Code ECO : {opening.eco}."
-    ]
+    sections = [f"Ouverture : {opening.name}.", f"Code ECO : {opening.eco}."]
 
     if opening.variation:
         sections.append(f"Variante : {opening.variation}.")
 
     if opening_details.variations:
         sections.append(
-            "Variantes connues disponibles : "
-            f"{len(opening_details.variations)}."
+            f"Variantes connues disponibles : {len(opening_details.variations)}."
         )
 
     return " ".join(sections)
 
 
-def _build_statistics_context(
-    statistics: OpeningStatistics | None
-) -> str | None:
+def _build_statistics_context(statistics: OpeningStatistics | None) -> str | None:
     """Construit le contexte des statistiques d'une ouverture."""
     if statistics is None:
         return None
@@ -133,7 +126,7 @@ def _build_theory_context(theory: OpeningTheory | None) -> str | None:
         ("Motifs tactiques", theory.tactical_patterns),
         ("Plans typiques des Blancs", theory.typical_plans_white),
         ("Plans typiques des Noirs", theory.typical_plans_black),
-        ("Erreurs fréquentes", theory.common_mistakes)
+        ("Erreurs fréquentes", theory.common_mistakes),
     )
 
     for title, values in theory_sections:
@@ -143,9 +136,7 @@ def _build_theory_context(theory: OpeningTheory | None) -> str | None:
     return "\n".join(sections)
 
 
-def _build_variations_context(
-    variations: list[OpeningVariation]
-) -> str | None:
+def _build_variations_context(variations: list[OpeningVariation]) -> str | None:
     """Construit le contexte des principales variantes connues."""
     if not variations:
         return None
@@ -154,9 +145,7 @@ def _build_variations_context(
 
     for variation in variations[:MAX_CONTEXT_VARIATIONS]:
         moves = " ".join(variation.moves) or "suite non précisée"
-        variation_lines.append(
-            f"- {variation.name} ({variation.eco}) : {moves}."
-        )
+        variation_lines.append(f"- {variation.name} ({variation.eco}) : {moves}.")
 
     return "Variantes principales :\n" + "\n".join(variation_lines)
 
@@ -164,10 +153,7 @@ def _build_variations_context(
 def _build_opening_context(opening_details: OpeningDetails) -> str:
     """Construit le contexte factuel d'une ouverture connue."""
     opening = opening_details.opening
-    sections = [
-        f"Ouverture : {opening.name}.",
-        f"Code ECO : {opening.eco}."
-    ]
+    sections = [f"Ouverture : {opening.name}.", f"Code ECO : {opening.eco}."]
 
     if opening.variation:
         sections.append(f"Variante : {opening.variation}.")
@@ -181,26 +167,16 @@ def _build_opening_context(opening_details: OpeningDetails) -> str:
     if opening.description:
         sections.append(f"Description : {opening.description}")
 
-    statistics_context = _build_statistics_context(
-        opening_details.statistics
-    )
+    statistics_context = _build_statistics_context(opening_details.statistics)
     theory_context = _build_theory_context(opening_details.theory)
-    variations_context = _build_variations_context(
-        opening_details.variations
-    )
+    variations_context = _build_variations_context(opening_details.variations)
 
-    for context in (
-        statistics_context,
-        theory_context,
-        variations_context
-    ):
+    for context in (statistics_context, theory_context, variations_context):
         if context:
             sections.append(context)
 
     if theory_context is None:
-        sections.append(
-            "Aucune théorie pédagogique détaillée n'est disponible."
-        )
+        sections.append("Aucune théorie pédagogique détaillée n'est disponible.")
 
     if variations_context is None:
         sections.append("Aucune variante complète n'est disponible.")
@@ -210,16 +186,16 @@ def _build_opening_context(opening_details: OpeningDetails) -> str:
 
 # Mises à jour
 
+
 def _build_success_update(
-    state: ChessAnalysisState,
-    opening: OpeningDetails
+    state: ChessAnalysisState, opening: OpeningDetails
 ) -> StateUpdate:
     """Construit la mise à jour après une détection réussie."""
     current_step = WorkflowStep.DETECT_THEORY
     workflow_context = state.workflow_context.model_copy(
         update={
             "opening_summary": _build_opening_summary(opening),
-            "opening_context": _build_opening_context(opening)
+            "opening_context": _build_opening_context(opening),
         }
     )
 
@@ -230,7 +206,7 @@ def _build_success_update(
         "opening": opening,
         "workflow_context": workflow_context,
         "errors": list(state.errors),
-        "warnings": list(state.warnings)
+        "warnings": list(state.warnings),
     }
 
 
@@ -238,15 +214,12 @@ def _build_warning_update(
     state: ChessAnalysisState,
     warning: WorkflowWarning,
     *,
-    status: AnalysisStatus | None = None
+    status: AnalysisStatus | None = None,
 ) -> StateUpdate:
     """Construit une mise à jour contenant un avertissement."""
     current_step = WorkflowStep.DETECT_THEORY
     workflow_context = state.workflow_context.model_copy(
-        update={
-            "opening_summary": None,
-            "opening_context": None
-        }
+        update={"opening_summary": None, "opening_context": None}
     )
 
     return {
@@ -257,20 +230,14 @@ def _build_warning_update(
         "opening": None,
         "workflow_context": workflow_context,
         "errors": list(state.errors),
-        "warnings": [*state.warnings, warning]
+        "warnings": [*state.warnings, warning],
     }
 
 
-def _build_error_update(
-    state: ChessAnalysisState,
-    error: WorkflowError
-) -> StateUpdate:
+def _build_error_update(state: ChessAnalysisState, error: WorkflowError) -> StateUpdate:
     """Construit la mise à jour après un échec bloquant."""
     workflow_context = state.workflow_context.model_copy(
-        update={
-            "opening_summary": None,
-            "opening_context": None
-        }
+        update={"opening_summary": None, "opening_context": None}
     )
 
     return {
@@ -281,16 +248,13 @@ def _build_error_update(
         "opening": None,
         "workflow_context": workflow_context,
         "errors": [*state.errors, error],
-        "warnings": list(state.warnings)
+        "warnings": list(state.warnings),
     }
 
 
 def _build_missing_service_update(state: ChessAnalysisState) -> StateUpdate:
     """Construit la mise à jour lorsque LichessService est indisponible."""
-    message = (
-        "LichessService est absent ou invalide dans la configuration "
-        "LangGraph."
-    )
+    message = "LichessService est absent ou invalide dans la configuration LangGraph."
 
     logger.error(message)
 
@@ -300,8 +264,8 @@ def _build_missing_service_update(state: ChessAnalysisState) -> StateUpdate:
             step=WorkflowStep.DETECT_THEORY,
             code=ERROR_CONFIGURATION,
             message=message,
-            recoverable=False
-        )
+            recoverable=False,
+        ),
     )
 
 
@@ -312,65 +276,52 @@ def _build_unexpected_error_update(state: ChessAnalysisState) -> StateUpdate:
         WorkflowError(
             step=WorkflowStep.DETECT_THEORY,
             code=ERROR_UNEXPECTED,
-            message=(
-                "Une erreur inattendue a empêché la détection "
-                "de l'ouverture."
-            ),
-            recoverable=False
-        )
+            message=("Une erreur inattendue a empêché la détection de l'ouverture."),
+            recoverable=False,
+        ),
     )
 
 
 # API publique
 
+
 async def detect_theory(
-    state: ChessAnalysisState,
-    config: RunnableConfig
+    state: ChessAnalysisState, config: RunnableConfig
 ) -> StateUpdate:
     """Détecte une ouverture connue avec Lichess."""
     current_step = WorkflowStep.DETECT_THEORY
 
-    logger.debug(
-        "Recherche d'une ouverture pour la position analysée."
-    )
+    logger.debug("Recherche d'une ouverture pour la position analysée.")
 
-    lichess_service = _get_lichess_service(
-        config
-    )
+    lichess_service = _get_lichess_service(config)
 
     if lichess_service is None:
         emit_progress(
             step=current_step,
             service=ServiceType.LICHESS,
             status=WorkflowStepStatus.FAILED,
-            message="LichessService indisponible."
+            message="LichessService indisponible.",
         )
 
-        return _build_missing_service_update(
-            state
-        )
+        return _build_missing_service_update(state)
 
     try:
-        request = FenRequest(
-            fen=state.fen
-        )
+        request = FenRequest(fen=state.fen)
 
         emit_progress(
             step=current_step,
             service=ServiceType.LICHESS,
             status=WorkflowStepStatus.RUNNING,
-            message="Recherche de l'ouverture en cours."
+            message="Recherche de l'ouverture en cours.",
         )
 
-        opening = await lichess_service.detect_opening(
-            request
-        )
+        opening = await lichess_service.detect_opening(request)
 
         emit_progress(
             step=current_step,
             service=ServiceType.LICHESS,
             status=WorkflowStepStatus.COMPLETED,
-            message="Ouverture détectée."
+            message="Ouverture détectée.",
         )
 
     except OpeningNotFoundError:
@@ -378,23 +329,18 @@ async def detect_theory(
             step=current_step,
             service=ServiceType.LICHESS,
             status=WorkflowStepStatus.WARNING,
-            message="Aucune ouverture connue détectée."
+            message="Aucune ouverture connue détectée.",
         )
 
-        logger.info(
-            "Aucune ouverture connue n'a été détectée."
-        )
+        logger.info("Aucune ouverture connue n'a été détectée.")
 
         return _build_warning_update(
             state,
             WorkflowWarning(
                 step=current_step,
                 code=ERROR_OPENING_NOT_FOUND,
-                message=(
-                    "La position ne correspond à "
-                    "aucune ouverture connue."
-                )
-            )
+                message=("La position ne correspond à aucune ouverture connue."),
+            ),
         )
 
     except LichessError as error:
@@ -402,24 +348,17 @@ async def detect_theory(
             step=current_step,
             service=ServiceType.LICHESS,
             status=WorkflowStepStatus.WARNING,
-            message="Service Lichess indisponible."
+            message="Service Lichess indisponible.",
         )
 
-        logger.warning(
-            "Le service Lichess est indisponible : %s",
-            error
-        )
+        logger.warning("Le service Lichess est indisponible : %s", error)
 
         return _build_warning_update(
             state,
             WorkflowWarning(
-                step=current_step,
-                code=ERROR_LICHESS_UNAVAILABLE,
-                message=str(error)
+                step=current_step, code=ERROR_LICHESS_UNAVAILABLE, message=str(error)
             ),
-            status=_get_partial_success_status(
-                state
-            )
+            status=_get_partial_success_status(state),
         )
 
     except Exception:
@@ -427,27 +366,13 @@ async def detect_theory(
             step=current_step,
             service=ServiceType.LICHESS,
             status=WorkflowStepStatus.FAILED,
-            message=(
-                "Une erreur inattendue a interrompu "
-                "la détection de l'ouverture."
-            )
+            message=("Une erreur inattendue a interrompu la détection de l'ouverture."),
         )
 
-        logger.exception(
-            "Erreur inattendue lors de la détection "
-            "d'une ouverture."
-        )
+        logger.exception("Erreur inattendue lors de la détection d'une ouverture.")
 
-        return _build_unexpected_error_update(
-            state
-        )
+        return _build_unexpected_error_update(state)
 
-    logger.info(
-        "Ouverture détectée : %s.",
-        opening.opening.name
-    )
+    logger.info("Ouverture détectée : %s.", opening.opening.name)
 
-    return _build_success_update(
-        state,
-        opening
-    )
+    return _build_success_update(state, opening)

@@ -123,17 +123,14 @@ class VectorSearchService:
     def _normalize_query(self, query: str) -> str:
         """Valide et normalise une requête textuelle."""
 
-            
-        normalized_query = " ".join(
-            query.split()
-        )
+        normalized_query = " ".join(query.split())
 
         if not normalized_query:
             raise RetrievalError(
                 context=ErrorContext(
                     service="vector_search", operation="_normalize_query"
                 ),
-                message=("La recherche vectorielle ne peut pas être vide.")
+                message=("La recherche vectorielle ne peut pas être vide."),
             )
 
         return normalized_query
@@ -148,7 +145,7 @@ class VectorSearchService:
                 context=ErrorContext(
                     service="vector_search", operation="_normalize_limit"
                 ),
-                message=("Le nombre maximal de résultats " "doit être un entier.")
+                message=("Le nombre maximal de résultats doit être un entier."),
             )
 
         if normalized_limit < 1:
@@ -157,8 +154,8 @@ class VectorSearchService:
                     service="vector_search", operation="_normalize_limit"
                 ),
                 message=(
-                    "Le nombre maximal de résultats " "doit être supérieur ou égal à 1."
-                )
+                    "Le nombre maximal de résultats doit être supérieur ou égal à 1."
+                ),
             )
 
         return min(normalized_limit, settings.milvus_search_limit)
@@ -171,9 +168,7 @@ class VectorSearchService:
                 context=ErrorContext(
                     service="vector_search", operation="_normalize_moves"
                 ),
-                message=(
-                    "La séquence de coups doit être " "une collection de chaînes."
-                )
+                message=("La séquence de coups doit être une collection de chaînes."),
             )
 
         normalized_moves = [
@@ -185,7 +180,7 @@ class VectorSearchService:
                 context=ErrorContext(
                     service="vector_search", operation="_normalize_moves"
                 ),
-                message=("La recherche par coups nécessite " "au moins un coup.")
+                message=("La recherche par coups nécessite au moins un coup."),
             )
 
         if len(normalized_moves) != len(moves):
@@ -193,7 +188,7 @@ class VectorSearchService:
                 context=ErrorContext(
                     service="vector_search", operation="_normalize_moves"
                 ),
-                message=("La séquence de coups contient " "une valeur invalide.")
+                message=("La séquence de coups contient une valeur invalide."),
             )
 
         return tuple(normalized_moves)
@@ -206,7 +201,7 @@ class VectorSearchService:
                 context=ErrorContext(
                     service="vector_search", operation="_normalize_eco"
                 ),
-                message=("Le code ECO doit être " "une chaîne de caractères.")
+                message=("Le code ECO doit être une chaîne de caractères."),
             )
 
         normalized_eco = eco.strip().upper()
@@ -216,7 +211,7 @@ class VectorSearchService:
                 context=ErrorContext(
                     service="vector_search", operation="_normalize_eco"
                 ),
-                message=("Le code ECO ne peut pas être vide.")
+                message=("Le code ECO ne peut pas être vide."),
             )
 
         return normalized_eco
@@ -229,9 +224,7 @@ class VectorSearchService:
                 context=ErrorContext(
                     service="vector_search", operation="_normalize_filter_expression"
                 ),
-                message=(
-                    "Le filtre documentaire doit être " "une chaîne de caractères."
-                )
+                message=("Le filtre documentaire doit être une chaîne de caractères."),
             )
 
         normalized_expression = filter_expression.strip()
@@ -241,7 +234,7 @@ class VectorSearchService:
                 context=ErrorContext(
                     service="vector_search", operation="_normalize_filter_expression"
                 ),
-                message=("Le filtre documentaire ne peut pas être vide.")
+                message=("Le filtre documentaire ne peut pas être vide."),
             )
 
         return normalized_expression
@@ -260,7 +253,7 @@ class VectorSearchService:
 
         escaped_value = self._escape_filter_value(value)
 
-        return f'metadata["{escaped_key}"] ' f'== "{escaped_value}"'
+        return f'metadata["{escaped_key}"] == "{escaped_value}"'
 
     def _build_moves_path(self, moves: Sequence[str]) -> str:
         """Construit le chemin canonique d'une séquence de coups."""
@@ -311,10 +304,7 @@ class VectorSearchService:
 
         return value.strip()
 
-    def _get_similarity(
-        self,
-        result: MilvusSearchResult
-    ) -> float | None:
+    def _get_similarity(self, result: MilvusSearchResult) -> float | None:
         """Retourne le score de similarité normalisé."""
 
         value = result.get(RESULT_SIMILARITY_FIELD)
@@ -327,10 +317,7 @@ class VectorSearchService:
         except (TypeError, ValueError):
             return None
 
-        return min(
-            max(similarity, 0.0),
-            1.0
-        )
+        return min(max(similarity, 0.0), 1.0)
 
     def _get_metadata(self, result: MilvusSearchResult) -> dict[str, Any]:
         """Retourne les métadonnées d'un résultat."""
@@ -364,7 +351,7 @@ class VectorSearchService:
             id=identifier,
             content=content,
             similarity=similarity,
-            metadata=self._get_metadata(result)
+            metadata=self._get_metadata(result),
         )
 
     def _build_results(
@@ -439,10 +426,10 @@ class VectorSearchService:
 
             if result_eco != eco:
                 logger.warning(
-                    "Résultat Wikichess écarté : " "eco attendu=%r, reçu=%r, id=%r.",
+                    "Résultat Wikichess écarté : eco attendu=%r, reçu=%r, id=%r.",
                     eco,
                     result_eco,
-                    result.id
+                    result.id,
                 )
 
                 continue
@@ -467,7 +454,7 @@ class VectorSearchService:
                     "moves_path attendu=%r, reçu=%r, id=%r.",
                     moves_path,
                     result_moves_path,
-                    result.id
+                    result.id,
                 )
 
                 continue
@@ -495,7 +482,7 @@ class VectorSearchService:
         query: str,
         limit: int | None,
         filter_expression: str | None = None,
-        operation: str
+        operation: str,
     ) -> list[VectorSearchResult]:
         """Exécute une recherche vectorielle éventuellement filtrée."""
 
@@ -510,11 +497,11 @@ class VectorSearchService:
         )
 
         logger.debug(
-            "Recherche vectorielle : " "operation=%s, query=%r, limit=%s, filter=%r.",
+            "Recherche vectorielle : operation=%s, query=%r, limit=%s, filter=%r.",
             operation,
             normalized_query,
             normalized_limit,
-            normalized_filter
+            normalized_filter,
         )
 
         started_at = perf_counter()
@@ -529,12 +516,12 @@ class VectorSearchService:
             raw_results = await self._milvus_service.search(
                 query_vector,
                 limit=normalized_limit,
-                filter_expression=normalized_filter
+                filter_expression=normalized_filter,
             )
 
         except (EmbeddingModelUnavailableError, EmbeddingGenerationError) as error:
             logger.warning(
-                "Impossible de générer l'embedding " "de la recherche : %s", error
+                "Impossible de générer l'embedding de la recherche : %s", error
             )
 
             raise RetrievalError(
@@ -545,12 +532,12 @@ class VectorSearchService:
                         "query": normalized_query,
                         "limit": normalized_limit,
                         "filter_expression": normalized_filter,
-                    }
+                    },
                 ),
                 message=(
-                    "Impossible de transformer la requête " "en vecteur de recherche."
+                    "Impossible de transformer la requête en vecteur de recherche."
                 ),
-                cause=error
+                cause=error,
             ) from error
 
         except (MilvusConnectionError, MilvusSearchError, MilvusError) as error:
@@ -564,12 +551,12 @@ class VectorSearchService:
                         "query": normalized_query,
                         "limit": normalized_limit,
                         "filter_expression": normalized_filter,
-                    }
+                    },
                 ),
                 message=(
-                    "Impossible d'effectuer la recherche " "dans la base vectorielle."
+                    "Impossible d'effectuer la recherche dans la base vectorielle."
                 ),
-                cause=error
+                cause=error,
             ) from error
 
         except Exception as error:
@@ -583,10 +570,10 @@ class VectorSearchService:
                         "query": normalized_query,
                         "limit": normalized_limit,
                         "filter_expression": normalized_filter,
-                    }
+                    },
                 ),
                 message=("La recherche vectorielle a échoué."),
-                cause=error
+                cause=error,
             ) from error
 
         duration_ms = round((perf_counter() - started_at) * 1_000, 2)
@@ -596,10 +583,10 @@ class VectorSearchService:
         self._register_search(result_count=len(results), duration_ms=duration_ms)
 
         logger.info(
-            "Recherche vectorielle %s : " "%s résultat(s) en %.2f ms.",
+            "Recherche vectorielle %s : %s résultat(s) en %.2f ms.",
             operation,
             len(results),
-            duration_ms
+            duration_ms,
         )
 
         return results
@@ -628,7 +615,7 @@ class VectorSearchService:
             query=query,
             limit=limit,
             filter_expression=filter_expression,
-            operation="search_with_filter"
+            operation="search_with_filter",
         )
 
     # Recherche Wikichess
@@ -639,7 +626,7 @@ class VectorSearchService:
         query: str,
         eco: str | None = None,
         moves: Sequence[str] | None = None,
-        limit: int | None = None
+        limit: int | None = None,
     ) -> list[VectorSearchResult]:
         """Recherche un document Wikichess selon le contexte disponible.
 
@@ -662,7 +649,7 @@ class VectorSearchService:
             logger.info(
                 "Aucun document Wikichess trouvé pour eco=%r. "
                 "Recherche par coups tentée en repli.",
-                eco
+                eco,
             )
 
         # Recherche par coups
@@ -677,7 +664,7 @@ class VectorSearchService:
             message=(
                 "La recherche Wikichess nécessite "
                 "un code ECO ou un historique de coups."
-            )
+            ),
         )
 
     async def search_by_eco(
@@ -701,7 +688,7 @@ class VectorSearchService:
             query=query,
             limit=limit,
             filter_expression=filter_expression,
-            operation="search_by_eco"
+            operation="search_by_eco",
         )
 
         verified_results = self._keep_exact_eco(results, eco=normalized_eco)
@@ -711,13 +698,13 @@ class VectorSearchService:
                 "Recherche Wikichess par ECO : "
                 "%s résultat(s) écarté(s) après "
                 "vérification du code ECO.",
-                (len(results) - len(verified_results))
+                (len(results) - len(verified_results)),
             )
 
         logger.info(
-            "Recherche Wikichess par ECO terminée : " "eco=%r, résultats=%s.",
+            "Recherche Wikichess par ECO terminée : eco=%r, résultats=%s.",
             normalized_eco,
-            len(verified_results)
+            len(verified_results),
         )
 
         return verified_results
@@ -749,7 +736,7 @@ class VectorSearchService:
             query=query,
             limit=limit,
             filter_expression=filter_expression,
-            operation="search_by_moves"
+            operation="search_by_moves",
         )
 
         verified_results = self._keep_exact_moves_path(results, moves_path=moves_path)
@@ -759,13 +746,13 @@ class VectorSearchService:
                 "Recherche Wikichess : "
                 "%s résultat(s) écarté(s) après "
                 "vérification du moves_path.",
-                (len(results) - len(verified_results))
+                (len(results) - len(verified_results)),
             )
 
         logger.info(
-            "Recherche Wikichess exacte terminée : " "moves_path=%r, résultats=%s.",
+            "Recherche Wikichess exacte terminée : moves_path=%r, résultats=%s.",
             moves_path,
-            len(verified_results)
+            len(verified_results),
         )
 
         return verified_results
@@ -804,7 +791,7 @@ class VectorSearchService:
 
         except Exception:
             logger.exception(
-                "Erreur inattendue lors du test " "du service de recherche vectorielle."
+                "Erreur inattendue lors du test du service de recherche vectorielle."
             )
 
             return False

@@ -27,19 +27,13 @@ class RequestIdMiddleware(BaseHTTPMiddleware):
     """Ajoute un identifiant de corrélation à chaque requête HTTP."""
 
     async def dispatch(
-        self,
-        request: Request,
-        call_next: RequestResponseEndpoint
+        self, request: Request, call_next: RequestResponseEndpoint
     ) -> Response:
         """Ajoute le request_id au contexte de la requête."""
 
         request_id = str(uuid4())
 
-        setattr(
-            request.state,
-            REQUEST_ID_FIELD,
-            request_id
-        )
+        setattr(request.state, REQUEST_ID_FIELD, request_id)
 
         response = await call_next(request)
 

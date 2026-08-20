@@ -61,6 +61,7 @@ VALID_DOCUMENT: VectorDocument = {
 
 # Exceptions de test
 
+
 def build_operation_error(
     operation: str = "test",
 ) -> MilvusOperationError:
@@ -77,27 +78,25 @@ def build_operation_error(
 
 # Fixtures
 
+
 @pytest.fixture
 def service() -> MilvusService:
     """Construit un service Milvus avec une petite dimension."""
 
-    return MilvusService(
-        vector_dimension=VECTOR_DIMENSION
-    )
+    return MilvusService(vector_dimension=VECTOR_DIMENSION)
 
 
 @pytest.fixture
 def client() -> MagicMock:
     """Construit un faux client PyMilvus."""
 
-    mocked_client = MagicMock(
-        spec=MilvusClient
-    )
+    mocked_client = MagicMock(spec=MilvusClient)
 
     return mocked_client
 
 
 # Construction
+
 
 def test_service_is_not_ready_after_creation(
     service: MilvusService,
@@ -133,14 +132,13 @@ def test_constructor_rejects_invalid_vector_dimension(
 def test_constructor_accepts_positive_dimension() -> None:
     """Vérifie l'acceptation d'une dimension positive."""
 
-    service = MilvusService(
-        vector_dimension=128
-    )
+    service = MilvusService(vector_dimension=128)
 
     assert service.get_vector_dimension() == 128
 
 
 # Informations
+
 
 def test_collection_name_returns_configured_name(
     service: MilvusService,
@@ -201,6 +199,7 @@ def test_is_ready_requires_client_and_collection(
 
 # Cycle de vie
 
+
 @pytest.mark.asyncio
 async def test_start_initializes_client_and_collection(
     service: MilvusService,
@@ -212,9 +211,7 @@ async def test_start_initializes_client_and_collection(
     monkeypatch.setattr(
         service,
         "_create_client",
-        MagicMock(
-            return_value=client
-        ),
+        MagicMock(return_value=client),
     )
 
     ensure_collection = AsyncMock()
@@ -270,19 +267,13 @@ async def test_start_resets_state_on_unexpected_error(
     monkeypatch.setattr(
         service,
         "_create_client",
-        MagicMock(
-            return_value=client
-        ),
+        MagicMock(return_value=client),
     )
 
     monkeypatch.setattr(
         service,
         "_ensure_collection",
-        AsyncMock(
-            side_effect=RuntimeError(
-                "initialization failure"
-            )
-        ),
+        AsyncMock(side_effect=RuntimeError("initialization failure")),
     )
 
     close_after_failure = AsyncMock()
@@ -299,9 +290,7 @@ async def test_start_resets_state_on_unexpected_error(
     assert service._client is None
     assert service._collection_ready is False
 
-    close_after_failure.assert_awaited_once_with(
-        client
-    )
+    close_after_failure.assert_awaited_once_with(client)
 
 
 @pytest.mark.asyncio
@@ -343,9 +332,7 @@ async def test_close_ignores_client_closing_error(
 ) -> None:
     """Vérifie qu'une erreur de fermeture n'est pas propagée."""
 
-    client.close.side_effect = RuntimeError(
-        "close failure"
-    )
+    client.close.side_effect = RuntimeError("close failure")
 
     service._client = cast(
         MilvusClient,
@@ -405,9 +392,7 @@ async def test_close_client_after_failure_does_nothing_without_client(
 ) -> None:
     """Vérifie l'absence de fermeture sans client."""
 
-    await service._close_client_after_failure(
-        None
-    )
+    await service._close_client_after_failure(None)
 
 
 @pytest.mark.asyncio
@@ -428,6 +413,7 @@ async def test_close_client_after_failure_closes_client(
 
 
 # Client
+
 
 def test_get_client_rejects_uninitialized_service(
     service: MilvusService,
@@ -480,6 +466,7 @@ async def test_ensure_client_starts_service_if_needed(
 
 # Exécution
 
+
 @pytest.mark.asyncio
 async def test_execute_returns_operation_result(
     service: MilvusService,
@@ -495,11 +482,7 @@ async def test_execute_returns_operation_result(
 
     result = await service._execute(
         "test",
-        lambda current_client: (
-            "ok"
-            if current_client is client
-            else "invalid"
-        ),
+        lambda current_client: "ok" if current_client is client else "invalid",
     )
 
     assert result == "ok"
@@ -525,9 +508,7 @@ async def test_execute_preserves_milvus_operation_error(
     ) -> object:
         raise error
 
-    with pytest.raises(
-        MilvusOperationError
-    ) as raised:
+    with pytest.raises(MilvusOperationError) as raised:
         await service._execute(
             "test",
             failing_operation,
@@ -552,13 +533,9 @@ async def test_execute_translates_unexpected_error(
     def failing_operation(
         _: MilvusClient,
     ) -> object:
-        raise RuntimeError(
-            "failure"
-        )
+        raise RuntimeError("failure")
 
-    with pytest.raises(
-        MilvusOperationError
-    ):
+    with pytest.raises(MilvusOperationError):
         await service._execute(
             "test",
             failing_operation,
@@ -566,6 +543,7 @@ async def test_execute_translates_unexpected_error(
 
 
 # Paramètres d'index
+
 
 def test_get_index_parameters_returns_dict(
     service: MilvusService,
@@ -595,6 +573,7 @@ def test_get_search_parameters_returns_dict(
 
 # Validation de dimension
 
+
 @pytest.mark.parametrize(
     "dimension",
     [
@@ -614,9 +593,7 @@ def test_normalize_vector_dimension_rejects_invalid_value(
     """Vérifie le rejet d'une dimension invalide."""
 
     with pytest.raises(ConfigurationError):
-        service._normalize_vector_dimension(
-            dimension
-        )
+        service._normalize_vector_dimension(dimension)
 
 
 def test_normalize_vector_dimension_accepts_positive_integer(
@@ -624,13 +601,11 @@ def test_normalize_vector_dimension_accepts_positive_integer(
 ) -> None:
     """Vérifie une dimension valide."""
 
-    assert (
-        service._normalize_vector_dimension(3)
-        == 3
-    )
+    assert service._normalize_vector_dimension(3) == 3
 
 
 # Validation vectorielle
+
 
 def test_normalize_vector_returns_float_values(
     service: MilvusService,
@@ -667,12 +642,8 @@ def test_normalize_vector_rejects_non_sequence(
 ) -> None:
     """Vérifie qu'un vecteur doit être une séquence."""
 
-    with pytest.raises(
-        MilvusValidationError
-    ):
-        service._normalize_vector(
-            value
-        )
+    with pytest.raises(MilvusValidationError):
+        service._normalize_vector(value)
 
 
 def test_normalize_vector_rejects_wrong_dimension(
@@ -680,9 +651,7 @@ def test_normalize_vector_rejects_wrong_dimension(
 ) -> None:
     """Vérifie la dimension du vecteur."""
 
-    with pytest.raises(
-        MilvusValidationError
-    ):
+    with pytest.raises(MilvusValidationError):
         service._normalize_vector(
             [
                 0.1,
@@ -711,12 +680,8 @@ def test_normalize_vector_rejects_non_numeric_component(
         0.3,
     ]
 
-    with pytest.raises(
-        MilvusValidationError
-    ):
-        service._normalize_vector(
-            vector
-        )
+    with pytest.raises(MilvusValidationError):
+        service._normalize_vector(vector)
 
 
 @pytest.mark.parametrize(
@@ -733,9 +698,7 @@ def test_normalize_vector_rejects_non_finite_component(
 ) -> None:
     """Vérifie le rejet d'une composante non finie."""
 
-    with pytest.raises(
-        MilvusValidationError
-    ):
+    with pytest.raises(MilvusValidationError):
         service._normalize_vector(
             [
                 0.1,
@@ -747,17 +710,13 @@ def test_normalize_vector_rejects_non_finite_component(
 
 # Identifiants
 
+
 def test_normalize_identifier_strips_spaces(
     service: MilvusService,
 ) -> None:
     """Vérifie la normalisation d'un identifiant."""
 
-    assert (
-        service._normalize_identifier(
-            "  document-1  "
-        )
-        == "document-1"
-    )
+    assert service._normalize_identifier("  document-1  ") == "document-1"
 
 
 @pytest.mark.parametrize(
@@ -775,12 +734,8 @@ def test_normalize_identifier_rejects_non_string(
 ) -> None:
     """Vérifie qu'un identifiant doit être textuel."""
 
-    with pytest.raises(
-        MilvusValidationError
-    ):
-        service._normalize_identifier(
-            value
-        )
+    with pytest.raises(MilvusValidationError):
+        service._normalize_identifier(value)
 
 
 def test_normalize_identifier_rejects_empty_value(
@@ -788,12 +743,8 @@ def test_normalize_identifier_rejects_empty_value(
 ) -> None:
     """Vérifie le rejet d'un identifiant vide."""
 
-    with pytest.raises(
-        MilvusValidationError
-    ):
-        service._normalize_identifier(
-            "   "
-        )
+    with pytest.raises(MilvusValidationError):
+        service._normalize_identifier("   ")
 
 
 def test_normalize_identifier_rejects_long_value(
@@ -801,31 +752,21 @@ def test_normalize_identifier_rejects_long_value(
 ) -> None:
     """Vérifie la longueur maximale d'un identifiant."""
 
-    value = "x" * (
-        MILVUS_MAX_IDENTIFIER_LENGTH + 1
-    )
+    value = "x" * (MILVUS_MAX_IDENTIFIER_LENGTH + 1)
 
-    with pytest.raises(
-        MilvusValidationError
-    ):
-        service._normalize_identifier(
-            value
-        )
+    with pytest.raises(MilvusValidationError):
+        service._normalize_identifier(value)
 
 
 # Contenu
+
 
 def test_normalize_content_strips_spaces(
     service: MilvusService,
 ) -> None:
     """Vérifie la normalisation du contenu."""
 
-    assert (
-        service._normalize_content(
-            "  Ruy Lopez  "
-        )
-        == "Ruy Lopez"
-    )
+    assert service._normalize_content("  Ruy Lopez  ") == "Ruy Lopez"
 
 
 @pytest.mark.parametrize(
@@ -843,25 +784,19 @@ def test_normalize_content_rejects_non_string(
 ) -> None:
     """Vérifie le type du contenu."""
 
-    with pytest.raises(
-        MilvusValidationError
-    ):
-        service._normalize_content(
-            value
-        )
+    with pytest.raises(MilvusValidationError):
+        service._normalize_content(value)
 
 
 # Source
+
 
 def test_normalize_source_returns_empty_string_for_none(
     service: MilvusService,
 ) -> None:
     """Vérifie la source absente."""
 
-    assert (
-        service._normalize_source(None)
-        == ""
-    )
+    assert service._normalize_source(None) == ""
 
 
 def test_normalize_source_strips_spaces(
@@ -869,12 +804,7 @@ def test_normalize_source_strips_spaces(
 ) -> None:
     """Vérifie la normalisation de la source."""
 
-    assert (
-        service._normalize_source(
-            "  wikichess  "
-        )
-        == "wikichess"
-    )
+    assert service._normalize_source("  wikichess  ") == "wikichess"
 
 
 def test_normalize_source_rejects_non_string(
@@ -882,12 +812,8 @@ def test_normalize_source_rejects_non_string(
 ) -> None:
     """Vérifie le type de la source."""
 
-    with pytest.raises(
-        MilvusValidationError
-    ):
-        service._normalize_source(
-            42
-        )
+    with pytest.raises(MilvusValidationError):
+        service._normalize_source(42)
 
 
 def test_normalize_source_rejects_long_value(
@@ -895,29 +821,21 @@ def test_normalize_source_rejects_long_value(
 ) -> None:
     """Vérifie la longueur maximale de la source."""
 
-    value = "x" * (
-        MILVUS_MAX_SOURCE_LENGTH + 1
-    )
+    value = "x" * (MILVUS_MAX_SOURCE_LENGTH + 1)
 
-    with pytest.raises(
-        MilvusValidationError
-    ):
-        service._normalize_source(
-            value
-        )
+    with pytest.raises(MilvusValidationError):
+        service._normalize_source(value)
 
 
 # Métadonnées
+
 
 def test_normalize_metadata_returns_empty_dict_for_none(
     service: MilvusService,
 ) -> None:
     """Vérifie les métadonnées absentes."""
 
-    assert (
-        service._normalize_metadata(None)
-        == {}
-    )
+    assert service._normalize_metadata(None) == {}
 
 
 def test_normalize_metadata_returns_json_safe_mapping(
@@ -947,9 +865,7 @@ def test_normalize_metadata_rejects_non_mapping(
 ) -> None:
     """Vérifie que les métadonnées doivent être un mapping."""
 
-    with pytest.raises(
-        MilvusValidationError
-    ):
+    with pytest.raises(MilvusValidationError):
         service._normalize_metadata(
             [
                 "invalid",
@@ -959,17 +875,13 @@ def test_normalize_metadata_rejects_non_mapping(
 
 # Timestamp
 
+
 def test_normalize_timestamp_returns_existing_integer(
     service: MilvusService,
 ) -> None:
     """Vérifie un timestamp déjà normalisé."""
 
-    assert (
-        service._normalize_timestamp(
-            123456
-        )
-        == 123456
-    )
+    assert service._normalize_timestamp(123456) == 123456
 
 
 def test_normalize_timestamp_converts_datetime(
@@ -986,9 +898,7 @@ def test_normalize_timestamp_converts_datetime(
         tzinfo=UTC,
     )
 
-    result = service._normalize_timestamp(
-        value
-    )
+    result = service._normalize_timestamp(value)
 
     assert isinstance(
         result,
@@ -1003,9 +913,7 @@ def test_normalize_timestamp_generates_current_time_for_none(
 ) -> None:
     """Vérifie la génération automatique du timestamp."""
 
-    result = service._normalize_timestamp(
-        None
-    )
+    result = service._normalize_timestamp(None)
 
     assert isinstance(
         result,
@@ -1031,25 +939,19 @@ def test_normalize_timestamp_rejects_invalid_value(
 ) -> None:
     """Vérifie le rejet d'un timestamp invalide."""
 
-    with pytest.raises(
-        MilvusValidationError
-    ):
-        service._normalize_timestamp(
-            value
-        )
+    with pytest.raises(MilvusValidationError):
+        service._normalize_timestamp(value)
 
 
 # Limite
+
 
 def test_normalize_limit_accepts_valid_value(
     service: MilvusService,
 ) -> None:
     """Vérifie une limite valide."""
 
-    assert (
-        service._normalize_limit(5)
-        == 5
-    )
+    assert service._normalize_limit(5) == 5
 
 
 @pytest.mark.parametrize(
@@ -1070,25 +972,19 @@ def test_normalize_limit_rejects_invalid_value(
 ) -> None:
     """Vérifie le rejet d'une limite invalide."""
 
-    with pytest.raises(
-        MilvusValidationError
-    ):
-        service._normalize_limit(
-            value
-        )
+    with pytest.raises(MilvusValidationError):
+        service._normalize_limit(value)
 
 
 # Filtre
+
 
 def test_normalize_filter_returns_none_for_none(
     service: MilvusService,
 ) -> None:
     """Vérifie un filtre facultatif absent."""
 
-    assert (
-        service._normalize_filter(None)
-        is None
-    )
+    assert service._normalize_filter(None) is None
 
 
 def test_normalize_filter_returns_none_for_empty_string(
@@ -1096,10 +992,7 @@ def test_normalize_filter_returns_none_for_empty_string(
 ) -> None:
     """Vérifie un filtre facultatif vide."""
 
-    assert (
-        service._normalize_filter("   ")
-        is None
-    )
+    assert service._normalize_filter("   ") is None
 
 
 def test_normalize_filter_strips_spaces(
@@ -1108,9 +1001,7 @@ def test_normalize_filter_strips_spaces(
     """Vérifie la normalisation du filtre."""
 
     assert (
-        service._normalize_filter(
-            "  source == 'wikichess'  "
-        )
+        service._normalize_filter("  source == 'wikichess'  ")
         == "source == 'wikichess'"
     )
 
@@ -1130,12 +1021,8 @@ def test_normalize_filter_rejects_forbidden_characters(
 ) -> None:
     """Vérifie le rejet de caractères interdits."""
 
-    with pytest.raises(
-        MilvusValidationError
-    ):
-        service._normalize_filter(
-            value
-        )
+    with pytest.raises(MilvusValidationError):
+        service._normalize_filter(value)
 
 
 def test_normalize_filter_rejects_missing_required_filter(
@@ -1143,9 +1030,7 @@ def test_normalize_filter_rejects_missing_required_filter(
 ) -> None:
     """Vérifie qu'un filtre obligatoire doit être renseigné."""
 
-    with pytest.raises(
-        MilvusValidationError
-    ):
+    with pytest.raises(MilvusValidationError):
         service._normalize_filter(
             None,
             required=True,
@@ -1154,14 +1039,13 @@ def test_normalize_filter_rejects_missing_required_filter(
 
 # Documents
 
+
 def test_normalize_document_returns_typed_document(
     service: MilvusService,
 ) -> None:
     """Vérifie la normalisation complète d'un document."""
 
-    normalized = service._normalize_document(
-        VALID_DOCUMENT
-    )
+    normalized = service._normalize_document(VALID_DOCUMENT)
 
     assert normalized["id"] == VALID_DOCUMENT_ID
     assert normalized["vector"] == VALID_VECTOR
@@ -1181,9 +1065,7 @@ def test_normalize_document_generates_identifier(
         "content": "Ruy Lopez",
     }
 
-    normalized = service._normalize_document(
-        document
-    )
+    normalized = service._normalize_document(document)
 
     assert normalized["id"]
 
@@ -1198,9 +1080,7 @@ def test_normalize_document_requires_identifier_for_upsert(
         "content": "Ruy Lopez",
     }
 
-    with pytest.raises(
-        MilvusValidationError
-    ):
+    with pytest.raises(MilvusValidationError):
         service._normalize_document(
             document,
             require_identifier=True,
@@ -1223,9 +1103,7 @@ def test_to_client_document_returns_dictionary(
         "created_at": 123456,
     }
 
-    result = service._to_client_document(
-        document
-    )
+    result = service._to_client_document(document)
 
     assert isinstance(
         result,
@@ -1237,6 +1115,7 @@ def test_to_client_document_returns_dictionary(
 
 # Écriture
 
+
 @pytest.mark.asyncio
 async def test_insert_document_returns_identifier(
     service: MilvusService,
@@ -1244,9 +1123,7 @@ async def test_insert_document_returns_identifier(
 ) -> None:
     """Vérifie l'insertion d'un document."""
 
-    execute = AsyncMock(
-        return_value=None
-    )
+    execute = AsyncMock(return_value=None)
 
     monkeypatch.setattr(
         service,
@@ -1279,16 +1156,10 @@ async def test_insert_document_translates_operation_error(
     monkeypatch.setattr(
         service,
         "_execute",
-        AsyncMock(
-            side_effect=build_operation_error(
-                "insert"
-            )
-        ),
+        AsyncMock(side_effect=build_operation_error("insert")),
     )
 
-    with pytest.raises(
-        MilvusInsertionError
-    ):
+    with pytest.raises(MilvusInsertionError):
         await service.insert_document(
             document_id=VALID_DOCUMENT_ID,
             vector=VALID_VECTOR,
@@ -1302,9 +1173,7 @@ async def test_insert_documents_returns_empty_list_for_empty_batch(
 ) -> None:
     """Vérifie l'insertion d'un lot vide."""
 
-    result = await service.insert_documents(
-        []
-    )
+    result = await service.insert_documents([])
 
     assert result == []
 
@@ -1316,9 +1185,7 @@ async def test_insert_documents_returns_identifiers(
 ) -> None:
     """Vérifie l'insertion d'un lot."""
 
-    execute = AsyncMock(
-        return_value=None
-    )
+    execute = AsyncMock(return_value=None)
 
     monkeypatch.setattr(
         service,
@@ -1339,9 +1206,7 @@ async def test_insert_documents_returns_identifiers(
         },
     ]
 
-    identifiers = await service.insert_documents(
-        documents
-    )
+    identifiers = await service.insert_documents(documents)
 
     assert identifiers == [
         "doc-1",
@@ -1359,9 +1224,7 @@ async def test_upsert_document_returns_identifier(
     monkeypatch.setattr(
         service,
         "_execute",
-        AsyncMock(
-            return_value=None
-        ),
+        AsyncMock(return_value=None),
     )
 
     identifier = await service.upsert_document(
@@ -1375,17 +1238,13 @@ async def test_upsert_document_returns_identifier(
 
 # Recherche
 
+
 def test_normalize_search_results_returns_empty_for_invalid_value(
     service: MilvusService,
 ) -> None:
     """Vérifie un résultat PyMilvus invalide."""
 
-    assert (
-        service._normalize_search_results(
-            None
-        )
-        == []
-    )
+    assert service._normalize_search_results(None) == []
 
 
 def test_normalize_search_results_returns_normalized_result(
@@ -1410,9 +1269,7 @@ def test_normalize_search_results_returns_normalized_result(
         ]
     ]
 
-    results = service._normalize_search_results(
-        raw_results
-    )
+    results = service._normalize_search_results(raw_results)
 
     assert len(results) == 1
 
@@ -1451,9 +1308,7 @@ async def test_search_returns_normalized_results(
     monkeypatch.setattr(
         service,
         "_execute",
-        AsyncMock(
-            return_value=raw_results
-        ),
+        AsyncMock(return_value=raw_results),
     )
 
     results = await service.search(
@@ -1475,16 +1330,10 @@ async def test_search_translates_operation_error(
     monkeypatch.setattr(
         service,
         "_execute",
-        AsyncMock(
-            side_effect=build_operation_error(
-                "search"
-            )
-        ),
+        AsyncMock(side_effect=build_operation_error("search")),
     )
 
-    with pytest.raises(
-        MilvusSearchError
-    ):
+    with pytest.raises(MilvusSearchError):
         await service.search(
             VALID_VECTOR,
             limit=1,
@@ -1492,6 +1341,7 @@ async def test_search_translates_operation_error(
 
 
 # Similarité
+
 
 def test_distance_to_similarity_returns_metric_value_for_cosine(
     service: MilvusService,
@@ -1502,12 +1352,7 @@ def test_distance_to_similarity_returns_metric_value_for_cosine(
         "COSINE",
         "IP",
     }:
-        assert (
-            service._distance_to_similarity(
-                0.8
-            )
-            == 0.8
-        )
+        assert service._distance_to_similarity(0.8) == 0.8
 
 
 def test_distance_to_similarity_is_non_negative(
@@ -1515,9 +1360,7 @@ def test_distance_to_similarity_is_non_negative(
 ) -> None:
     """Vérifie que la similarité retournée est numérique."""
 
-    result = service._distance_to_similarity(
-        0.5
-    )
+    result = service._distance_to_similarity(0.5)
 
     assert isinstance(
         result,
@@ -1526,6 +1369,7 @@ def test_distance_to_similarity_is_non_negative(
 
 
 # Lecture
+
 
 @pytest.mark.asyncio
 async def test_get_document_returns_none_when_not_found(
@@ -1537,14 +1381,10 @@ async def test_get_document_returns_none_when_not_found(
     monkeypatch.setattr(
         service,
         "_execute",
-        AsyncMock(
-            return_value=[]
-        ),
+        AsyncMock(return_value=[]),
     )
 
-    result = await service.get_document(
-        VALID_DOCUMENT_ID
-    )
+    result = await service.get_document(VALID_DOCUMENT_ID)
 
     assert result is None
 
@@ -1569,9 +1409,7 @@ async def test_get_document_returns_json_object(
         ),
     )
 
-    result = await service.get_document(
-        VALID_DOCUMENT_ID
-    )
+    result = await service.get_document(VALID_DOCUMENT_ID)
 
     assert result is not None
     assert result[MILVUS_ID_FIELD] == VALID_DOCUMENT_ID
@@ -1587,22 +1425,15 @@ async def test_get_document_translates_operation_error(
     monkeypatch.setattr(
         service,
         "_execute",
-        AsyncMock(
-            side_effect=build_operation_error(
-                "get"
-            )
-        ),
+        AsyncMock(side_effect=build_operation_error("get")),
     )
 
-    with pytest.raises(
-        MilvusSearchError
-    ):
-        await service.get_document(
-            VALID_DOCUMENT_ID
-        )
+    with pytest.raises(MilvusSearchError):
+        await service.get_document(VALID_DOCUMENT_ID)
 
 
 # Suppression
+
 
 @pytest.mark.asyncio
 async def test_delete_document_returns_true(
@@ -1614,17 +1445,10 @@ async def test_delete_document_returns_true(
     monkeypatch.setattr(
         service,
         "_execute",
-        AsyncMock(
-            return_value=None
-        ),
+        AsyncMock(return_value=None),
     )
 
-    assert (
-        await service.delete_document(
-            VALID_DOCUMENT_ID
-        )
-        is True
-    )
+    assert await service.delete_document(VALID_DOCUMENT_ID) is True
 
 
 @pytest.mark.asyncio
@@ -1637,19 +1461,11 @@ async def test_delete_document_translates_operation_error(
     monkeypatch.setattr(
         service,
         "_execute",
-        AsyncMock(
-            side_effect=build_operation_error(
-                "delete"
-            )
-        ),
+        AsyncMock(side_effect=build_operation_error("delete")),
     )
 
-    with pytest.raises(
-        MilvusDeletionError
-    ):
-        await service.delete_document(
-            VALID_DOCUMENT_ID
-        )
+    with pytest.raises(MilvusDeletionError):
+        await service.delete_document(VALID_DOCUMENT_ID)
 
 
 @pytest.mark.asyncio
@@ -1662,17 +1478,10 @@ async def test_delete_by_filter_returns_true(
     monkeypatch.setattr(
         service,
         "_execute",
-        AsyncMock(
-            return_value=None
-        ),
+        AsyncMock(return_value=None),
     )
 
-    assert (
-        await service.delete_by_filter(
-            "source == 'wikichess'"
-        )
-        is True
-    )
+    assert await service.delete_by_filter("source == 'wikichess'") is True
 
 
 @pytest.mark.asyncio
@@ -1681,36 +1490,25 @@ async def test_delete_by_filter_rejects_empty_filter(
 ) -> None:
     """Vérifie qu'un filtre est obligatoire."""
 
-    with pytest.raises(
-        MilvusValidationError
-    ):
-        await service.delete_by_filter(
-            "   "
-        )
+    with pytest.raises(MilvusValidationError):
+        await service.delete_by_filter("   ")
 
 
 # Conversion JSON
+
 
 def test_make_json_safe_keeps_json_scalar(
     service: MilvusService,
 ) -> None:
     """Vérifie les valeurs JSON natives."""
 
-    assert service._make_json_safe(
-        "text"
-    ) == "text"
+    assert service._make_json_safe("text") == "text"
 
-    assert service._make_json_safe(
-        12
-    ) == 12
+    assert service._make_json_safe(12) == 12
 
-    assert service._make_json_safe(
-        True
-    ) is True
+    assert service._make_json_safe(True) is True
 
-    assert service._make_json_safe(
-        None
-    ) is None
+    assert service._make_json_safe(None) is None
 
 
 def test_make_json_safe_converts_datetime(
@@ -1727,9 +1525,7 @@ def test_make_json_safe_converts_datetime(
         tzinfo=UTC,
     )
 
-    result = service._make_json_safe(
-        value
-    )
+    result = service._make_json_safe(value)
 
     assert isinstance(
         result,
@@ -1781,6 +1577,7 @@ def test_make_json_safe_converts_sequence(
 
 # Helpers
 
+
 def test_get_result_text_returns_text(
     service: MilvusService,
 ) -> None:
@@ -1831,10 +1628,7 @@ def test_get_integer(
 ) -> None:
     """Vérifie la conversion entière."""
 
-    assert (
-        service._get_integer(value)
-        == expected
-    )
+    assert service._get_integer(value) == expected
 
 
 @pytest.mark.parametrize(
@@ -1856,13 +1650,11 @@ def test_get_float(
 ) -> None:
     """Vérifie la conversion flottante."""
 
-    assert (
-        service._get_float(value)
-        == expected
-    )
+    assert service._get_float(value) == expected
 
 
 # Santé
+
 
 @pytest.mark.asyncio
 async def test_ping_returns_true_on_success(
@@ -1874,9 +1666,7 @@ async def test_ping_returns_true_on_success(
     monkeypatch.setattr(
         service,
         "_execute",
-        AsyncMock(
-            return_value=[]
-        ),
+        AsyncMock(return_value=[]),
     )
 
     assert await service.ping() is True
@@ -1892,11 +1682,7 @@ async def test_ping_returns_false_on_milvus_error(
     monkeypatch.setattr(
         service,
         "_execute",
-        AsyncMock(
-            side_effect=build_operation_error(
-                "list_collections"
-            )
-        ),
+        AsyncMock(side_effect=build_operation_error("list_collections")),
     )
 
     assert await service.ping() is False
@@ -1912,11 +1698,7 @@ async def test_ping_returns_false_on_unexpected_error(
     monkeypatch.setattr(
         service,
         "_execute",
-        AsyncMock(
-            side_effect=RuntimeError(
-                "unexpected"
-            )
-        ),
+        AsyncMock(side_effect=RuntimeError("unexpected")),
     )
 
     assert await service.ping() is False
@@ -1939,17 +1721,13 @@ async def test_health_returns_service_status(
     monkeypatch.setattr(
         service,
         "ping",
-        AsyncMock(
-            return_value=True
-        ),
+        AsyncMock(return_value=True),
     )
 
     monkeypatch.setattr(
         service,
         "_execute",
-        AsyncMock(
-            return_value=True
-        ),
+        AsyncMock(return_value=True),
     )
 
     status = await service.health()

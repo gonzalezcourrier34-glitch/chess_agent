@@ -11,13 +11,11 @@ from pydantic import BaseModel, ConfigDict
 
 # Service
 
+
 class ServiceHealth(BaseModel):
     """État d'un service applicatif."""
 
-    model_config = ConfigDict(
-        extra="forbid",
-        frozen=True
-    )
+    model_config = ConfigDict(extra="forbid", frozen=True)
 
     available: bool
 
@@ -28,13 +26,11 @@ class ServiceHealth(BaseModel):
 
 # Services
 
+
 class ServicesStatus(BaseModel):
     """État des services de l'application."""
 
-    model_config = ConfigDict(
-        extra="forbid",
-        frozen=True
-    )
+    model_config = ConfigDict(extra="forbid", frozen=True)
 
     mongodb: ServiceHealth
 

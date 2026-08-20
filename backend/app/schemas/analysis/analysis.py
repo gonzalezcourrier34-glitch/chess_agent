@@ -51,92 +51,71 @@ JsonObject = dict[str, Any]
 
 # Requête
 
+
 class AnalysisRequest(BaseModel):
     """Requête d'analyse d'une position."""
 
-    model_config = ConfigDict(
-        extra="forbid",
-        str_strip_whitespace=True
-    )
+    model_config = ConfigDict(extra="forbid", str_strip_whitespace=True)
 
     # Position
 
     fen: str = Field(
-        ...,
-        min_length=10,
-        description="Position à analyser au format FEN."
+        ..., min_length=10, description="Position à analyser au format FEN."
     )
 
     # Historique
 
     moves: list[str] = Field(
-        default_factory=list,
-        description="Historique des coups au format UCI."
+        default_factory=list, description="Historique des coups au format UCI."
     )
 
     # Demande utilisateur
 
     question: str | None = Field(
-        default=None,
-        description="Question facultative posée par l'utilisateur."
+        default=None, description="Question facultative posée par l'utilisateur."
     )
 
     response_language: str = Field(
         default="fr",
         min_length=2,
         max_length=10,
-        description="Langue souhaitée pour la réponse."
+        description="Langue souhaitée pour la réponse.",
     )
 
     # Validation
 
-    @field_validator(
-        "moves"
-    )
+    @field_validator("moves")
     @classmethod
-    def validate_moves(
-        cls,
-        moves: list[str]
-    ) -> list[str]:
+    def validate_moves(cls, moves: list[str]) -> list[str]:
         """Valide et normalise l'historique des coups."""
 
         normalized_moves: list[str] = []
 
-        for index, move in enumerate(
-            moves
-        ):
-            if not isinstance(
-                move,
-                str
-            ):
+        for index, move in enumerate(moves):
+            if not isinstance(move, str):
                 raise ValueError(
-                    f"Le coup situé à l'index {index} "
-                    "doit être une chaîne."
+                    f"Le coup situé à l'index {index} doit être une chaîne."
                 )
 
             normalized_move = move.strip()
 
             if not normalized_move:
                 raise ValueError(
-                    f"Le coup situé à l'index {index} "
-                    "ne peut pas être vide."
+                    f"Le coup situé à l'index {index} ne peut pas être vide."
                 )
 
-            normalized_moves.append(
-                normalized_move
-            )
+            normalized_moves.append(normalized_move)
 
         return normalized_moves
 
 
 # Réponse
 
+
 class AnalysisResponse(BaseModel):
     """Résultat complet d'une analyse."""
 
-    model_config = ConfigDict(
-        extra="forbid"
-    )
+    model_config = ConfigDict(extra="forbid")
 
     # Informations générales
 
@@ -152,24 +131,21 @@ class AnalysisResponse(BaseModel):
 
     documents: list[Document] = Field(
         default_factory=list,
-        description="Documents pédagogiques sélectionnés par le RAG."
+        description="Documents pédagogiques sélectionnés par le RAG.",
     )
 
     videos: list[Video] = Field(
-        default_factory=list,
-        description="Vidéos pédagogiques sélectionnées."
+        default_factory=list, description="Vidéos pédagogiques sélectionnées."
     )
 
     # Réponse
 
     explanation: str | None = Field(
-        default=None,
-        description="Réponse pédagogique générée."
+        default=None, description="Réponse pédagogique générée."
     )
 
     analysis_id: str | None = Field(
-        default=None,
-        description="Identifiant de l'analyse persistée."
+        default=None, description="Identifiant de l'analyse persistée."
     )
 
     error: str | None = Field(
@@ -177,270 +153,185 @@ class AnalysisResponse(BaseModel):
         description=(
             "Dernier message d'erreur produit par le workflow "
             "lorsqu'une analyse échoue ou se termine partiellement."
-        )
+        ),
     )
 
+
 # Persistance
+
 
 class AnalysisRecord(BaseModel):
     """Analyse complète persistée dans MongoDB."""
 
-    model_config = ConfigDict(
-        extra="forbid",
-        frozen=True
-    )
+    model_config = ConfigDict(extra="forbid", frozen=True)
 
     # Identifiants
 
-    id: str = Field(
-        ...,
-        min_length=1,
-        description="Identifiant unique de l'analyse."
-    )
+    id: str = Field(..., min_length=1, description="Identifiant unique de l'analyse.")
 
     request_id: str = Field(
-        ...,
-        min_length=1,
-        description="Identifiant de la requête d'origine."
+        ..., min_length=1, description="Identifiant de la requête d'origine."
     )
 
     document_version: int = Field(
-        default=1,
-        ge=1,
-        description="Version du format du document MongoDB."
+        default=1, ge=1, description="Version du format du document MongoDB."
     )
 
     # Requête
 
-    fen: str = Field(
-        ...,
-        min_length=10,
-        description="Position analysée au format FEN."
-    )
+    fen: str = Field(..., min_length=10, description="Position analysée au format FEN.")
 
     moves: list[str] = Field(
         default_factory=list,
-        description=(
-            "Historique réel des coups ayant conduit "
-            "à la position analysée."
-        )
+        description=("Historique réel des coups ayant conduit à la position analysée."),
     )
 
     question: str | None = Field(
-        default=None,
-        description="Question formulée par l'utilisateur."
+        default=None, description="Question formulée par l'utilisateur."
     )
 
     response_language: str = Field(
         default="fr",
         min_length=2,
         max_length=10,
-        description="Langue utilisée pour la réponse."
+        description="Langue utilisée pour la réponse.",
     )
 
     # Résultats métier
 
     status: AnalysisStatus = Field(
-        ...,
-        description="Statut de l'analyse au moment de la sauvegarde."
+        ..., description="Statut de l'analyse au moment de la sauvegarde."
     )
 
     position: BoardPosition | None = Field(
-        default=None,
-        description="Position structurée validée."
+        default=None, description="Position structurée validée."
     )
 
     opening: OpeningDetails | None = Field(
-        default=None,
-        description="Ouverture éventuellement détectée."
+        default=None, description="Ouverture éventuellement détectée."
     )
 
     evaluation: PositionEvaluation | None = Field(
-        default=None,
-        description="Évaluation produite par Stockfish."
+        default=None, description="Évaluation produite par Stockfish."
     )
 
     retrieval_context: RetrievalContext | None = Field(
         default=None,
-        description=(
-            "Contexte documentaire complet récupéré "
-            "par le moteur RAG."
-        )
+        description=("Contexte documentaire complet récupéré par le moteur RAG."),
     )
 
     videos: list[Video] = Field(
-        default_factory=list,
-        description="Vidéos pédagogiques sélectionnées."
+        default_factory=list, description="Vidéos pédagogiques sélectionnées."
     )
 
     response: str | None = Field(
-        default=None,
-        description="Réponse finale produite par le workflow."
+        default=None, description="Réponse finale produite par le workflow."
     )
 
     # Snapshots internes
 
     options: JsonObject = Field(
-        default_factory=dict,
-        description="Snapshot des options d'analyse."
+        default_factory=dict, description="Snapshot des options d'analyse."
     )
 
     engine_analysis: JsonObject | None = Field(
-        default=None,
-        description="Snapshot détaillé du résultat Stockfish."
+        default=None, description="Snapshot détaillé du résultat Stockfish."
     )
 
     workflow_context: JsonObject = Field(
-        default_factory=dict,
-        description="Snapshot du contexte consolidé du workflow."
+        default_factory=dict, description="Snapshot du contexte consolidé du workflow."
     )
 
     metadata: JsonObject = Field(
-        default_factory=dict,
-        description="Métadonnées techniques de l'exécution."
+        default_factory=dict, description="Métadonnées techniques de l'exécution."
     )
 
     # Suivi du workflow
 
-    current_step: WorkflowStep = Field(
-        ...,
-        description="Dernière étape exécutée."
-    )
+    current_step: WorkflowStep = Field(..., description="Dernière étape exécutée.")
 
     completed_steps: list[WorkflowStep] = Field(
-        default_factory=list,
-        description="Étapes terminées du workflow."
+        default_factory=list, description="Étapes terminées du workflow."
     )
 
     warnings: list[WorkflowWarning] = Field(
-        default_factory=list,
-        description="Avertissements produits pendant l'analyse."
+        default_factory=list, description="Avertissements produits pendant l'analyse."
     )
 
     errors: list[WorkflowError] = Field(
-        default_factory=list,
-        description="Erreurs produites pendant l'analyse."
+        default_factory=list, description="Erreurs produites pendant l'analyse."
     )
 
     # Dates
 
     created_at: datetime = Field(
-        ...,
-        description="Date de création initiale de l'analyse."
+        ..., description="Date de création initiale de l'analyse."
     )
 
-    saved_at: datetime = Field(
-        ...,
-        description="Date de la dernière sauvegarde."
-    )
+    saved_at: datetime = Field(..., description="Date de la dernière sauvegarde.")
 
 
 # Résultat de sauvegarde
 
+
 class AnalysisSaveResult(BaseModel):
     """Résultat retourné après une sauvegarde MongoDB."""
 
-    model_config = ConfigDict(
-        extra="forbid",
-        frozen=True
-    )
+    model_config = ConfigDict(extra="forbid", frozen=True)
 
     analysis_id: str = Field(
-        ...,
-        min_length=1,
-        description="Identifiant de l'analyse sauvegardée."
+        ..., min_length=1, description="Identifiant de l'analyse sauvegardée."
     )
 
     request_id: str = Field(
-        ...,
-        min_length=1,
-        description="Identifiant de la requête associée."
+        ..., min_length=1, description="Identifiant de la requête associée."
     )
 
-    saved_at: datetime = Field(
-        ...,
-        description="Date effective de la sauvegarde."
-    )
+    saved_at: datetime = Field(..., description="Date effective de la sauvegarde.")
 
     created: bool = Field(
-        ...,
-        description=(
-            "Indique si le document a été créé "
-            "plutôt que mis à jour."
-        )
+        ..., description=("Indique si le document a été créé plutôt que mis à jour.")
     )
 
 
 # Historique
 
+
 class AnalysisSummary(BaseModel):
     """Résumé d'une analyse affichée dans un historique."""
 
-    model_config = ConfigDict(
-        extra="forbid",
-        frozen=True
-    )
+    model_config = ConfigDict(extra="forbid", frozen=True)
 
     # Identifiants
 
-    id: str = Field(
-        ...,
-        min_length=1,
-        description="Identifiant unique de l'analyse."
-    )
+    id: str = Field(..., min_length=1, description="Identifiant unique de l'analyse.")
 
     request_id: str = Field(
-        ...,
-        min_length=1,
-        description="Identifiant de la requête associée."
+        ..., min_length=1, description="Identifiant de la requête associée."
     )
 
     # Analyse
 
-    fen: str = Field(
-        ...,
-        min_length=10,
-        description="Position analysée."
-    )
+    fen: str = Field(..., min_length=10, description="Position analysée.")
 
-    status: AnalysisStatus = Field(
-        ...,
-        description="Statut final de l'analyse."
-    )
-
+    status: AnalysisStatus = Field(..., description="Statut final de l'analyse.")
 
     opening_name: str | None = Field(
-        default=None,
-        description="Nom de l'ouverture éventuellement détectée."
+        default=None, description="Nom de l'ouverture éventuellement détectée."
     )
 
     response_preview: str | None = Field(
-        default=None,
-        description="Extrait de la réponse générée."
+        default=None, description="Extrait de la réponse générée."
     )
 
     # Diagnostics
 
-    warning_count: int = Field(
-        default=0,
-        ge=0,
-        description="Nombre d'avertissements."
-    )
+    warning_count: int = Field(default=0, ge=0, description="Nombre d'avertissements.")
 
-    error_count: int = Field(
-        default=0,
-        ge=0,
-        description="Nombre d'erreurs."
-    )
+    error_count: int = Field(default=0, ge=0, description="Nombre d'erreurs.")
 
     # Dates
 
-    created_at: datetime = Field(
-        ...,
-        description="Date de création de l'analyse."
-    )
+    created_at: datetime = Field(..., description="Date de création de l'analyse.")
 
-    saved_at: datetime = Field(
-        ...,
-        description="Date de la dernière sauvegarde."
-    )
+    saved_at: datetime = Field(..., description="Date de la dernière sauvegarde.")

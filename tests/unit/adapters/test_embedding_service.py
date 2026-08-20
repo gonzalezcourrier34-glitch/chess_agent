@@ -32,6 +32,7 @@ VALID_DOCUMENT_VECTORS = [
 
 # Fixtures
 
+
 @pytest.fixture
 def service() -> EmbeddingService:
     """Construit un service non initialisé."""
@@ -45,20 +46,17 @@ def model() -> MagicMock:
 
     mocked_model = MagicMock()
 
-    mocked_model.get_embedding_dimension.return_value = (
-        EMBEDDING_DIMENSION
-    )
+    mocked_model.get_embedding_dimension.return_value = EMBEDDING_DIMENSION
 
     mocked_model.encode_query.return_value = VALID_VECTOR
 
-    mocked_model.encode_document.return_value = (
-        VALID_DOCUMENT_VECTORS
-    )
+    mocked_model.encode_document.return_value = VALID_DOCUMENT_VECTORS
 
     return mocked_model
 
 
 # Construction
+
 
 def test_service_is_not_ready_after_creation(
     service: EmbeddingService,
@@ -79,6 +77,7 @@ def test_get_dimension_fails_before_initialization(
 
 
 # Cycle de vie
+
 
 @pytest.mark.asyncio
 async def test_start_loads_model(
@@ -137,9 +136,7 @@ async def test_start_fails_when_model_has_no_dimension(
         lambda *args, **kwargs: model,
     )
 
-    with pytest.raises(
-        EmbeddingModelUnavailableError
-    ):
+    with pytest.raises(EmbeddingModelUnavailableError):
         await service.start()
 
 
@@ -154,18 +151,14 @@ async def test_start_fails_when_model_loading_fails(
         *args: object,
         **kwargs: object,
     ) -> None:
-        raise RuntimeError(
-            "model unavailable"
-        )
+        raise RuntimeError("model unavailable")
 
     monkeypatch.setattr(
         "app.adapters.embedding_service.SentenceTransformer",
         raise_error,
     )
 
-    with pytest.raises(
-        EmbeddingModelUnavailableError
-    ):
+    with pytest.raises(EmbeddingModelUnavailableError):
         await service.start()
 
 
@@ -229,6 +222,7 @@ async def test_shutdown_calls_close(
 
 # Accès au modèle
 
+
 def test_get_model_fails_when_service_is_not_started(
     service: EmbeddingService,
 ) -> None:
@@ -251,6 +245,7 @@ def test_get_model_returns_loaded_model(
 
 # Normalisation
 
+
 def test_normalize_text_strips_spaces(
     service: EmbeddingService,
 ) -> None:
@@ -269,9 +264,7 @@ def test_normalize_text_rejects_empty_text(
 ) -> None:
     """Vérifie qu'un texte vide est refusé."""
 
-    with pytest.raises(
-        EmbeddingGenerationError
-    ):
+    with pytest.raises(EmbeddingGenerationError):
         service._normalize_text(
             "   ",
             operation="test",
@@ -283,9 +276,7 @@ def test_normalize_text_rejects_non_string(
 ) -> None:
     """Vérifie qu'une entrée non textuelle est refusée."""
 
-    with pytest.raises(
-        EmbeddingGenerationError
-    ):
+    with pytest.raises(EmbeddingGenerationError):
         service._normalize_text(
             42,  # type: ignore[arg-type]
             operation="test",
@@ -311,9 +302,7 @@ def test_normalize_text_rejects_text_too_long(
         test_settings,
     )
 
-    with pytest.raises(
-        EmbeddingGenerationError
-    ):
+    with pytest.raises(EmbeddingGenerationError):
         service._normalize_text(
             "123456",
             operation="test",
@@ -343,9 +332,7 @@ def test_normalize_texts_reports_invalid_index(
 ) -> None:
     """Vérifie le rejet d'un élément invalide dans un lot."""
 
-    with pytest.raises(
-        EmbeddingGenerationError
-    ):
+    with pytest.raises(EmbeddingGenerationError):
         service._normalize_texts(
             [
                 "valid",
@@ -355,6 +342,7 @@ def test_normalize_texts_reports_invalid_index(
 
 
 # Validation des lots
+
 
 def test_validate_batch_accepts_valid_batch(
     service: EmbeddingService,
@@ -374,9 +362,7 @@ def test_validate_batch_rejects_string(
 ) -> None:
     """Vérifie qu'une chaîne seule n'est pas un lot."""
 
-    with pytest.raises(
-        EmbeddingGenerationError
-    ):
+    with pytest.raises(EmbeddingGenerationError):
         service._validate_batch(
             "not-a-batch"  # type: ignore[arg-type]
         )
@@ -401,9 +387,7 @@ def test_validate_batch_rejects_oversized_batch(
         test_settings,
     )
 
-    with pytest.raises(
-        EmbeddingGenerationError
-    ):
+    with pytest.raises(EmbeddingGenerationError):
         service._validate_batch(
             [
                 "one",
@@ -413,6 +397,7 @@ def test_validate_batch_rejects_oversized_batch(
 
 
 # Conversion
+
 
 def test_convert_number_accepts_numeric_value(
     service: EmbeddingService,
@@ -432,9 +417,7 @@ def test_convert_number_rejects_boolean(
 ) -> None:
     """Vérifie qu'un booléen n'est pas accepté comme composante."""
 
-    with pytest.raises(
-        EmbeddingGenerationError
-    ):
+    with pytest.raises(EmbeddingGenerationError):
         service._convert_number(
             True,
             operation="test",
@@ -446,9 +429,7 @@ def test_convert_number_rejects_non_numeric_value(
 ) -> None:
     """Vérifie le rejet d'une valeur non numérique."""
 
-    with pytest.raises(
-        EmbeddingGenerationError
-    ):
+    with pytest.raises(EmbeddingGenerationError):
         service._convert_number(
             "abc",
             operation="test",
@@ -460,9 +441,7 @@ def test_convert_number_rejects_non_finite_value(
 ) -> None:
     """Vérifie le rejet d'une valeur infinie."""
 
-    with pytest.raises(
-        EmbeddingGenerationError
-    ):
+    with pytest.raises(EmbeddingGenerationError):
         service._convert_number(
             float("inf"),
             operation="test",
@@ -495,9 +474,7 @@ def test_convert_embedding_rejects_mapping(
 ) -> None:
     """Vérifie qu'un mapping n'est pas un embedding valide."""
 
-    with pytest.raises(
-        EmbeddingGenerationError
-    ):
+    with pytest.raises(EmbeddingGenerationError):
         service._convert_embedding(
             {
                 "value": 1,
@@ -527,6 +504,7 @@ def test_convert_embeddings_returns_batch(
 
 # Dimensions
 
+
 def test_validate_embedding_dimension_accepts_valid_dimension(
     service: EmbeddingService,
 ) -> None:
@@ -547,9 +525,7 @@ def test_validate_embedding_dimension_rejects_invalid_dimension(
 
     service._dimension = 3
 
-    with pytest.raises(
-        EmbeddingGenerationError
-    ):
+    with pytest.raises(EmbeddingGenerationError):
         service._validate_embedding_dimension(
             [0.1, 0.2],
             operation="test",
@@ -563,9 +539,7 @@ def test_validate_embeddings_rejects_invalid_count(
 
     service._dimension = 3
 
-    with pytest.raises(
-        EmbeddingGenerationError
-    ):
+    with pytest.raises(EmbeddingGenerationError):
         service._validate_embeddings(
             [
                 [0.1, 0.2, 0.3],
@@ -577,6 +551,7 @@ def test_validate_embeddings_rejects_invalid_count(
 
 # Génération d'un embedding
 
+
 @pytest.mark.asyncio
 async def test_generate_embedding_returns_vector(
     service: EmbeddingService,
@@ -587,9 +562,7 @@ async def test_generate_embedding_returns_vector(
     service._model = model
     service._dimension = EMBEDDING_DIMENSION
 
-    result = await service.generate_embedding(
-        "Ruy Lopez"
-    )
+    result = await service.generate_embedding("Ruy Lopez")
 
     assert result == VALID_VECTOR
     assert service.get_generated_count() == 1
@@ -623,22 +596,17 @@ async def test_generate_embedding_translates_model_error(
 ) -> None:
     """Vérifie la traduction d'une erreur du modèle."""
 
-    model.encode_query.side_effect = RuntimeError(
-        "encoding failure"
-    )
+    model.encode_query.side_effect = RuntimeError("encoding failure")
 
     service._model = model
     service._dimension = EMBEDDING_DIMENSION
 
-    with pytest.raises(
-        EmbeddingGenerationError
-    ):
-        await service.generate_embedding(
-            "Ruy Lopez"
-        )
+    with pytest.raises(EmbeddingGenerationError):
+        await service.generate_embedding("Ruy Lopez")
 
 
 # Génération de documents
+
 
 @pytest.mark.asyncio
 async def test_generate_embeddings_returns_vectors(
@@ -669,9 +637,7 @@ async def test_generate_embeddings_returns_empty_list_for_empty_batch(
 ) -> None:
     """Vérifie qu'un lot vide ne déclenche aucun chargement."""
 
-    result = await service.generate_embeddings(
-        []
-    )
+    result = await service.generate_embeddings([])
 
     assert result == []
     assert service.get_generated_count() == 0
@@ -691,9 +657,7 @@ async def test_generate_embeddings_rejects_wrong_embedding_count(
     service._model = model
     service._dimension = EMBEDDING_DIMENSION
 
-    with pytest.raises(
-        EmbeddingGenerationError
-    ):
+    with pytest.raises(EmbeddingGenerationError):
         await service.generate_embeddings(
             [
                 "one",
@@ -716,9 +680,7 @@ async def test_generate_embeddings_rejects_wrong_dimension(
     service._model = model
     service._dimension = EMBEDDING_DIMENSION
 
-    with pytest.raises(
-        EmbeddingGenerationError
-    ):
+    with pytest.raises(EmbeddingGenerationError):
         await service.generate_embeddings(
             [
                 "one",
@@ -727,6 +689,7 @@ async def test_generate_embeddings_rejects_wrong_dimension(
 
 
 # Informations
+
 
 def test_get_generated_count_returns_current_value(
     service: EmbeddingService,
@@ -752,6 +715,7 @@ def test_is_ready_returns_true_when_model_and_dimension_exist(
 
 # Santé
 
+
 @pytest.mark.asyncio
 async def test_ping_returns_true_when_embedding_is_valid(
     service: EmbeddingService,
@@ -761,9 +725,7 @@ async def test_ping_returns_true_when_embedding_is_valid(
 
     service._dimension = EMBEDDING_DIMENSION
 
-    generate_embedding = AsyncMock(
-        return_value=VALID_VECTOR
-    )
+    generate_embedding = AsyncMock(return_value=VALID_VECTOR)
 
     monkeypatch.setattr(
         service,
@@ -786,9 +748,7 @@ async def test_ping_returns_false_on_embedding_error(
 ) -> None:
     """Vérifie un healthcheck en erreur."""
 
-    generate_embedding = AsyncMock(
-        side_effect=EmbeddingGenerationError()
-    )
+    generate_embedding = AsyncMock(side_effect=EmbeddingGenerationError())
 
     monkeypatch.setattr(
         service,
@@ -836,9 +796,7 @@ async def test_health_returns_service_status(
     service._dimension = EMBEDDING_DIMENSION
     service._generated_embeddings = 4
 
-    ping = AsyncMock(
-        return_value=True
-    )
+    ping = AsyncMock(return_value=True)
 
     monkeypatch.setattr(
         service,

@@ -105,27 +105,25 @@ class EmbeddingService:
             if not model_name:
                 raise ConfigurationError(
                     context=ErrorContext(service=SERVICE_NAME, operation="start"),
-                    message="Le nom du modèle d'embedding n'est pas configuré."
+                    message="Le nom du modèle d'embedding n'est pas configuré.",
                 )
 
             logger.info(
-               "Chargement du modèle d'embedding %s sur %s.",
+                "Chargement du modèle d'embedding %s sur %s.",
                 model_name,
-                settings.embedding_device
+                settings.embedding_device,
             )
 
             try:
                 model = await asyncio.to_thread(
-                    SentenceTransformer,
-                    model_name,
-                    device=settings.embedding_device
-                    )
-                
+                    SentenceTransformer, model_name, device=settings.embedding_device
+                )
+
             except Exception as error:
                 logger.exception("Impossible de charger le modèle d'embedding.")
                 raise EmbeddingModelUnavailableError(
                     context=ErrorContext(service=SERVICE_NAME, operation="start"),
-                    cause=error
+                    cause=error,
                 ) from error
 
             dimension = model.get_embedding_dimension()
@@ -136,7 +134,7 @@ class EmbeddingService:
                     message=(
                         "Le modèle chargé ne fournit pas de dimension "
                         "d'embedding valide."
-                    )
+                    ),
                 )
 
             self._model = model
@@ -145,7 +143,7 @@ class EmbeddingService:
             logger.info(
                 "Modèle d'embedding %s chargé avec une dimension de %s.",
                 model_name,
-                self._dimension
+                self._dimension,
             )
 
     async def close(self) -> None:
@@ -173,11 +171,8 @@ class EmbeddingService:
         """Retourne le modèle chargé."""
         if self._model is None:
             raise ConfigurationError(
-                context=ErrorContext(
-                    service=SERVICE_NAME,
-                    operation="_get_model"
-                ),
-                message="Le modèle d'embedding n'est pas initialisé."
+                context=ErrorContext(service=SERVICE_NAME, operation="_get_model"),
+                message="Le modèle d'embedding n'est pas initialisé.",
             )
 
         return self._model
@@ -196,7 +191,7 @@ class EmbeddingService:
         if not isinstance(text, str):
             raise EmbeddingGenerationError(
                 context=ErrorContext(service=SERVICE_NAME, operation=operation),
-                message="Le contenu à encoder doit être une chaîne de caractères."
+                message="Le contenu à encoder doit être une chaîne de caractères.",
             )
 
         normalized_text = text.strip()
@@ -206,7 +201,7 @@ class EmbeddingService:
                 context=ErrorContext(service=SERVICE_NAME, operation=operation),
                 message=(
                     "Impossible de générer un embedding à partir d'un texte vide."
-                )
+                ),
             )
 
         maximum_length = settings.embedding_max_text_length
@@ -218,7 +213,7 @@ class EmbeddingService:
                     "Le texte dépasse la longueur maximale autorisée pour les "
                     f"embeddings : {len(normalized_text)} caractères reçus pour "
                     f"{maximum_length} maximum."
-                )
+                ),
             )
 
         return normalized_text
@@ -235,7 +230,7 @@ class EmbeddingService:
                 raise EmbeddingGenerationError(
                     context=ErrorContext(service=SERVICE_NAME, operation=operation),
                     message=f"Le texte situé à l'index {index} est invalide.",
-                    cause=error
+                    cause=error,
                 ) from error
 
             normalized_texts.append(normalized_text)
@@ -249,7 +244,7 @@ class EmbeddingService:
         if isinstance(texts, str):
             raise EmbeddingGenerationError(
                 context=ErrorContext(service=SERVICE_NAME, operation=operation),
-                message="Les documents à encoder doivent former une collection."
+                message="Les documents à encoder doivent former une collection.",
             )
 
         maximum_size = settings.embedding_max_batch_size
@@ -260,17 +255,13 @@ class EmbeddingService:
                 message=(
                     f"Le lot contient trop de textes : {len(texts)} reçus pour "
                     f"{maximum_size} maximum."
-                )
+                ),
             )
 
     # Conversion
 
     def _get_iterable(
-        self,
-        value: object,
-        *,
-        operation: str,
-        message: str
+        self, value: object, *, operation: str, message: str
     ) -> Iterable[object]:
         """Retourne une vue itérable sûre d'un résultat d'encodage."""
         candidate = value.tolist() if isinstance(value, SupportsToList) else value
@@ -278,13 +269,13 @@ class EmbeddingService:
         if isinstance(candidate, (str, bytes, bytearray, Mapping)):
             raise EmbeddingGenerationError(
                 context=ErrorContext(service=SERVICE_NAME, operation=operation),
-                message=message
+                message=message,
             )
 
         if not isinstance(candidate, Iterable):
             raise EmbeddingGenerationError(
                 context=ErrorContext(service=SERVICE_NAME, operation=operation),
-                message=message
+                message=message,
             )
 
         return candidate
@@ -297,7 +288,7 @@ class EmbeddingService:
                 message=(
                     "L'embedding généré ne contient pas uniquement des valeurs "
                     "numériques."
-                )
+                ),
             )
 
         try:
@@ -306,47 +297,38 @@ class EmbeddingService:
             raise EmbeddingGenerationError(
                 context=ErrorContext(service=SERVICE_NAME, operation=operation),
                 message="Une composante de l'embedding ne peut pas être convertie.",
-                cause=error
+                cause=error,
             ) from error
 
         if not isfinite(converted_value):
             raise EmbeddingGenerationError(
                 context=ErrorContext(service=SERVICE_NAME, operation=operation),
-                message="L'embedding généré contient une valeur non finie."
+                message="L'embedding généré contient une valeur non finie.",
             )
 
         return converted_value
 
     def _convert_embedding(
-        self,
-        embedding: object,
-        *,
-        operation: str,
-        index: int | None = None
+        self, embedding: object, *, operation: str, index: int | None = None
     ) -> Embedding:
         """Convertit un embedding en liste de nombres flottants."""
         location = "" if index is None else f" situé à l'index {index}"
         values = self._get_iterable(
             embedding,
             operation=operation,
-            message=f"Le résultat{location} n'est pas un embedding valide."
+            message=f"Le résultat{location} n'est pas un embedding valide.",
         )
 
-        return [
-            self._convert_number(value, operation=operation) for value in values
-        ]
+        return [self._convert_number(value, operation=operation) for value in values]
 
     def _convert_embeddings(
-        self,
-        embeddings: object,
-        *,
-        operation: str
+        self, embeddings: object, *, operation: str
     ) -> EmbeddingBatch:
         """Convertit un lot d'embeddings en listes de nombres flottants."""
         values = self._get_iterable(
             embeddings,
             operation=operation,
-            message="Le résultat généré n'est pas un lot d'embeddings valide."
+            message="Le résultat généré n'est pas un lot d'embeddings valide.",
         )
 
         return [
@@ -357,11 +339,7 @@ class EmbeddingService:
     # Validation
 
     def _validate_embedding_dimension(
-        self,
-        embedding: Embedding,
-        *,
-        operation: str,
-        index: int | None = None
+        self, embedding: Embedding, *, operation: str, index: int | None = None
     ) -> None:
         """Vérifie la dimension d'un embedding."""
         expected_dimension = self.get_dimension()
@@ -382,15 +360,11 @@ class EmbeddingService:
 
         raise EmbeddingGenerationError(
             context=ErrorContext(service=SERVICE_NAME, operation=operation),
-            message=message
+            message=message,
         )
 
     def _validate_embeddings(
-        self,
-        embeddings: EmbeddingBatch,
-        *,
-        expected_count: int,
-        operation: str
+        self, embeddings: EmbeddingBatch, *, expected_count: int, operation: str
     ) -> None:
         """Vérifie le nombre et la dimension des embeddings d'un lot."""
         if len(embeddings) != expected_count:
@@ -399,24 +373,17 @@ class EmbeddingService:
                 message=(
                     "Le nombre d'embeddings générés est invalide : "
                     f"{len(embeddings)} au lieu de {expected_count}."
-                )
+                ),
             )
 
         for index, embedding in enumerate(embeddings):
             self._validate_embedding_dimension(
-                embedding,
-                operation=operation,
-                index=index
+                embedding, operation=operation, index=index
             )
 
     # Requêtes
 
-    async def generate_embedding(
-        self,
-        text: str,
-        *,
-        count: bool = True
-    ) -> Embedding:
+    async def generate_embedding(self, text: str, *, count: bool = True) -> Embedding:
         """Génère l'embedding d'une requête sémantique."""
         operation = "generate_embedding"
         normalized_text = self._normalize_text(text, operation=operation)
@@ -431,21 +398,18 @@ class EmbeddingService:
                     model.encode_query,
                     normalized_text,
                     convert_to_numpy=True,
-                    normalize_embeddings=True
+                    normalize_embeddings=True,
                 )
         except Exception as error:
             exception = EmbeddingGenerationError(
                 context=ErrorContext(service=SERVICE_NAME, operation=operation),
-                cause=error
+                cause=error,
             )
             exception.log()
             raise exception from error
 
         duration_ms = (perf_counter() - started_at) * MILLISECONDS_PER_SECOND
-        embedding = self._convert_embedding(
-            raw_embedding,
-            operation=operation
-        )
+        embedding = self._convert_embedding(raw_embedding, operation=operation)
         self._validate_embedding_dimension(embedding, operation=operation)
 
         if count:
@@ -468,8 +432,7 @@ class EmbeddingService:
         model = await self._ensure_model()
 
         logger.debug(
-            "Génération de %s embedding(s) de document.",
-            len(normalized_texts)
+            "Génération de %s embedding(s) de document.", len(normalized_texts)
         )
 
         try:
@@ -479,32 +442,27 @@ class EmbeddingService:
                     model.encode_document,
                     normalized_texts,
                     convert_to_numpy=True,
-                    normalize_embeddings=True
+                    normalize_embeddings=True,
                 )
         except Exception as error:
             exception = EmbeddingGenerationError(
                 context=ErrorContext(service=SERVICE_NAME, operation=operation),
-                cause=error
+                cause=error,
             )
             exception.log()
             raise exception from error
 
         duration_ms = (perf_counter() - started_at) * MILLISECONDS_PER_SECOND
-        embeddings = self._convert_embeddings(
-            raw_embeddings,
-            operation=operation
-        )
+        embeddings = self._convert_embeddings(raw_embeddings, operation=operation)
         self._validate_embeddings(
-            embeddings,
-            expected_count=len(normalized_texts),
-            operation=operation
+            embeddings, expected_count=len(normalized_texts), operation=operation
         )
         self._generated_embeddings += len(embeddings)
 
         logger.debug(
             "%s embedding(s) de document généré(s) en %.2f ms.",
             len(embeddings),
-            duration_ms
+            duration_ms,
         )
         return embeddings
 
@@ -514,11 +472,8 @@ class EmbeddingService:
         """Retourne la dimension des embeddings."""
         if self._dimension is None:
             raise ConfigurationError(
-                context=ErrorContext(
-                    service=SERVICE_NAME,
-                    operation="get_dimension"
-                ),
-                message="La dimension du modèle d'embedding n'est pas disponible."
+                context=ErrorContext(service=SERVICE_NAME, operation="get_dimension"),
+                message="La dimension du modèle d'embedding n'est pas disponible.",
             )
 
         return self._dimension
@@ -536,29 +491,24 @@ class EmbeddingService:
     async def ping(self) -> bool:
         """Vérifie que le modèle peut produire un embedding valide."""
         try:
-            embedding = await self.generate_embedding(
-                HEALTHCHECK_TEXT,
-                count=False
-            )
+            embedding = await self.generate_embedding(HEALTHCHECK_TEXT, count=False)
             dimension = self.get_dimension()
         except (
             ConfigurationError,
             EmbeddingGenerationError,
-            EmbeddingModelUnavailableError
+            EmbeddingModelUnavailableError,
         ):
             logger.exception("Le modèle d'embedding est indisponible.")
             return False
         except Exception:
-            logger.exception(
-                "Erreur inattendue lors du test du modèle d'embedding."
-            )
+            logger.exception("Erreur inattendue lors du test du modèle d'embedding.")
             return False
 
         if len(embedding) != dimension:
             logger.error(
                 "Dimension d'embedding invalide : %s au lieu de %s.",
                 len(embedding),
-                dimension
+                dimension,
             )
             return False
 

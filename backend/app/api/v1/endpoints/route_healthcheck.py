@@ -27,6 +27,7 @@ router = APIRouter()
 
 # Liveness
 
+
 @router.get(
     "/health/live",
     status_code=status.HTTP_200_OK,
@@ -39,12 +40,11 @@ router = APIRouter()
 async def live() -> dict[str, str]:
     """Retourne l'état de vie du backend."""
 
-    return {
-        "status": "alive"
-    }
+    return {"status": "alive"}
 
 
 # Readiness
+
 
 @router.get(
     "/health/ready",
@@ -62,12 +62,11 @@ async def ready(
 
     await healthcheck_service.check_readiness()
 
-    return {
-        "status": "ready"
-    }
+    return {"status": "ready"}
 
 
 # Diagnostic complet
+
 
 @router.get(
     "/healthcheck",

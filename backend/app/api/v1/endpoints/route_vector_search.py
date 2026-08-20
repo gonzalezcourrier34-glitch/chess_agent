@@ -65,6 +65,4 @@ async def search_documents(
         Résultats documentaires classés par similarité.
     """
 
-    return await service.search(
-        payload
-    )
+    return await service.search(payload)

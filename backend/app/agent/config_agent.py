@@ -36,43 +36,28 @@ def build_workflow_config(
     milvus_service: MilvusService,
     youtube_service: YoutubeService,
     llm_service: LLMService,
-    mongodb_service: MongoDBService
+    mongodb_service: MongoDBService,
 ) -> RunnableConfig:
     """Construit la configuration d'exécution du workflow."""
 
     return {
         "configurable": {
             # LangGraph
-
             "thread_id": thread_id,
-
             # Validation
-
             "chess_service": chess_service,
-
             # Détection d'ouverture
-
             "lichess_service": lichess_service,
-
             # Analyse moteur
-
             "stockfish_service": stockfish_service,
-
             # Recherche documentaire
-
             "embedding_service": embedding_service,
             "milvus_service": milvus_service,
-
             # Recherche vidéo
-
             "youtube_service": youtube_service,
-
             # Génération
-
             "llm": llm_service,
-
             # Persistance
-
-            "mongodb_service": mongodb_service
+            "mongodb_service": mongodb_service,
         }
     }

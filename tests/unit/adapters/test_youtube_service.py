@@ -50,21 +50,14 @@ SEARCH_PAYLOAD: YoutubePayload = {
             },
             "snippet": {
                 "title": "Ruy Lopez Chess Opening Guide",
-                "description": (
-                    "Learn the Ruy Lopez opening."
-                ),
+                "description": ("Learn the Ruy Lopez opening."),
                 "channelId": CHANNEL_ID,
                 "channelTitle": "Chess Channel",
-                "publishedAt": (
-                    "2026-08-18T10:00:00Z"
-                ),
+                "publishedAt": ("2026-08-18T10:00:00Z"),
                 "defaultLanguage": "en",
                 "thumbnails": {
                     "high": {
-                        "url": (
-                            "https://example.test/"
-                            "thumbnail.jpg"
-                        ),
+                        "url": ("https://example.test/thumbnail.jpg"),
                     },
                 },
             },
@@ -91,6 +84,7 @@ DETAILS_PAYLOAD: YoutubePayload = {
 
 
 # Helpers
+
 
 def build_youtube_error() -> YoutubeUnavailableError:
     """Construit une erreur YouTube valide."""
@@ -142,15 +136,12 @@ def build_response(
     return httpx.Response(
         status_code,
         request=request,
-        json=(
-            payload
-            if payload is not None
-            else {}
-        ),
+        json=(payload if payload is not None else {}),
     )
 
 
 # Fixtures
+
 
 @pytest.fixture
 def service(
@@ -160,28 +151,18 @@ def service(
 
     youtube_service = YoutubeService()
 
-    test_settings = (
-        youtube_service
-        ._settings
-        .model_copy(
-            update={
-                "youtube_api_key": SecretStr(
-                    API_KEY
-                ),
-                "youtube_api_url": BASE_URL,
-                "youtube_default_language": (
-                    LANGUAGE
-                ),
-                "youtube_region_code": "FR",
-                "youtube_query_suffix": (
-                    "chess opening"
-                ),
-                "youtube_search_max_results": 5,
-                "youtube_timeout_seconds": 15.0,
-                "http_max_retry_attempts": 1,
-                "http_retry_delay_seconds": 0.01,
-            }
-        )
+    test_settings = youtube_service._settings.model_copy(
+        update={
+            "youtube_api_key": SecretStr(API_KEY),
+            "youtube_api_url": BASE_URL,
+            "youtube_default_language": (LANGUAGE),
+            "youtube_region_code": "FR",
+            "youtube_query_suffix": ("chess opening"),
+            "youtube_search_max_results": 5,
+            "youtube_timeout_seconds": 15.0,
+            "http_max_retry_attempts": 1,
+            "http_retry_delay_seconds": 0.01,
+        }
     )
 
     monkeypatch.setattr(
@@ -195,6 +176,7 @@ def service(
 
 # Construction
 
+
 def test_service_is_ready_with_api_key(
     service: YoutubeService,
 ) -> None:
@@ -205,6 +187,7 @@ def test_service_is_ready_with_api_key(
 
 
 # Cycle de vie
+
 
 @pytest.mark.asyncio
 async def test_initialize_does_not_close_client(
@@ -244,9 +227,7 @@ async def test_close_closes_http_client(
 ) -> None:
     """Vérifie la fermeture du client HTTP."""
 
-    client = MagicMock(
-        spec=httpx.AsyncClient
-    )
+    client = MagicMock(spec=httpx.AsyncClient)
 
     client.is_closed = False
     client.aclose = AsyncMock()
@@ -269,9 +250,7 @@ async def test_close_does_nothing_when_client_is_closed(
 ) -> None:
     """Vérifie l'idempotence de la fermeture."""
 
-    client = MagicMock(
-        spec=httpx.AsyncClient
-    )
+    client = MagicMock(spec=httpx.AsyncClient)
 
     client.is_closed = True
     client.aclose = AsyncMock()
@@ -295,9 +274,7 @@ async def test_operation_increments_and_decrements_counter(
 
     assert service._active_operations == 0
 
-    async with service._operation(
-        "test"
-    ):
+    async with service._operation("test"):
         assert service._active_operations == 1
 
     assert service._active_operations == 0
@@ -311,16 +288,13 @@ async def test_operation_rejects_closing_service(
 
     service._closing = True
 
-    with pytest.raises(
-        YoutubeUnavailableError
-    ):
-        async with service._operation(
-            "test"
-        ):
+    with pytest.raises(YoutubeUnavailableError):
+        async with service._operation("test"):
             pass
 
 
 # Clé API
+
 
 def test_get_api_key_returns_secret_value(
     service: YoutubeService,
@@ -336,14 +310,10 @@ def test_get_api_key_rejects_missing_key(
 ) -> None:
     """Vérifie l'absence de clé API."""
 
-    test_settings = (
-        service
-        ._settings
-        .model_copy(
-            update={
-                "youtube_api_key": None,
-            }
-        )
+    test_settings = service._settings.model_copy(
+        update={
+            "youtube_api_key": None,
+        }
     )
 
     monkeypatch.setattr(
@@ -352,9 +322,7 @@ def test_get_api_key_rejects_missing_key(
         test_settings,
     )
 
-    with pytest.raises(
-        YoutubeConfigurationError
-    ):
+    with pytest.raises(YoutubeConfigurationError):
         service._get_api_key()
 
 
@@ -364,16 +332,10 @@ def test_get_api_key_rejects_empty_key(
 ) -> None:
     """Vérifie une clé API vide."""
 
-    test_settings = (
-        service
-        ._settings
-        .model_copy(
-            update={
-                "youtube_api_key": SecretStr(
-                    "   "
-                ),
-            }
-        )
+    test_settings = service._settings.model_copy(
+        update={
+            "youtube_api_key": SecretStr("   "),
+        }
     )
 
     monkeypatch.setattr(
@@ -382,13 +344,12 @@ def test_get_api_key_rejects_empty_key(
         test_settings,
     )
 
-    with pytest.raises(
-        YoutubeConfigurationError
-    ):
+    with pytest.raises(YoutubeConfigurationError):
         service._get_api_key()
 
 
 # Requête générique
+
 
 @pytest.mark.asyncio
 async def test_request_adds_api_key(
@@ -397,13 +358,9 @@ async def test_request_adds_api_key(
 ) -> None:
     """Vérifie l'ajout automatique de la clé API."""
 
-    response = build_response(
-        payload=SEARCH_PAYLOAD
-    )
+    response = build_response(payload=SEARCH_PAYLOAD)
 
-    execute_request = AsyncMock(
-        return_value=response
-    )
+    execute_request = AsyncMock(return_value=response)
 
     monkeypatch.setattr(
         service,
@@ -433,21 +390,15 @@ async def test_request_adds_api_key(
 
 # Parsing JSON
 
+
 def test_parse_response_payload_returns_payload(
     service: YoutubeService,
 ) -> None:
     """Vérifie le parsing d'un JSON valide."""
 
-    response = build_response(
-        payload=SEARCH_PAYLOAD
-    )
+    response = build_response(payload=SEARCH_PAYLOAD)
 
-    result = (
-        service
-        ._parse_response_payload(
-            response
-        )
-    )
+    result = service._parse_response_payload(response)
 
     assert result == SEARCH_PAYLOAD
 
@@ -457,16 +408,10 @@ def test_parse_response_payload_rejects_empty_response(
 ) -> None:
     """Vérifie le rejet d'une réponse vide."""
 
-    response = build_response(
-        content=b""
-    )
+    response = build_response(content=b"")
 
-    with pytest.raises(
-        YoutubeResponseError
-    ):
-        service._parse_response_payload(
-            response
-        )
+    with pytest.raises(YoutubeResponseError):
+        service._parse_response_payload(response)
 
 
 def test_parse_response_payload_rejects_invalid_json(
@@ -474,19 +419,14 @@ def test_parse_response_payload_rejects_invalid_json(
 ) -> None:
     """Vérifie le rejet d'un JSON invalide."""
 
-    response = build_response(
-        content=b"not-json"
-    )
+    response = build_response(content=b"not-json")
 
-    with pytest.raises(
-        YoutubeResponseError
-    ):
-        service._parse_response_payload(
-            response
-        )
+    with pytest.raises(YoutubeResponseError):
+        service._parse_response_payload(response)
 
 
 # Retry
+
 
 @pytest.mark.parametrize(
     "status_code",
@@ -584,14 +524,10 @@ async def test_wait_before_retry_uses_exponential_delay(
 ) -> None:
     """Vérifie le délai exponentiel."""
 
-    test_settings = (
-        service
-        ._settings
-        .model_copy(
-            update={
-                "http_retry_delay_seconds": 2.0,
-            }
-        )
+    test_settings = service._settings.model_copy(
+        update={
+            "http_retry_delay_seconds": 2.0,
+        }
     )
 
     monkeypatch.setattr(
@@ -603,8 +539,7 @@ async def test_wait_before_retry_uses_exponential_delay(
     sleep = AsyncMock()
 
     monkeypatch.setattr(
-        "app.adapters.youtube_service."
-        "asyncio.sleep",
+        "app.adapters.youtube_service.asyncio.sleep",
         sleep,
     )
 
@@ -613,12 +548,11 @@ async def test_wait_before_retry_uses_exponential_delay(
         endpoint=YOUTUBE_SEARCH_ENDPOINT,
     )
 
-    sleep.assert_awaited_once_with(
-        8.0
-    )
+    sleep.assert_awaited_once_with(8.0)
 
 
 # Erreurs HTTP
+
 
 def test_raise_response_error_detects_quota(
     service: YoutubeService,
@@ -640,12 +574,8 @@ def test_raise_response_error_detects_quota(
         payload=payload,
     )
 
-    with pytest.raises(
-        YoutubeQuotaError
-    ):
-        service._raise_response_error(
-            response
-        )
+    with pytest.raises(YoutubeQuotaError):
+        service._raise_response_error(response)
 
 
 @pytest.mark.parametrize(
@@ -673,12 +603,8 @@ def test_raise_response_error_detects_configuration_error(
         payload=payload,
     )
 
-    with pytest.raises(
-        YoutubeConfigurationError
-    ):
-        service._raise_response_error(
-            response
-        )
+    with pytest.raises(YoutubeConfigurationError):
+        service._raise_response_error(response)
 
 
 @pytest.mark.parametrize(
@@ -703,12 +629,8 @@ def test_raise_response_error_detects_timeout(
         },
     )
 
-    with pytest.raises(
-        YoutubeTimeoutError
-    ):
-        service._raise_response_error(
-            response
-        )
+    with pytest.raises(YoutubeTimeoutError):
+        service._raise_response_error(response)
 
 
 @pytest.mark.parametrize(
@@ -734,12 +656,8 @@ def test_raise_response_error_detects_unavailable_service(
         },
     )
 
-    with pytest.raises(
-        YoutubeUnavailableError
-    ):
-        service._raise_response_error(
-            response
-        )
+    with pytest.raises(YoutubeUnavailableError):
+        service._raise_response_error(response)
 
 
 def test_raise_response_error_falls_back_to_response_error(
@@ -756,15 +674,12 @@ def test_raise_response_error_falls_back_to_response_error(
         },
     )
 
-    with pytest.raises(
-        YoutubeResponseError
-    ):
-        service._raise_response_error(
-            response
-        )
+    with pytest.raises(YoutubeResponseError):
+        service._raise_response_error(response)
 
 
 # Extraction de la raison
+
 
 def test_extract_error_reason_returns_reason(
     service: YoutubeService,
@@ -786,12 +701,7 @@ def test_extract_error_reason_returns_reason(
         payload=payload,
     )
 
-    assert (
-        service._extract_error_reason(
-            response
-        )
-        == "quotaExceeded"
-    )
+    assert service._extract_error_reason(response) == "quotaExceeded"
 
 
 def test_extract_error_reason_returns_message(
@@ -810,27 +720,18 @@ def test_extract_error_reason_returns_message(
         payload=payload,
     )
 
-    assert (
-        service._extract_error_reason(
-            response
-        )
-        == "API failure"
-    )
+    assert service._extract_error_reason(response) == "API failure"
 
 
 # Normalisation de requête
+
 
 def test_normalize_query_normalizes_spaces(
     service: YoutubeService,
 ) -> None:
     """Vérifie la normalisation d'une requête."""
 
-    assert (
-        service._normalize_query(
-            "  Ruy   Lopez  "
-        )
-        == "Ruy Lopez"
-    )
+    assert service._normalize_query("  Ruy   Lopez  ") == "Ruy Lopez"
 
 
 @pytest.mark.parametrize(
@@ -848,12 +749,8 @@ def test_normalize_query_rejects_non_string(
 ) -> None:
     """Vérifie le type de la requête."""
 
-    with pytest.raises(
-        InvalidRequestError
-    ):
-        service._normalize_query(
-            value
-        )
+    with pytest.raises(InvalidRequestError):
+        service._normalize_query(value)
 
 
 def test_normalize_query_rejects_empty_query(
@@ -861,27 +758,19 @@ def test_normalize_query_rejects_empty_query(
 ) -> None:
     """Vérifie le rejet d'une requête vide."""
 
-    with pytest.raises(
-        InvalidRequestError
-    ):
-        service._normalize_query(
-            "   "
-        )
+    with pytest.raises(InvalidRequestError):
+        service._normalize_query("   ")
 
 
 # Nombre de résultats
+
 
 def test_normalize_max_results_accepts_valid_value(
     service: YoutubeService,
 ) -> None:
     """Vérifie une limite valide."""
 
-    assert (
-        service._normalize_max_results(
-            5
-        )
-        == 5
-    )
+    assert service._normalize_max_results(5) == 5
 
 
 @pytest.mark.parametrize(
@@ -899,12 +788,8 @@ def test_normalize_max_results_rejects_non_integer(
 ) -> None:
     """Vérifie le type de la limite."""
 
-    with pytest.raises(
-        InvalidRequestError
-    ):
-        service._normalize_max_results(
-            value
-        )
+    with pytest.raises(InvalidRequestError):
+        service._normalize_max_results(value)
 
 
 @pytest.mark.parametrize(
@@ -920,27 +805,19 @@ def test_normalize_max_results_rejects_out_of_range(
 ) -> None:
     """Vérifie les bornes de résultats."""
 
-    with pytest.raises(
-        InvalidRequestError
-    ):
-        service._normalize_max_results(
-            value
-        )
+    with pytest.raises(InvalidRequestError):
+        service._normalize_max_results(value)
 
 
 # Langue
+
 
 def test_normalize_language_returns_lowercase(
     service: YoutubeService,
 ) -> None:
     """Vérifie la normalisation de la langue."""
 
-    assert (
-        service._normalize_language(
-            " FR "
-        )
-        == "fr"
-    )
+    assert service._normalize_language(" FR ") == "fr"
 
 
 def test_normalize_language_uses_default(
@@ -948,12 +825,7 @@ def test_normalize_language_uses_default(
 ) -> None:
     """Vérifie la langue par défaut."""
 
-    assert (
-        service._normalize_language(
-            None
-        )
-        == LANGUAGE
-    )
+    assert service._normalize_language(None) == LANGUAGE
 
 
 @pytest.mark.parametrize(
@@ -970,12 +842,8 @@ def test_normalize_language_rejects_non_string(
 ) -> None:
     """Vérifie le type de la langue."""
 
-    with pytest.raises(
-        InvalidRequestError
-    ):
-        service._normalize_language(
-            value
-        )
+    with pytest.raises(InvalidRequestError):
+        service._normalize_language(value)
 
 
 @pytest.mark.parametrize(
@@ -991,30 +859,23 @@ def test_normalize_language_rejects_invalid_length(
 ) -> None:
     """Vérifie la longueur de langue."""
 
-    with pytest.raises(
-        InvalidRequestError
-    ):
-        service._normalize_language(
-            value
-        )
+    with pytest.raises(InvalidRequestError):
+        service._normalize_language(value)
 
 
 # Construction de recherche
+
 
 def test_build_search_query_appends_suffix(
     service: YoutubeService,
 ) -> None:
     """Vérifie le suffixe pédagogique."""
 
-    assert (
-        service._build_search_query(
-            QUERY
-        )
-        == f"{QUERY} chess opening"
-    )
+    assert service._build_search_query(QUERY) == f"{QUERY} chess opening"
 
 
 # Extraction des IDs vidéo
+
 
 def test_extract_video_ids_returns_unique_ids(
     service: YoutubeService,
@@ -1041,15 +902,10 @@ def test_extract_video_ids_returns_unique_ids(
         ],
     }
 
-    assert (
-        service._extract_video_ids(
-            payload
-        )
-        == [
-            "a",
-            "b",
-        ]
-    )
+    assert service._extract_video_ids(payload) == [
+        "a",
+        "b",
+    ]
 
 
 def test_extract_video_ids_returns_empty_for_invalid_items(
@@ -1061,57 +917,28 @@ def test_extract_video_ids_returns_empty_for_invalid_items(
         "items": "invalid",
     }
 
-    assert (
-        service._extract_video_ids(
-            payload
-        )
-        == []
-    )
+    assert service._extract_video_ids(payload) == []
 
 
 # Détails vidéo
+
 
 def test_extract_video_details_returns_metadata(
     service: YoutubeService,
 ) -> None:
     """Vérifie l'extraction des statistiques vidéo."""
 
-    details = (
-        service
-        ._extract_video_details(
-            DETAILS_PAYLOAD
-        )
-    )
+    details = service._extract_video_details(DETAILS_PAYLOAD)
 
     assert VIDEO_ID in details
 
-    assert (
-        details[VIDEO_ID][
-            "duration_seconds"
-        ]
-        == 630
-    )
+    assert details[VIDEO_ID]["duration_seconds"] == 630
 
-    assert (
-        details[VIDEO_ID][
-            "view_count"
-        ]
-        == 1234
-    )
+    assert details[VIDEO_ID]["view_count"] == 1234
 
-    assert (
-        details[VIDEO_ID][
-            "like_count"
-        ]
-        == 120
-    )
+    assert details[VIDEO_ID]["like_count"] == 120
 
-    assert (
-        details[VIDEO_ID][
-            "comment_count"
-        ]
-        == 15
-    )
+    assert details[VIDEO_ID]["comment_count"] == 15
 
 
 @pytest.mark.asyncio
@@ -1120,12 +947,7 @@ async def test_get_video_details_returns_empty_without_ids(
 ) -> None:
     """Vérifie qu'aucun appel HTTP n'est réalisé sans ID."""
 
-    assert (
-        await service._get_video_details(
-            []
-        )
-        == {}
-    )
+    assert await service._get_video_details([]) == {}
 
 
 @pytest.mark.asyncio
@@ -1139,9 +961,7 @@ async def test_get_video_details_calls_videos_endpoint(
         YOUTUBE_VIDEO_DETAILS_PART,
     )
 
-    request = AsyncMock(
-        return_value=DETAILS_PAYLOAD
-    )
+    request = AsyncMock(return_value=DETAILS_PAYLOAD)
 
     monkeypatch.setattr(
         service,

@@ -73,19 +73,21 @@ MongoHealthStatus = dict[str, Any]
 # Les valeurs réelles restent centralisées dans constants.py afin
 # d'éviter toute divergence entre MongoDB, les repositories et les
 # services métier.
-MONGO_COLLECTIONS = frozenset({
-    OPENINGS_COLLECTION,
-    OPENING_THEORIES_COLLECTION,
-    POSITIONS_COLLECTION,
-    ANALYSES_COLLECTION,
-    DOCUMENTS_COLLECTION,
-    VIDEOS_COLLECTION,
-    USERS_COLLECTION,
-    USER_HISTORIES_COLLECTION,
-    FAVORITES_COLLECTION,
-    CACHE_COLLECTION,
-    SETTINGS_COLLECTION
-})
+MONGO_COLLECTIONS = frozenset(
+    {
+        OPENINGS_COLLECTION,
+        OPENING_THEORIES_COLLECTION,
+        POSITIONS_COLLECTION,
+        ANALYSES_COLLECTION,
+        DOCUMENTS_COLLECTION,
+        VIDEOS_COLLECTION,
+        USERS_COLLECTION,
+        USER_HISTORIES_COLLECTION,
+        FAVORITES_COLLECTION,
+        CACHE_COLLECTION,
+        SETTINGS_COLLECTION,
+    }
+)
 
 
 # État
@@ -103,60 +105,48 @@ _client_lock = Lock()
 
 # Validation
 
-def get_required_setting(
-    value: str | None,
-    setting_name: str
-) -> str:
+
+def get_required_setting(value: str | None, setting_name: str) -> str:
     """Retourne une configuration obligatoire nettoyée."""
 
     # Cette validation fournit une erreur de configuration explicite
     # avant toute tentative de connexion.
-    normalized_value = str(
-        value or ""
-    ).strip()
+    normalized_value = str(value or "").strip()
 
     if not normalized_value:
         raise ConfigurationError(
-            message=(
-                "La configuration MongoDB "
-                f"'{setting_name}' est obligatoire."
-            )
+            message=(f"La configuration MongoDB '{setting_name}' est obligatoire.")
         )
 
     return normalized_value
 
 
-def normalize_collection_name(
-    name: str
-) -> str:
+def normalize_collection_name(name: str) -> str:
     """Valide et normalise un nom de collection MongoDB."""
 
     # Une validation explicite évite de transmettre à PyMongo une valeur
     # absente ou d'un type inattendu.
     if not isinstance(name, str):
         raise ValueError(
-            "Le nom de la collection MongoDB doit être "
-            "une chaîne de caractères."
+            "Le nom de la collection MongoDB doit être une chaîne de caractères."
         )
 
     collection_name = name.strip()
 
     if not collection_name:
-        raise ValueError(
-            "Le nom de la collection MongoDB est obligatoire."
-        )
+        raise ValueError("Le nom de la collection MongoDB est obligatoire.")
 
     # MongoDB interdit le caractère nul dans les noms de collections.
     if INVALID_COLLECTION_CHARACTER in collection_name:
         raise ValueError(
-            "Le nom de la collection MongoDB contient "
-            "un caractère interdit."
+            "Le nom de la collection MongoDB contient un caractère interdit."
         )
 
     return collection_name
 
 
 # Connexion
+
 
 def connect() -> MongoClient:
     """Retourne le client MongoDB partagé."""
@@ -174,20 +164,15 @@ def connect() -> MongoClient:
         if _client is not None:
             return _client
 
-        mongodb_uri = get_required_setting(
-            settings.mongodb_uri,
-            "mongodb_uri"
-        )
+        mongodb_uri = get_required_setting(settings.mongodb_uri, "mongodb_uri")
 
         # AsyncMongoClient établit les connexions réelles à la demande.
         # La commande ping d'initialize() déclenchera la vérification du
         # serveur.
         _client = AsyncMongoClient(
             mongodb_uri,
-            serverSelectionTimeoutMS=(
-                settings.mongodb_server_selection_timeout_ms
-            ),
-            maxPoolSize=settings.mongodb_max_pool_size
+            serverSelectionTimeoutMS=(settings.mongodb_server_selection_timeout_ms),
+            maxPoolSize=settings.mongodb_max_pool_size,
         )
 
     return _client
@@ -203,14 +188,9 @@ async def initialize() -> MongoClient:
     try:
         # La commande ping force la sélection d'un serveur et vérifie
         # immédiatement que MongoDB est joignable.
-        await client.admin.command(
-            MONGODB_PING_COMMAND
-        )
+        await client.admin.command(MONGODB_PING_COMMAND)
 
-    except (
-        ConfigurationError,
-        PyMongoError
-    ) as error:
+    except (ConfigurationError, PyMongoError) as error:
         # La référence globale est supprimée afin qu'une prochaine
         # tentative reparte d'un client neuf.
         with _client_lock:
@@ -228,17 +208,13 @@ async def initialize() -> MongoClient:
                 "après un échec d'initialisation."
             )
 
-        logger.exception(
-            "Impossible d'initialiser la connexion MongoDB."
-        )
+        logger.exception("Impossible d'initialiser la connexion MongoDB.")
 
         raise DatabaseConnectionError(
             message="Impossible d'initialiser MongoDB."
         ) from error
 
-    logger.info(
-        "Connexion MongoDB initialisée."
-    )
+    logger.info("Connexion MongoDB initialisée.")
 
     return client
 
@@ -261,85 +237,58 @@ async def disconnect() -> None:
         await client.close()
 
     except PyMongoError as error:
-        logger.exception(
-            "Erreur lors de la fermeture du client MongoDB."
-        )
+        logger.exception("Erreur lors de la fermeture du client MongoDB.")
 
         raise DatabaseConnectionError(
-            message=(
-                "Impossible de fermer proprement "
-                "le client MongoDB."
-            )
+            message=("Impossible de fermer proprement le client MongoDB.")
         ) from error
 
-    logger.info(
-        "Client MongoDB fermé."
-    )
+    logger.info("Client MongoDB fermé.")
 
 
 # Accès aux données
 
+
 def get_database() -> MongoDatabase:
     """Retourne la base MongoDB configurée."""
 
-    database_name = get_required_setting(
-        settings.mongodb_database,
-        "mongodb_database"
-    )
+    database_name = get_required_setting(settings.mongodb_database, "mongodb_database")
 
     # L'accès par crochets ne déclenche pas immédiatement une opération
     # réseau. Il retourne un objet représentant la base.
-    return connect()[
-        database_name
-    ]
+    return connect()[database_name]
 
 
-def get_collection(
-    name: str
-) -> MongoCollection:
+def get_collection(name: str) -> MongoCollection:
     """Retourne une collection MongoDB."""
 
-    collection_name = normalize_collection_name(
-        name
-    )
+    collection_name = normalize_collection_name(name)
 
     # L'accès par crochets retourne un objet collection réutilisable par
     # les repositories et les services de persistance.
-    return get_database()[
-        collection_name
-    ]
+    return get_database()[collection_name]
 
 
-async def collection_exists(
-    name: str
-) -> bool:
+async def collection_exists(name: str) -> bool:
     """Indique si une collection existe."""
 
-    collection_name = normalize_collection_name(
-        name
-    )
+    collection_name = normalize_collection_name(name)
 
     try:
-        collection_names = (
-            await get_database().list_collection_names()
-        )
+        collection_names = await get_database().list_collection_names()
 
     except PyMongoError as error:
-        logger.exception(
-            "Impossible de récupérer les collections MongoDB."
-        )
+        logger.exception("Impossible de récupérer les collections MongoDB.")
 
         raise DatabaseConnectionError(
-            message=(
-                "Impossible de vérifier l'existence "
-                "de la collection MongoDB."
-            )
+            message=("Impossible de vérifier l'existence de la collection MongoDB.")
         ) from error
 
     return collection_name in collection_names
 
 
 # Informations
+
 
 def is_initialized() -> bool:
     """Indique si un client MongoDB a été créé."""
@@ -349,6 +298,7 @@ def is_initialized() -> bool:
 
 # Santé
 
+
 async def ping() -> bool:
     """Teste la disponibilité de MongoDB."""
 
@@ -357,24 +307,15 @@ async def ping() -> bool:
         # La commande ping réalise ensuite la vérification réseau réelle.
         client = connect()
 
-        await client.admin.command(
-            MONGODB_PING_COMMAND
-        )
+        await client.admin.command(MONGODB_PING_COMMAND)
 
-    except (
-        ConfigurationError,
-        PyMongoError
-    ):
-        logger.exception(
-            "MongoDB est indisponible."
-        )
+    except (ConfigurationError, PyMongoError):
+        logger.exception("MongoDB est indisponible.")
 
         return False
 
     except Exception:
-        logger.exception(
-            "Erreur inattendue lors du test MongoDB."
-        )
+        logger.exception("Erreur inattendue lors du test MongoDB.")
 
         return False
 
@@ -388,28 +329,19 @@ async def health() -> MongoHealthStatus:
 
     available = await ping()
 
-    latency_ms = round(
-        (
-            perf_counter()
-            - started_at
-        ) * 1_000,
-        2
-    )
+    latency_ms = round((perf_counter() - started_at) * 1_000, 2)
 
     database_name: str | None = None
 
     try:
         database_name = get_required_setting(
-            settings.mongodb_database,
-            "mongodb_database"
+            settings.mongodb_database, "mongodb_database"
         )
 
     except ConfigurationError:
         # Une configuration absente est reflétée dans le diagnostic sans
         # provoquer l'échec de l'endpoint de supervision.
-        logger.exception(
-            "Nom de base MongoDB non configuré."
-        )
+        logger.exception("Nom de base MongoDB non configuré.")
 
     return {
         "service": "mongodb",
@@ -417,8 +349,6 @@ async def health() -> MongoHealthStatus:
         "available": available,
         "database": database_name,
         "latency_ms": latency_ms,
-        "server_selection_timeout_ms": (
-            settings.mongodb_server_selection_timeout_ms
-        ),
-        "max_pool_size": settings.mongodb_max_pool_size
+        "server_selection_timeout_ms": (settings.mongodb_server_selection_timeout_ms),
+        "max_pool_size": settings.mongodb_max_pool_size,
     }

@@ -49,7 +49,7 @@ VECTOR_CONTENT_PREFIXES = (
     "Code ECO :",
     "Coups :",
     "Position après :",
-    "Position after :"
+    "Position after :",
 )
 
 LLM_CONFIGURATION_MESSAGE = (
@@ -156,13 +156,10 @@ Ne donne aucune interprétation personnelle.
 
 # Services
 
+
 def _get_llm_service(config: RunnableConfig) -> LLMService | None:
     """Retourne le service LLM configuré avec un type vérifié."""
-    service = get_configured_service(
-        config,
-        LLM_SERVICE_KEY,
-        expected_type=LLMService
-    )
+    service = get_configured_service(config, LLM_SERVICE_KEY, expected_type=LLMService)
 
     if service is None:
         return None
@@ -171,7 +168,7 @@ def _get_llm_service(config: RunnableConfig) -> LLMService | None:
         logger.error(
             "Service %s invalide : %s reçu au lieu de LLMService.",
             LLM_SERVICE_KEY,
-            type(service).__name__
+            type(service).__name__,
         )
         return None
 
@@ -179,6 +176,7 @@ def _get_llm_service(config: RunnableConfig) -> LLMService | None:
 
 
 # Statuts
+
 
 def _get_success_status(state: ChessAnalysisState) -> AnalysisStatus:
     """Retourne le statut applicable après une génération réussie."""
@@ -201,6 +199,7 @@ def _get_partial_success_status(state: ChessAnalysisState) -> AnalysisStatus:
 
 
 # Normalisation
+
 
 def _normalize_text(value: object) -> str | None:
     """Retourne une chaîne facultative nettoyée."""
@@ -242,6 +241,7 @@ def _format_percentage(value: float | int | None) -> str:
 
 # Documents RAG
 
+
 def _is_vector_metadata_line(line: str) -> bool:
     """Indique si une ligne appartient au préambule vectoriel."""
     return line.strip().startswith(VECTOR_CONTENT_PREFIXES)
@@ -281,9 +281,7 @@ def _strip_vector_content_header(content: str) -> str | None:
     return remaining_content or None
 
 
-def _extract_document_content(
-    retrieved_document: RetrievedDocument
-) -> str | None:
+def _extract_document_content(retrieved_document: RetrievedDocument) -> str | None:
     """Retourne uniquement la présentation pédagogique disponible."""
     content = _normalize_text(retrieved_document.document.content)
 
@@ -332,9 +330,7 @@ def _build_documents_context(state: ChessAnalysisState) -> str | None:
     return "\n\n".join(sections)
 
 
-def _get_wikichess_continuations(
-    state: ChessAnalysisState
-) -> frozenset[str]:
+def _get_wikichess_continuations(state: ChessAnalysisState) -> frozenset[str]:
     """Retourne les continuations Wikichess disponibles."""
     retrieval_context = state.retrieval_context
 
@@ -364,6 +360,7 @@ def _get_wikichess_continuations(
 
 # Ouverture Lichess
 
+
 def _build_opening_context(state: ChessAnalysisState) -> str | None:
     """Construit le contexte statistique Lichess."""
     if state.opening is None or state.opening.statistics is None:
@@ -372,20 +369,15 @@ def _build_opening_context(state: ChessAnalysisState) -> str | None:
     statistics = state.opening.statistics
     lines = [
         f"Parties : {statistics.games}",
-        (
-            "Victoires blanches : "
-            f"{_format_percentage(statistics.white_win_rate)}"
-        ),
+        (f"Victoires blanches : {_format_percentage(statistics.white_win_rate)}"),
         f"Parties nulles : {_format_percentage(statistics.draw_rate)}",
-        (
-            "Victoires noires : "
-            f"{_format_percentage(statistics.black_win_rate)}"
-        ),
+        (f"Victoires noires : {_format_percentage(statistics.black_win_rate)}"),
     ]
     return "\n".join(lines)
 
 
 # Stockfish
+
 
 def _get_engine(state: ChessAnalysisState) -> EngineAnalysis | None:
     """Retourne l'analyse moteur disponible."""
@@ -400,7 +392,7 @@ def _get_engine(state: ChessAnalysisState) -> EngineAnalysis | None:
     if not isinstance(engine, EngineAnalysis):
         logger.error(
             "Analyse Stockfish invalide : %s reçu au lieu de EngineAnalysis.",
-            type(engine).__name__
+            type(engine).__name__,
         )
         return None
 
@@ -436,9 +428,7 @@ def _append_alternatives(lines: list[str], engine: EngineAnalysis) -> None:
 
 
 def _append_wikichess_matches(
-    lines: list[str],
-    state: ChessAnalysisState,
-    engine: EngineAnalysis
+    lines: list[str], state: ChessAnalysisState, engine: EngineAnalysis
 ) -> None:
     """Ajoute les correspondances Stockfish et Wikichess."""
     continuations = _get_wikichess_continuations(state)
@@ -448,9 +438,7 @@ def _append_wikichess_matches(
 
     best_move = engine.best_move
     compared_moves = [] if best_move is None else [best_move.san]
-    compared_moves.extend(
-        alternative.san for alternative in engine.alternatives
-    )
+    compared_moves.extend(alternative.san for alternative in engine.alternatives)
     compared_moves = [move for move in compared_moves if move]
 
     if not compared_moves:
@@ -483,6 +471,7 @@ def _build_engine_context(state: ChessAnalysisState) -> str | None:
 
 # Position inconnue
 
+
 def _get_unknown_position_context(state: ChessAnalysisState) -> str | None:
     """Retourne le contexte produit par le nœud de position inconnue."""
     if state.opening is not None:
@@ -493,11 +482,9 @@ def _get_unknown_position_context(state: ChessAnalysisState) -> str | None:
 
 # Prompt
 
+
 def _append_prompt_section(
-    sections: list[str],
-    title: str,
-    content: str | None,
-    rules: str | None = None
+    sections: list[str], title: str, content: str | None, rules: str | None = None
 ) -> None:
     """Ajoute une section uniquement lorsqu'un contenu existe."""
     if not content:
@@ -515,28 +502,19 @@ def _build_system_prompt(state: ChessAnalysisState) -> str:
     """Construit le prompt minimal transmis au modèle."""
     sections = [GENERAL_RULES]
     _append_prompt_section(
-        sections,
-        "Wikichess",
-        _build_documents_context(state),
-        WIKICHESS_RULES
+        sections, "Wikichess", _build_documents_context(state), WIKICHESS_RULES
     )
     _append_prompt_section(
-        sections,
-        "Lichess",
-        _build_opening_context(state),
-        LICHESS_RULES
+        sections, "Lichess", _build_opening_context(state), LICHESS_RULES
     )
     _append_prompt_section(
-        sections,
-        "Stockfish",
-        _build_engine_context(state),
-        STOCKFISH_RULES
+        sections, "Stockfish", _build_engine_context(state), STOCKFISH_RULES
     )
     _append_prompt_section(
         sections,
         "Position inconnue",
         _get_unknown_position_context(state),
-        UNKNOWN_POSITION_RULES
+        UNKNOWN_POSITION_RULES,
     )
     language = _normalize_language(state.options.response_language)
     sections.append(RESPONSE_RULES.format(language=language))
@@ -545,6 +523,7 @@ def _build_system_prompt(state: ChessAnalysisState) -> str:
 
 
 # Extraction
+
 
 def _extract_opening_name(state: ChessAnalysisState) -> str | None:
     """Retourne le nom de l'ouverture détectée."""
@@ -579,10 +558,8 @@ def _get_retrieved_document_count(state: ChessAnalysisState) -> int:
 
 # Réponse de secours
 
-def _append_position_status(
-    sections: list[str],
-    state: ChessAnalysisState
-) -> None:
+
+def _append_position_status(sections: list[str], state: ChessAnalysisState) -> None:
     """Ajoute le statut particulier de la position."""
     position = state.position
 
@@ -598,9 +575,7 @@ def _append_position_status(
         return
 
     if position.is_check:
-        sections.append(
-            "Le joueur au trait est indiqué comme étant en échec."
-        )
+        sections.append("Le joueur au trait est indiqué comme étant en échec.")
 
 
 def _build_fallback_response(state: ChessAnalysisState) -> str:
@@ -622,22 +597,17 @@ def _build_fallback_response(state: ChessAnalysisState) -> str:
     best_move = _extract_best_move(state)
 
     if best_move is not None:
-        sections.append(
-            f"Meilleur coup retourné par Stockfish : {best_move}."
-        )
+        sections.append(f"Meilleur coup retourné par Stockfish : {best_move}.")
 
     _append_position_status(sections, state)
     document_count = _get_retrieved_document_count(state)
 
     if document_count > 0:
-        sections.append(
-            f"{document_count} document(s) Wikichess ont été retrouvés."
-        )
+        sections.append(f"{document_count} document(s) Wikichess ont été retrouvés.")
 
     if state.videos:
         sections.append(
-            f"{len(state.videos)} vidéo(s) pédagogique(s) "
-            "ont été sélectionnée(s)."
+            f"{len(state.videos)} vidéo(s) pédagogique(s) ont été sélectionnée(s)."
         )
 
     sections.append(
@@ -649,20 +619,16 @@ def _build_fallback_response(state: ChessAnalysisState) -> str:
 
 # Mises à jour
 
+
 def _build_updated_workflow_context(
-    state: ChessAnalysisState,
-    response: str
+    state: ChessAnalysisState, response: str
 ) -> WorkflowContext:
     """Ajoute la réponse finale au contexte du workflow."""
-    return state.workflow_context.model_copy(
-        update={"final_summary": response}
-    )
+    return state.workflow_context.model_copy(update={"final_summary": response})
 
 
 def _build_success_update(
-    state: ChessAnalysisState,
-    response: str,
-    workflow_context: WorkflowContext
+    state: ChessAnalysisState, response: str, workflow_context: WorkflowContext
 ) -> StateUpdate:
     """Construit la mise à jour après une génération réussie."""
     current_step = WorkflowStep.GENERATE_RESPONSE
@@ -682,7 +648,7 @@ def _build_warning_update(
     state: ChessAnalysisState,
     warning: WorkflowWarning,
     response: str,
-    workflow_context: WorkflowContext
+    workflow_context: WorkflowContext,
 ) -> StateUpdate:
     """Construit la mise à jour avec une réponse de secours."""
     current_step = WorkflowStep.GENERATE_RESPONSE
@@ -699,27 +665,21 @@ def _build_warning_update(
 
 
 def _build_fallback_update(
-    state: ChessAnalysisState,
-    code: str,
-    message: str
+    state: ChessAnalysisState, code: str, message: str
 ) -> StateUpdate:
     """Construit une mise à jour dégradée avec la réponse de secours."""
     response = _build_fallback_response(state)
     workflow_context = _build_updated_workflow_context(state, response)
     warning = WorkflowWarning(
-        step=WorkflowStep.GENERATE_RESPONSE,
-        code=code,
-        message=message
+        step=WorkflowStep.GENERATE_RESPONSE, code=code, message=message
     )
     return _build_warning_update(state, warning, response, workflow_context)
 
 
 # Génération
 
-async def _generate_llm_response(
-    service: LLMService,
-    state: ChessAnalysisState
-) -> str:
+
+async def _generate_llm_response(service: LLMService, state: ChessAnalysisState) -> str:
     """Construit le prompt et retourne la réponse non vide du LLM."""
     prompt = _build_system_prompt(state)
     logger.debug("Prompt final préparé : %s caractères.", len(prompt))
@@ -736,42 +696,28 @@ async def _generate_llm_response(
 
 
 async def generate_response(
-    state: ChessAnalysisState,
-    config: RunnableConfig
+    state: ChessAnalysisState, config: RunnableConfig
 ) -> StateUpdate:
     """Génère la réponse finale du workflow."""
     current_step = WorkflowStep.GENERATE_RESPONSE
     request_id = state.metadata.request_id or "unknown"
 
-    logger.info(
-        "Génération de la réponse finale du workflow %s.",
-        request_id
-    )
+    logger.info("Génération de la réponse finale du workflow %s.", request_id)
 
-    llm_service = _get_llm_service(
-        config
-    )
+    llm_service = _get_llm_service(config)
 
     if llm_service is None:
         emit_progress(
             step=current_step,
             service=ServiceType.LLM,
             status=WorkflowStepStatus.WARNING,
-            message=(
-                "LLMService indisponible. "
-                "Utilisation de la réponse de secours."
-            )
+            message=("LLMService indisponible. Utilisation de la réponse de secours."),
         )
 
-        logger.error(
-            "LLMService absent ou invalide dans "
-            "la configuration LangGraph."
-        )
+        logger.error("LLMService absent ou invalide dans la configuration LangGraph.")
 
         return _build_fallback_update(
-            state,
-            ERROR_CONFIGURATION,
-            LLM_CONFIGURATION_MESSAGE
+            state, ERROR_CONFIGURATION, LLM_CONFIGURATION_MESSAGE
         )
 
     try:
@@ -779,19 +725,16 @@ async def generate_response(
             step=current_step,
             service=ServiceType.LLM,
             status=WorkflowStepStatus.RUNNING,
-            message="Génération de la réponse pédagogique en cours."
+            message="Génération de la réponse pédagogique en cours.",
         )
 
-        response = await _generate_llm_response(
-            llm_service,
-            state
-        )
+        response = await _generate_llm_response(llm_service, state)
 
         emit_progress(
             step=current_step,
             service=ServiceType.LLM,
             status=WorkflowStepStatus.COMPLETED,
-            message="Réponse pédagogique générée."
+            message="Réponse pédagogique générée.",
         )
 
     except Exception:
@@ -800,34 +743,18 @@ async def generate_response(
             service=ServiceType.LLM,
             status=WorkflowStepStatus.WARNING,
             message=(
-                "Génération LLM impossible. "
-                "Utilisation de la réponse de secours."
-            )
+                "Génération LLM impossible. Utilisation de la réponse de secours."
+            ),
         )
 
-        logger.exception(
-            "Échec de la génération du workflow %s.",
-            request_id
-        )
+        logger.exception("Échec de la génération du workflow %s.", request_id)
 
         return _build_fallback_update(
-            state,
-            ERROR_UNEXPECTED,
-            LLM_GENERATION_ERROR_MESSAGE
+            state, ERROR_UNEXPECTED, LLM_GENERATION_ERROR_MESSAGE
         )
 
-    workflow_context = _build_updated_workflow_context(
-        state,
-        response
-    )
+    workflow_context = _build_updated_workflow_context(state, response)
 
-    logger.info(
-        "Réponse finale générée pour le workflow %s.",
-        request_id
-    )
+    logger.info("Réponse finale générée pour le workflow %s.", request_id)
 
-    return _build_success_update(
-        state,
-        response,
-        workflow_context
-    )
+    return _build_success_update(state, response, workflow_context)

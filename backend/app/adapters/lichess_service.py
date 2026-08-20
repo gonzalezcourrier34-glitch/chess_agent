@@ -83,9 +83,7 @@ RETRYABLE_STATUS_CODES = frozenset(
     }
 )
 
-LICHESS_PAYLOAD_ADAPTER: TypeAdapter[LichessPayload] = TypeAdapter(
-    LichessPayload
-)
+LICHESS_PAYLOAD_ADAPTER: TypeAdapter[LichessPayload] = TypeAdapter(LichessPayload)
 
 
 # Service
@@ -101,7 +99,7 @@ class LichessService:
         self._settings = settings
         limits = httpx.Limits(
             max_connections=self._settings.http_max_connections,
-            max_keepalive_connections=self._settings.http_max_connections
+            max_keepalive_connections=self._settings.http_max_connections,
         )
         headers = {"User-Agent": self._settings.http_user_agent}
         token = self._get_token()
@@ -114,7 +112,7 @@ class LichessService:
             timeout=self._settings.lichess_timeout_seconds,
             headers=headers,
             limits=limits,
-            follow_redirects=True
+            follow_redirects=True,
         )
 
     def _get_token(self) -> str | None:
@@ -145,10 +143,7 @@ class LichessService:
     # HTTP
 
     async def _request(
-        self,
-        endpoint: str,
-        *,
-        params: LichessParams | None = None
+        self, endpoint: str, *, params: LichessParams | None = None
     ) -> LichessPayload:
         """Exécute une requête et retourne son contenu JSON validé."""
         logger.debug("Interrogation Lichess : %s, paramètres : %s", endpoint, params)
@@ -156,10 +151,7 @@ class LichessService:
         return self._parse_response_payload(response)
 
     async def _execute_request(
-        self,
-        endpoint: str,
-        *,
-        params: LichessParams | None
+        self, endpoint: str, *, params: LichessParams | None
     ) -> httpx.Response:
         """Exécute une requête HTTP avec nouvelles tentatives."""
         # Une requête initiale est toujours réalisée. La configuration indique
@@ -173,51 +165,41 @@ class LichessService:
                 if self._should_retry_status(
                     status_code=response.status_code,
                     attempt=attempt,
-                    total_attempts=total_attempts
+                    total_attempts=total_attempts,
                 ):
                     await self._wait_before_retry(
                         attempt=attempt,
                         endpoint=endpoint,
-                        status_code=response.status_code
+                        status_code=response.status_code,
                     )
                     continue
 
                 response.raise_for_status()
-                logger.debug(
-                    "Réponse Lichess reçue : %s.",
-                    response.status_code
-                )
+                logger.debug("Réponse Lichess reçue : %s.", response.status_code)
                 return response
             except httpx.TimeoutException as error:
                 if attempt < total_attempts:
-                    await self._wait_before_retry(
-                        attempt=attempt,
-                        endpoint=endpoint
-                    )
+                    await self._wait_before_retry(attempt=attempt, endpoint=endpoint)
                     continue
 
                 logger.exception("Timeout lors de l'appel à Lichess.")
                 raise LichessTimeoutError(
                     message=(
-                        "Le service Lichess ne répond pas dans le délai "
-                        "configuré."
+                        "Le service Lichess ne répond pas dans le délai configuré."
                     )
                 ) from error
             except httpx.HTTPStatusError as error:
                 logger.exception(
                     "Erreur HTTP %s retournée par Lichess pour l'endpoint %s.",
                     error.response.status_code,
-                    endpoint
+                    endpoint,
                 )
                 raise LichessError(
                     message="L'API Lichess a retourné une erreur HTTP."
                 ) from error
             except httpx.HTTPError as error:
                 if attempt < total_attempts:
-                    await self._wait_before_retry(
-                        attempt=attempt,
-                        endpoint=endpoint
-                    )
+                    await self._wait_before_retry(attempt=attempt, endpoint=endpoint)
                     continue
 
                 logger.exception("Erreur réseau lors de l'appel à Lichess.")
@@ -227,19 +209,12 @@ class LichessService:
 
         # Cette protection conserve le contrat de retour si la logique de
         # tentative évolue ultérieurement.
-        raise LichessError(
-            message="La requête Lichess n'a pas pu être exécutée."
-        )
+        raise LichessError(message="La requête Lichess n'a pas pu être exécutée.")
 
-    def _parse_response_payload(
-        self,
-        response: httpx.Response
-    ) -> LichessPayload:
+    def _parse_response_payload(self, response: httpx.Response) -> LichessPayload:
         """Valide et retourne le contenu JSON d'une réponse."""
         if not response.content:
-            raise LichessResponseError(
-                message="Réponse vide retournée par Lichess."
-            )
+            raise LichessResponseError(message="Réponse vide retournée par Lichess.")
 
         try:
             return LICHESS_PAYLOAD_ADAPTER.validate_json(response.content)
@@ -247,37 +222,23 @@ class LichessService:
             logger.warning("Réponse JSON invalide retournée par Lichess.")
             raise LichessResponseError(
                 message=(
-                    "La réponse retournée par Lichess n'est pas un objet "
-                    "JSON valide."
+                    "La réponse retournée par Lichess n'est pas un objet JSON valide."
                 )
             ) from error
 
     def _should_retry_status(
-        self,
-        *,
-        status_code: int,
-        attempt: int,
-        total_attempts: int
+        self, *, status_code: int, attempt: int, total_attempts: int
     ) -> bool:
         """Indique si le statut autorise une nouvelle tentative."""
-        return (
-            status_code in RETRYABLE_STATUS_CODES
-            and attempt < total_attempts
-        )
+        return status_code in RETRYABLE_STATUS_CODES and attempt < total_attempts
 
     async def _wait_before_retry(
-        self,
-        *,
-        attempt: int,
-        endpoint: str,
-        status_code: int | None = None
+        self, *, attempt: int, endpoint: str, status_code: int | None = None
     ) -> None:
         """Attend avant une nouvelle tentative HTTP."""
         delay = self._settings.http_retry_delay_seconds * 2 ** (attempt - 1)
         status_message = (
-            f" après le statut HTTP {status_code}"
-            if status_code is not None
-            else ""
+            f" après le statut HTTP {status_code}" if status_code is not None else ""
         )
         logger.warning(
             "Nouvelle tentative Lichess dans %.2f seconde(s) pour %s "
@@ -285,7 +246,7 @@ class LichessService:
             delay,
             endpoint,
             attempt,
-            status_message
+            status_message,
         )
         await asyncio.sleep(delay)
 
@@ -293,10 +254,7 @@ class LichessService:
 
     async def detect_opening(self, request: FenRequest) -> OpeningDetails:
         """Retourne les informations disponibles sur une ouverture."""
-        logger.debug(
-            "Recherche d'une ouverture pour la position : %s",
-            request.fen
-        )
+        logger.debug("Recherche d'une ouverture pour la position : %s", request.fen)
         payload = await self._get_master_database(fen=request.fen)
 
         if not self._has_opening(payload):
@@ -304,14 +262,8 @@ class LichessService:
                 message="Aucune ouverture n'a été retournée par Lichess."
             )
 
-        opening_details = self._build_opening_details(
-            payload,
-            fen=request.fen
-        )
-        logger.debug(
-            "Ouverture Lichess détectée : %s.",
-            opening_details.opening.name
-        )
+        opening_details = self._build_opening_details(payload, fen=request.fen)
+        logger.debug("Ouverture Lichess détectée : %s.", opening_details.opening.name)
         return opening_details
 
     async def _get_master_database(self, *, fen: str) -> LichessPayload:
@@ -321,15 +273,11 @@ class LichessService:
             params={
                 "fen": fen,
                 "moves": self._settings.lichess_max_moves,
-            }
+            },
         )
 
     async def _get_user_database(
-        self,
-        *,
-        fen: str,
-        speeds: str | None = None,
-        ratings: str | None = None
+        self, *, fen: str, speeds: str | None = None, ratings: str | None = None
     ) -> LichessPayload:
         """Interroge la base des parties des joueurs."""
         params: LichessParams = {
@@ -348,44 +296,29 @@ class LichessService:
     # Construction
 
     def _build_opening_details(
-        self,
-        payload: LichessPayload,
-        *,
-        fen: str
+        self, payload: LichessPayload, *, fen: str
     ) -> OpeningDetails:
         """Construit les informations complètes d'une ouverture."""
         # Explorer ne fournit ni théorie pédagogique structurée ni variante
         # complète ; les valeurs par défaut du schéma expriment cette absence.
         return OpeningDetails(
             opening=self._build_opening(payload, fen=fen),
-            statistics=self._build_statistics(payload)
+            statistics=self._build_statistics(payload),
         )
 
-    def _build_opening(
-        self,
-        payload: LichessPayload,
-        *,
-        fen: str
-    ) -> Opening:
+    def _build_opening(self, payload: LichessPayload, *, fen: str) -> Opening:
         """Construit l'identité de l'ouverture détectée."""
         opening_payload = self._get_object(payload, "opening")
 
         return Opening(
             eco=self._get_string(opening_payload, "eco"),
-            name=self._get_string(
-                opening_payload,
-                "name",
-                UNKNOWN_OPENING
-            ),
+            name=self._get_string(opening_payload, "name", UNKNOWN_OPENING),
             moves=[],
             final_fen=fen,
-            description=None
+            description=None,
         )
 
-    def _build_statistics(
-        self,
-        payload: LichessPayload
-    ) -> OpeningStatistics:
+    def _build_statistics(self, payload: LichessPayload) -> OpeningStatistics:
         """Construit les statistiques globales de la position."""
         white_wins = self._get_integer(payload, "white")
         black_wins = self._get_integer(payload, "black")
@@ -399,7 +332,7 @@ class LichessService:
             games=games,
             white_win_rate=white_wins * 100 / games,
             black_win_rate=black_wins * 100 / games,
-            draw_rate=draws * 100 / games
+            draw_rate=draws * 100 / games,
         )
 
     # Validation
@@ -408,17 +341,12 @@ class LichessService:
         """Indique si une ouverture est présente."""
         opening = self._get_object(payload, "opening")
         return bool(
-            self._get_string(opening, "name")
-            or self._get_string(opening, "eco")
+            self._get_string(opening, "name") or self._get_string(opening, "eco")
         )
 
     # Conversion
 
-    def _get_object(
-        self,
-        payload: LichessPayload,
-        key: str
-    ) -> LichessPayload:
+    def _get_object(self, payload: LichessPayload, key: str) -> LichessPayload:
         """Retourne un objet JSON imbriqué ou un objet vide."""
         value = payload.get(key)
 
@@ -427,12 +355,7 @@ class LichessService:
 
         return value
 
-    def _get_string(
-        self,
-        payload: LichessPayload,
-        key: str,
-        default: str = ""
-    ) -> str:
+    def _get_string(self, payload: LichessPayload, key: str, default: str = "") -> str:
         """Retourne une chaîne normalisée."""
         value = payload.get(key)
 
@@ -441,11 +364,7 @@ class LichessService:
 
         return value.strip() or default
 
-    def _get_integer(
-        self,
-        payload: LichessPayload,
-        key: str
-    ) -> int:
+    def _get_integer(self, payload: LichessPayload, key: str) -> int:
         """Retourne un entier positif ou nul."""
         return self._parse_integer(payload.get(key)) or 0
 

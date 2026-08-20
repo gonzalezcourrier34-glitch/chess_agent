@@ -17,49 +17,35 @@ from app.schemas.common.enums import EvaluationType
 
 # Évaluation
 
+
 class Evaluation(BaseModel):
     """Évaluation d'une position."""
 
-    model_config = ConfigDict(
-        extra="forbid",
-        frozen=True
-    )
+    model_config = ConfigDict(extra="forbid", frozen=True)
 
     # Informations directement retournées par Stockfish.
     score: float
 
     evaluation_type: EvaluationType
 
-    depth: int = Field(
-        ...,
-        ge=1
-    )
+    depth: int = Field(..., ge=1)
 
-    nodes: int | None = Field(
-        default=None,
-        ge=0
-    )
+    nodes: int | None = Field(default=None, ge=0)
 
-    time_ms: int | None = Field(
-        default=None,
-        ge=0
-    )
+    time_ms: int | None = Field(default=None, ge=0)
 
 
 # Ligne principale
 
+
 class PrincipalVariation(BaseModel):
     """Variante principale calculée par le moteur."""
 
-    model_config = ConfigDict(
-        extra="forbid"
-    )
+    model_config = ConfigDict(extra="forbid")
 
     # Cette variante correspond à la meilleure suite de coups
     # trouvée par le moteur lors de l'analyse.
-    moves: list[str] = Field(
-        default_factory=list
-    )
+    moves: list[str] = Field(default_factory=list)
 
     evaluation: Evaluation
 
@@ -68,12 +54,11 @@ class PrincipalVariation(BaseModel):
 
 # Analyse moteur
 
+
 class EngineAnalysis(BaseModel):
     """Analyse complète d'une position."""
 
-    model_config = ConfigDict(
-        extra="forbid"
-    )
+    model_config = ConfigDict(extra="forbid")
 
     # Ce modèle rassemble les principaux résultats produits
     # par Stockfish pour une position donnée.
@@ -83,42 +68,29 @@ class EngineAnalysis(BaseModel):
 
     principal_variation: PrincipalVariation
 
-    alternatives: list[BestMove] = Field(
-        default_factory=list
-    )
+    alternatives: list[BestMove] = Field(default_factory=list)
 
 
 # Analyse enrichie
 
+
 class PositionEvaluation(BaseModel):
     """Évaluation enrichie destinée au frontend."""
 
-    model_config = ConfigDict(
-        extra="forbid"
-    )
+    model_config = ConfigDict(extra="forbid")
 
     # L'analyse du moteur est enrichie par l'agent IA afin de
     # produire une explication plus pédagogique.
     engine: EngineAnalysis
 
-    positional_themes: list[str] = Field(
-        default_factory=list
-    )
+    positional_themes: list[str] = Field(default_factory=list)
 
-    tactical_themes: list[str] = Field(
-        default_factory=list
-    )
+    tactical_themes: list[str] = Field(default_factory=list)
 
-    strengths: list[str] = Field(
-        default_factory=list
-    )
+    strengths: list[str] = Field(default_factory=list)
 
-    weaknesses: list[str] = Field(
-        default_factory=list
-    )
+    weaknesses: list[str] = Field(default_factory=list)
 
-    recommendations: list[str] = Field(
-        default_factory=list
-    )
+    recommendations: list[str] = Field(default_factory=list)
 
     summary: str | None = None

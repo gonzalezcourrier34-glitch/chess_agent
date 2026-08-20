@@ -33,9 +33,7 @@ VECTOR_SEARCH_ENDPOINT = "/vector-search"
 
 # Journalisation
 
-LOG_FORMAT = (
-    "%(asctime)s | %(levelname)s | %(name)s | %(message)s"
-)
+LOG_FORMAT = "%(asctime)s | %(levelname)s | %(name)s | %(message)s"
 
 LOG_DATE_FORMAT = "%Y-%m-%d %H:%M:%S"
 
@@ -141,11 +139,7 @@ MASTER_DATABASE_ENDPOINT = "/masters"
 
 USER_DATABASE_ENDPOINT = "/lichess"
 
-DEFAULT_STARTING_FEN = (
-    "rnbqkbnr/pppppppp/8/8/"
-    "8/8/PPPPPPPP/RNBQKBNR "
-    "w KQkq - 0 1"
-)
+DEFAULT_STARTING_FEN = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
 
 UNKNOWN_OPENING = "Unknown opening"
 
@@ -156,23 +150,15 @@ YOUTUBE_SEARCH_ENDPOINT = "/search"
 
 YOUTUBE_VIDEOS_ENDPOINT = "/videos"
 
-YOUTUBE_VIDEO_URL_TEMPLATE = (
-    "https://www.youtube.com/watch?v={video_id}"
-)
+YOUTUBE_VIDEO_URL_TEMPLATE = "https://www.youtube.com/watch?v={video_id}"
 
-YOUTUBE_EMBED_URL_TEMPLATE = (
-    "https://www.youtube.com/embed/{video_id}"
-)
+YOUTUBE_EMBED_URL_TEMPLATE = "https://www.youtube.com/embed/{video_id}"
 
-YOUTUBE_CHANNEL_URL_TEMPLATE = (
-    "https://www.youtube.com/channel/{channel_id}"
-)
+YOUTUBE_CHANNEL_URL_TEMPLATE = "https://www.youtube.com/channel/{channel_id}"
 
 YOUTUBE_SEARCH_PART = "snippet"
 
-YOUTUBE_VIDEO_DETAILS_PART = (
-    "contentDetails,statistics,status"
-)
+YOUTUBE_VIDEO_DETAILS_PART = "contentDetails,statistics,status"
 
 YOUTUBE_SEARCH_TYPE = "video"
 
@@ -182,21 +168,25 @@ YOUTUBE_SEARCH_SAFE_SEARCH = "strict"
 
 YOUTUBE_SEARCH_VIDEO_DURATION = "medium"
 
-YOUTUBE_RETRYABLE_STATUS_CODES = frozenset({
-    408,
-    425,
-    500,
-    502,
-    503,
-    504,
-})
+YOUTUBE_RETRYABLE_STATUS_CODES = frozenset(
+    {
+        408,
+        425,
+        500,
+        502,
+        503,
+        504,
+    }
+)
 
-YOUTUBE_QUOTA_ERROR_MARKERS = frozenset({
-    "quotaexceeded",
-    "dailylimitexceeded",
-    "ratelimitexceeded",
-    "userratelimitexceeded",
-})
+YOUTUBE_QUOTA_ERROR_MARKERS = frozenset(
+    {
+        "quotaexceeded",
+        "dailylimitexceeded",
+        "ratelimitexceeded",
+        "userratelimitexceeded",
+    }
+)
 
 
 # Échecs
@@ -225,6 +215,3 @@ ERROR_CONFIGURATION = "configuration_error"
 ERROR_TIMEOUT = "timeout"
 
 ERROR_UNEXPECTED = "unexpected_error"
-
-
-

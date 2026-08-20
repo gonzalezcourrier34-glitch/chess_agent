@@ -7,6 +7,7 @@ import pytest
 
 # Tests
 
+
 @pytest.mark.deployment
 def test_backend_is_available(
     backend_url: str,

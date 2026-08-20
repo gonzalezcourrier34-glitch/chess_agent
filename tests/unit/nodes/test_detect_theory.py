@@ -58,14 +58,11 @@ from langchain_core.runnables import RunnableConfig
 
 STARTING_FEN = chess.STARTING_FEN
 
-GIUOCO_PIANO_FEN = (
-    "r1bqk1nr/pppp1ppp/2n5/2b1p3/"
-    "2B1P3/5N2/PPPP1PPP/RNBQK2R "
-    "w KQkq - 4 4"
-)
+GIUOCO_PIANO_FEN = "r1bqk1nr/pppp1ppp/2n5/2b1p3/2B1P3/5N2/PPPP1PPP/RNBQK2R w KQkq - 4 4"
 
 
 # Fixtures
+
 
 @pytest.fixture
 def state() -> ChessAnalysisState:
@@ -139,6 +136,7 @@ def opening() -> OpeningDetails:
 
 # Services
 
+
 def test_get_lichess_service_returns_configured_service(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
@@ -153,8 +151,7 @@ def test_get_lichess_service_returns_configured_service(
     )
 
     monkeypatch.setattr(
-        "app.agent.nodes.B_detect_theory."
-        "get_configured_service",
+        "app.agent.nodes.B_detect_theory.get_configured_service",
         configured_service,
     )
 
@@ -163,9 +160,7 @@ def test_get_lichess_service_returns_configured_service(
         {},
     )
 
-    result = _get_lichess_service(
-        config
-    )
+    result = _get_lichess_service(config)
 
     assert result is service
 
@@ -186,8 +181,7 @@ def test_get_lichess_service_returns_none_when_missing(
     )
 
     monkeypatch.setattr(
-        "app.agent.nodes.B_detect_theory."
-        "get_configured_service",
+        "app.agent.nodes.B_detect_theory.get_configured_service",
         configured_service,
     )
 
@@ -211,8 +205,7 @@ def test_get_lichess_service_rejects_invalid_type(
     )
 
     monkeypatch.setattr(
-        "app.agent.nodes.B_detect_theory."
-        "get_configured_service",
+        "app.agent.nodes.B_detect_theory.get_configured_service",
         configured_service,
     )
 
@@ -227,6 +220,7 @@ def test_get_lichess_service_rejects_invalid_type(
 
 
 # Statuts
+
 
 @pytest.mark.parametrize(
     ("initial_status", "expected_status"),
@@ -262,23 +256,20 @@ def test_get_partial_success_status(
         }
     )
 
-    result = _get_partial_success_status(
-        current_state
-    )
+    result = _get_partial_success_status(current_state)
 
     assert result == expected_status
 
 
 # Résumés
 
+
 def test_build_opening_summary(
     opening: OpeningDetails,
 ) -> None:
     """Vérifie le résumé d'une ouverture complète."""
 
-    result = _build_opening_summary(
-        opening
-    )
+    result = _build_opening_summary(opening)
 
     assert "Italian Game" in result
     assert "C50" in result
@@ -300,27 +291,18 @@ def test_build_opening_summary_without_optional_information() -> None:
         variations=[],
     )
 
-    result = _build_opening_summary(
-        details
-    )
+    result = _build_opening_summary(details)
 
-    assert result == (
-        "Ouverture : Italian Game. "
-        "Code ECO : C50."
-    )
+    assert result == ("Ouverture : Italian Game. Code ECO : C50.")
 
 
 # Statistiques
 
+
 def test_build_statistics_context_returns_none() -> None:
     """Vérifie l'absence de statistiques."""
 
-    assert (
-        _build_statistics_context(
-            None
-        )
-        is None
-    )
+    assert _build_statistics_context(None) is None
 
 
 def test_build_statistics_context() -> None:
@@ -333,9 +315,7 @@ def test_build_statistics_context() -> None:
         black_win_rate=30.0,
     )
 
-    result = _build_statistics_context(
-        statistics
-    )
+    result = _build_statistics_context(statistics)
 
     assert result is not None
     assert "1000 parties" in result
@@ -346,15 +326,11 @@ def test_build_statistics_context() -> None:
 
 # Théorie
 
+
 def test_build_theory_context_returns_none() -> None:
     """Vérifie l'absence de théorie."""
 
-    assert (
-        _build_theory_context(
-            None
-        )
-        is None
-    )
+    assert _build_theory_context(None) is None
 
 
 def test_build_theory_context() -> None:
@@ -379,9 +355,7 @@ def test_build_theory_context() -> None:
         ],
     )
 
-    result = _build_theory_context(
-        theory
-    )
+    result = _build_theory_context(theory)
 
     assert result is not None
     assert "Présentation théorique : Présentation." in result
@@ -394,15 +368,11 @@ def test_build_theory_context() -> None:
 
 # Variantes
 
+
 def test_build_variations_context_returns_none() -> None:
     """Vérifie l'absence de variantes."""
 
-    assert (
-        _build_variations_context(
-            []
-        )
-        is None
-    )
+    assert _build_variations_context([]) is None
 
 
 def test_build_variations_context() -> None:
@@ -421,9 +391,7 @@ def test_build_variations_context() -> None:
         ),
     ]
 
-    result = _build_variations_context(
-        variations
-    )
+    result = _build_variations_context(variations)
 
     assert result is not None
     assert "Giuoco Piano" in result
@@ -443,9 +411,7 @@ def test_build_variations_context_without_moves() -> None:
         ),
     ]
 
-    result = _build_variations_context(
-        variations
-    )
+    result = _build_variations_context(variations)
 
     assert result is not None
     assert "suite non précisée" in result
@@ -463,38 +429,27 @@ def test_build_variations_context_limits_results() -> None:
             ],
             final_fen=STARTING_FEN,
         )
-        for index in range(
-            MAX_CONTEXT_VARIATIONS + 2
-        )
+        for index in range(MAX_CONTEXT_VARIATIONS + 2)
     ]
 
-    result = _build_variations_context(
-        variations
-    )
+    result = _build_variations_context(variations)
 
     assert result is not None
 
-    assert (
-        f"Variation {MAX_CONTEXT_VARIATIONS - 1}"
-        in result
-    )
+    assert f"Variation {MAX_CONTEXT_VARIATIONS - 1}" in result
 
-    assert (
-        f"Variation {MAX_CONTEXT_VARIATIONS}"
-        not in result
-    )
+    assert f"Variation {MAX_CONTEXT_VARIATIONS}" not in result
 
 
 # Contexte complet
+
 
 def test_build_opening_context(
     opening: OpeningDetails,
 ) -> None:
     """Vérifie le contexte complet d'une ouverture."""
 
-    result = _build_opening_context(
-        opening
-    )
+    result = _build_opening_context(opening)
 
     assert "Italian Game" in result
     assert "C50" in result
@@ -521,23 +476,15 @@ def test_build_opening_context_without_theory_or_variations() -> None:
         variations=[],
     )
 
-    result = _build_opening_context(
-        details
-    )
+    result = _build_opening_context(details)
 
-    assert (
-        "Aucune théorie pédagogique détaillée "
-        "n'est disponible."
-        in result
-    )
+    assert "Aucune théorie pédagogique détaillée n'est disponible." in result
 
-    assert (
-        "Aucune variante complète n'est disponible."
-        in result
-    )
+    assert "Aucune variante complète n'est disponible." in result
 
 
 # Mises à jour
+
 
 def test_build_success_update(
     state: ChessAnalysisState,
@@ -552,21 +499,13 @@ def test_build_success_update(
 
     assert result["status"] == state.status
 
-    assert (
-        result["current_step"]
-        == WorkflowStep.DETECT_THEORY
-    )
+    assert result["current_step"] == WorkflowStep.DETECT_THEORY
 
     assert result["opening"] == opening
 
-    assert (
-        WorkflowStep.DETECT_THEORY
-        in result["completed_steps"]
-    )
+    assert WorkflowStep.DETECT_THEORY in result["completed_steps"]
 
-    context = result[
-        "workflow_context"
-    ]
+    context = result["workflow_context"]
 
     assert context.opening_summary is not None
     assert context.opening_context is not None
@@ -591,18 +530,13 @@ def test_build_warning_update(
     assert result["status"] == state.status
     assert result["opening"] is None
 
-    assert (
-        WorkflowStep.DETECT_THEORY
-        in result["completed_steps"]
-    )
+    assert WorkflowStep.DETECT_THEORY in result["completed_steps"]
 
     assert result["warnings"] == [
         warning,
     ]
 
-    context = result[
-        "workflow_context"
-    ]
+    context = result["workflow_context"]
 
     assert context.opening_summary is None
     assert context.opening_context is None
@@ -625,10 +559,7 @@ def test_build_warning_update_can_override_status(
         status=AnalysisStatus.PARTIAL_SUCCESS,
     )
 
-    assert (
-        result["status"]
-        == AnalysisStatus.PARTIAL_SUCCESS
-    )
+    assert result["status"] == AnalysisStatus.PARTIAL_SUCCESS
 
 
 def test_build_error_update(
@@ -648,27 +579,16 @@ def test_build_error_update(
         error,
     )
 
-    assert (
-        result["status"]
-        == AnalysisStatus.FAILED
-    )
+    assert result["status"] == AnalysisStatus.FAILED
 
-    assert (
-        result["current_step"]
-        == WorkflowStep.DETECT_THEORY
-    )
+    assert result["current_step"] == WorkflowStep.DETECT_THEORY
 
     assert result["opening"] is None
     assert result["errors"] == [error]
 
-    assert (
-        WorkflowStep.DETECT_THEORY
-        not in result["completed_steps"]
-    )
+    assert WorkflowStep.DETECT_THEORY not in result["completed_steps"]
 
-    context = result[
-        "workflow_context"
-    ]
+    context = result["workflow_context"]
 
     assert context.opening_summary is None
     assert context.opening_context is None
@@ -679,24 +599,13 @@ def test_build_missing_service_update(
 ) -> None:
     """Vérifie l'erreur de configuration du service."""
 
-    result = _build_missing_service_update(
-        state
-    )
+    result = _build_missing_service_update(state)
 
-    assert (
-        result["status"]
-        == AnalysisStatus.FAILED
-    )
+    assert result["status"] == AnalysisStatus.FAILED
 
-    assert (
-        result["errors"][0].code
-        == ERROR_CONFIGURATION
-    )
+    assert result["errors"][0].code == ERROR_CONFIGURATION
 
-    assert (
-        result["errors"][0].recoverable
-        is False
-    )
+    assert result["errors"][0].recoverable is False
 
 
 def test_build_unexpected_error_update(
@@ -704,22 +613,15 @@ def test_build_unexpected_error_update(
 ) -> None:
     """Vérifie la construction de l'erreur inattendue."""
 
-    result = _build_unexpected_error_update(
-        state
-    )
+    result = _build_unexpected_error_update(state)
 
-    assert (
-        result["status"]
-        == AnalysisStatus.FAILED
-    )
+    assert result["status"] == AnalysisStatus.FAILED
 
-    assert (
-        result["errors"][0].code
-        == ERROR_UNEXPECTED
-    )
+    assert result["errors"][0].code == ERROR_UNEXPECTED
 
 
 # API publique
+
 
 @pytest.mark.asyncio
 async def test_detect_theory_success(
@@ -746,14 +648,12 @@ async def test_detect_theory_success(
     emit_progress = MagicMock()
 
     monkeypatch.setattr(
-        "app.agent.nodes.B_detect_theory."
-        "_get_lichess_service",
+        "app.agent.nodes.B_detect_theory._get_lichess_service",
         get_service,
     )
 
     monkeypatch.setattr(
-        "app.agent.nodes.B_detect_theory."
-        "emit_progress",
+        "app.agent.nodes.B_detect_theory.emit_progress",
         emit_progress,
     )
 
@@ -768,18 +668,11 @@ async def test_detect_theory_success(
     assert result["opening"] == opening
     assert result["status"] == state.status
 
-    assert (
-        WorkflowStep.DETECT_THEORY
-        in result["completed_steps"]
-    )
+    assert WorkflowStep.DETECT_THEORY in result["completed_steps"]
 
     detect_opening.assert_awaited_once()
 
-    request = (
-        detect_opening
-        .call_args
-        .args[0]
-    )
+    request = detect_opening.call_args.args[0]
 
     assert isinstance(
         request,
@@ -805,14 +698,12 @@ async def test_detect_theory_missing_service(
     emit_progress = MagicMock()
 
     monkeypatch.setattr(
-        "app.agent.nodes.B_detect_theory."
-        "_get_lichess_service",
+        "app.agent.nodes.B_detect_theory._get_lichess_service",
         get_service,
     )
 
     monkeypatch.setattr(
-        "app.agent.nodes.B_detect_theory."
-        "emit_progress",
+        "app.agent.nodes.B_detect_theory.emit_progress",
         emit_progress,
     )
 
@@ -824,15 +715,9 @@ async def test_detect_theory_missing_service(
         ),
     )
 
-    assert (
-        result["status"]
-        == AnalysisStatus.FAILED
-    )
+    assert result["status"] == AnalysisStatus.FAILED
 
-    assert (
-        result["errors"][0].code
-        == ERROR_CONFIGURATION
-    )
+    assert result["errors"][0].code == ERROR_CONFIGURATION
 
     assert result["opening"] is None
     assert result["completed_steps"] == []
@@ -860,8 +745,7 @@ async def test_detect_theory_opening_not_found(
     service.detect_opening = detect_opening
 
     monkeypatch.setattr(
-        "app.agent.nodes.B_detect_theory."
-        "_get_lichess_service",
+        "app.agent.nodes.B_detect_theory._get_lichess_service",
         MagicMock(
             return_value=service,
         ),
@@ -870,8 +754,7 @@ async def test_detect_theory_opening_not_found(
     emit_progress = MagicMock()
 
     monkeypatch.setattr(
-        "app.agent.nodes.B_detect_theory."
-        "emit_progress",
+        "app.agent.nodes.B_detect_theory.emit_progress",
         emit_progress,
     )
 
@@ -885,15 +768,9 @@ async def test_detect_theory_opening_not_found(
 
     assert result["opening"] is None
 
-    assert (
-        result["warnings"][0].code
-        == ERROR_OPENING_NOT_FOUND
-    )
+    assert result["warnings"][0].code == ERROR_OPENING_NOT_FOUND
 
-    assert (
-        WorkflowStep.DETECT_THEORY
-        in result["completed_steps"]
-    )
+    assert WorkflowStep.DETECT_THEORY in result["completed_steps"]
 
     assert emit_progress.call_count == 2
 
@@ -918,8 +795,7 @@ async def test_detect_theory_lichess_error(
     service.detect_opening = detect_opening
 
     monkeypatch.setattr(
-        "app.agent.nodes.B_detect_theory."
-        "_get_lichess_service",
+        "app.agent.nodes.B_detect_theory._get_lichess_service",
         MagicMock(
             return_value=service,
         ),
@@ -928,8 +804,7 @@ async def test_detect_theory_lichess_error(
     emit_progress = MagicMock()
 
     monkeypatch.setattr(
-        "app.agent.nodes.B_detect_theory."
-        "emit_progress",
+        "app.agent.nodes.B_detect_theory.emit_progress",
         emit_progress,
     )
 
@@ -941,22 +816,13 @@ async def test_detect_theory_lichess_error(
         ),
     )
 
-    assert (
-        result["status"]
-        == AnalysisStatus.PARTIAL_SUCCESS
-    )
+    assert result["status"] == AnalysisStatus.PARTIAL_SUCCESS
 
     assert result["opening"] is None
 
-    assert (
-        result["warnings"][0].code
-        == ERROR_LICHESS_UNAVAILABLE
-    )
+    assert result["warnings"][0].code == ERROR_LICHESS_UNAVAILABLE
 
-    assert (
-        WorkflowStep.DETECT_THEORY
-        in result["completed_steps"]
-    )
+    assert WorkflowStep.DETECT_THEORY in result["completed_steps"]
 
     assert emit_progress.call_count == 2
 
@@ -987,16 +853,14 @@ async def test_detect_theory_lichess_error_preserves_failed_status(
     service.detect_opening = detect_opening
 
     monkeypatch.setattr(
-        "app.agent.nodes.B_detect_theory."
-        "_get_lichess_service",
+        "app.agent.nodes.B_detect_theory._get_lichess_service",
         MagicMock(
             return_value=service,
         ),
     )
 
     monkeypatch.setattr(
-        "app.agent.nodes.B_detect_theory."
-        "emit_progress",
+        "app.agent.nodes.B_detect_theory.emit_progress",
         MagicMock(),
     )
 
@@ -1008,10 +872,7 @@ async def test_detect_theory_lichess_error_preserves_failed_status(
         ),
     )
 
-    assert (
-        result["status"]
-        == AnalysisStatus.FAILED
-    )
+    assert result["status"] == AnalysisStatus.FAILED
 
 
 @pytest.mark.asyncio
@@ -1022,9 +883,7 @@ async def test_detect_theory_unexpected_error(
     """Vérifie une erreur inattendue."""
 
     detect_opening = AsyncMock(
-        side_effect=RuntimeError(
-            "Unexpected failure"
-        ),
+        side_effect=RuntimeError("Unexpected failure"),
     )
 
     service = MagicMock(
@@ -1034,8 +893,7 @@ async def test_detect_theory_unexpected_error(
     service.detect_opening = detect_opening
 
     monkeypatch.setattr(
-        "app.agent.nodes.B_detect_theory."
-        "_get_lichess_service",
+        "app.agent.nodes.B_detect_theory._get_lichess_service",
         MagicMock(
             return_value=service,
         ),
@@ -1044,8 +902,7 @@ async def test_detect_theory_unexpected_error(
     emit_progress = MagicMock()
 
     monkeypatch.setattr(
-        "app.agent.nodes.B_detect_theory."
-        "emit_progress",
+        "app.agent.nodes.B_detect_theory.emit_progress",
         emit_progress,
     )
 
@@ -1057,21 +914,12 @@ async def test_detect_theory_unexpected_error(
         ),
     )
 
-    assert (
-        result["status"]
-        == AnalysisStatus.FAILED
-    )
+    assert result["status"] == AnalysisStatus.FAILED
 
-    assert (
-        result["errors"][0].code
-        == ERROR_UNEXPECTED
-    )
+    assert result["errors"][0].code == ERROR_UNEXPECTED
 
     assert result["opening"] is None
 
-    assert (
-        WorkflowStep.DETECT_THEORY
-        not in result["completed_steps"]
-    )
+    assert WorkflowStep.DETECT_THEORY not in result["completed_steps"]
 
     assert emit_progress.call_count == 2

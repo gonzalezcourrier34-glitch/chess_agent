@@ -24,6 +24,7 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 
 # Configuration
 
+
 class WikichessScriptSettings(BaseSettings):
     """Configuration des scripts Wikichess."""
 
@@ -33,7 +34,7 @@ class WikichessScriptSettings(BaseSettings):
         env_prefix="WIKICHESS_",
         extra="ignore",
         frozen=True,
-        str_strip_whitespace=True
+        str_strip_whitespace=True,
     )
 
     # Téléchargement
@@ -42,20 +43,14 @@ class WikichessScriptSettings(BaseSettings):
         default=30.0,
         gt=0,
         le=300,
-        description=(
-            "Temps maximal d'attente d'une requête Wikichess "
-            "en secondes."
-        )
+        description=("Temps maximal d'attente d'une requête Wikichess en secondes."),
     )
 
     request_delay_seconds: float = Field(
         default=1.0,
         ge=0,
         le=60,
-        description=(
-            "Délai entre deux requêtes Wikichess "
-            "en secondes."
-        )
+        description=("Délai entre deux requêtes Wikichess en secondes."),
     )
 
     default_language: str = Field(
@@ -63,17 +58,13 @@ class WikichessScriptSettings(BaseSettings):
         min_length=2,
         max_length=10,
         description=(
-            "Langue utilisée lorsque l'article Wikichess "
-            "ne précise aucune langue."
-        )
+            "Langue utilisée lorsque l'article Wikichess ne précise aucune langue."
+        ),
     )
 
     replace_existing_files: bool = Field(
         default=True,
-        description=(
-            "Remplace les fichiers JSON Wikichess "
-            "déjà présents."
-        )
+        description=("Remplace les fichiers JSON Wikichess déjà présents."),
     )
 
     strict_robots_policy: bool = Field(
@@ -81,7 +72,7 @@ class WikichessScriptSettings(BaseSettings):
         description=(
             "Interrompt le téléchargement lorsqu'une URL "
             "est refusée ou impossible à vérifier dans robots.txt."
-        )
+        ),
     )
 
     # Ingestion
@@ -89,19 +80,15 @@ class WikichessScriptSettings(BaseSettings):
     replace_existing_documents: bool = Field(
         default=True,
         description=(
-            "Supprime les anciens documents Wikichess "
-            "avant une nouvelle ingestion."
-        )
+            "Supprime les anciens documents Wikichess avant une nouvelle ingestion."
+        ),
     )
 
     milvus_insert_batch_size: int = Field(
         default=100,
         ge=1,
         le=10_000,
-        description=(
-            "Nombre maximal de documents insérés dans Milvus "
-            "par lot."
-        )
+        description=("Nombre maximal de documents insérés dans Milvus par lot."),
     )
 
     export_prepared_chunks: bool = Field(
@@ -109,15 +96,14 @@ class WikichessScriptSettings(BaseSettings):
         description=(
             "Enregistre les documents Wikichess préparés "
             "dans un fichier JSON avant leur insertion dans Milvus."
-        )
+        ),
     )
 
 
 # Accès
 
-@lru_cache(
-    maxsize=1
-)
+
+@lru_cache(maxsize=1)
 def get_wikichess_script_settings() -> WikichessScriptSettings:
     """Retourne l'unique configuration des scripts Wikichess."""
 
@@ -126,6 +112,4 @@ def get_wikichess_script_settings() -> WikichessScriptSettings:
 
 # Instance
 
-wikichess_script_settings = (
-    get_wikichess_script_settings()
-)
+wikichess_script_settings = get_wikichess_script_settings()

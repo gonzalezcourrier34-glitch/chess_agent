@@ -14,13 +14,11 @@ from app.schemas.common.service import ServicesStatus
 
 # Réponse
 
+
 class HealthcheckResponse(BaseModel):
     """État général de l'application."""
 
-    model_config = ConfigDict(
-        extra="forbid",
-        frozen=True
-    )
+    model_config = ConfigDict(extra="forbid", frozen=True)
 
     status: str
 

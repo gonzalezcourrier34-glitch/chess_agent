@@ -69,6 +69,7 @@ FINISHED_AT = datetime(
 
 # Faux graphe
 
+
 class FakeStreamingGraph:
     """Graphe minimal produisant des événements LangGraph."""
 
@@ -132,12 +133,11 @@ class InvalidStreamingGraph:
         if False:
             yield {}
 
-        raise RuntimeError(
-            "stream failure"
-        )
+        raise RuntimeError("stream failure")
 
 
 # Helpers
+
 
 def build_request(
     *,
@@ -150,11 +150,7 @@ def build_request(
 
     return AnalysisRequest.model_construct(
         fen=fen,
-        moves=(
-            moves
-            if moves is not None
-            else []
-        ),
+        moves=(moves if moves is not None else []),
         question=question,
         response_language=response_language,
     )
@@ -188,13 +184,9 @@ def build_dependencies(
 
     embedding_service = MagicMock()
 
-    embedding_service.is_ready.return_value = (
-        embedding_ready
-    )
+    embedding_service.is_ready.return_value = embedding_ready
 
-    embedding_service.get_dimension.return_value = (
-        embedding_dimension
-    )
+    embedding_service.get_dimension.return_value = embedding_dimension
 
     dependencies = SimpleNamespace(
         chess_service=MagicMock(),
@@ -238,6 +230,7 @@ def build_service(
 
 # Construction
 
+
 def test_service_starts_with_zero_statistics() -> None:
     """Vérifie les statistiques initiales."""
 
@@ -245,15 +238,13 @@ def test_service_starts_with_zero_statistics() -> None:
 
     assert service.get_analysis_count() == 0
 
-    assert (
-        service.get_last_analysis_duration()
-        is None
-    )
+    assert service.get_last_analysis_duration() is None
 
     assert service.is_ready() is True
 
 
 # Graphe
+
 
 def test_get_graph_returns_graph() -> None:
     """Vérifie la récupération du graphe."""
@@ -264,10 +255,7 @@ def test_get_graph_returns_graph() -> None:
         graph=graph,
     )
 
-    assert (
-        service._get_graph()
-        is graph
-    )
+    assert service._get_graph() is graph
 
 
 def test_get_graph_rejects_missing_graph() -> None:
@@ -277,13 +265,12 @@ def test_get_graph_rejects_missing_graph() -> None:
 
     service._graph = None  # type: ignore[assignment]
 
-    with pytest.raises(
-        WorkflowConfigurationError
-    ):
+    with pytest.raises(WorkflowConfigurationError):
         service._get_graph()
 
 
 # Normalisation de la question
+
 
 @pytest.mark.parametrize(
     ("value", "expected"),
@@ -314,13 +301,11 @@ def test_normalize_question(
 
     service = build_service()
 
-    assert (
-        service._normalize_question(value)
-        == expected
-    )
+    assert service._normalize_question(value) == expected
 
 
 # Langue
+
 
 @pytest.mark.parametrize(
     ("value", "expected"),
@@ -347,35 +332,30 @@ def test_normalize_language(
 
     service = build_service()
 
-    assert (
-        service._normalize_language(value)
-        == expected
-    )
+    assert service._normalize_language(value) == expected
 
 
 # Coups
+
 
 def test_normalize_moves() -> None:
     """Vérifie la normalisation des coups."""
 
     service = build_service()
 
-    assert (
-        service._normalize_moves(
-            [
-                " e2e4 ",
-                "",
-                "   ",
-                "e7e5",
-                " g1f3 ",
-            ]
-        )
-        == [
-            "e2e4",
+    assert service._normalize_moves(
+        [
+            " e2e4 ",
+            "",
+            "   ",
             "e7e5",
-            "g1f3",
+            " g1f3 ",
         ]
-    )
+    ) == [
+        "e2e4",
+        "e7e5",
+        "g1f3",
+    ]
 
 
 def test_normalize_moves_empty() -> None:
@@ -383,13 +363,11 @@ def test_normalize_moves_empty() -> None:
 
     service = build_service()
 
-    assert (
-        service._normalize_moves([])
-        == []
-    )
+    assert service._normalize_moves([]) == []
 
 
 # Options
+
 
 def test_build_options_enables_workflow_features() -> None:
     """Vérifie les options produites pour le workflow."""
@@ -409,13 +387,11 @@ def test_build_options_enables_workflow_features() -> None:
     assert options.generate_response is True
     assert options.save_analysis is True
 
-    assert (
-        options.response_language
-        == "en"
-    )
+    assert options.response_language == "en"
 
 
 # Métadonnées initiales
+
 
 def test_build_metadata() -> None:
     """Vérifie les métadonnées initiales."""
@@ -429,13 +405,11 @@ def test_build_metadata() -> None:
 
     assert metadata.request_id == REQUEST_ID
 
-    assert (
-        metadata.started_at
-        == STARTED_AT
-    )
+    assert metadata.started_at == STARTED_AT
 
 
 # Métadonnées finales
+
 
 def test_complete_metadata_with_ready_embedding() -> None:
     """Vérifie l'enrichissement des métadonnées."""
@@ -457,42 +431,21 @@ def test_complete_metadata_with_ready_embedding() -> None:
         duration_ms=125.5,
     )
 
-    assert (
-        metadata.finished_at
-        == FINISHED_AT
-    )
+    assert metadata.finished_at == FINISHED_AT
 
     assert metadata.duration_ms == 125.5
 
-    assert (
-        metadata.embedding_model
-        == settings.embedding_model
-    )
+    assert metadata.embedding_model == settings.embedding_model
 
-    assert (
-        metadata.embedding_provider
-        == settings.embedding_provider
-    )
+    assert metadata.embedding_provider == settings.embedding_provider
 
-    assert (
-        metadata.embedding_dimension
-        == 1024
-    )
+    assert metadata.embedding_dimension == 1024
 
-    assert (
-        metadata.llm_model
-        == settings.llm_model
-    )
+    assert metadata.llm_model == settings.llm_model
 
-    assert (
-        metadata.llm_provider
-        == settings.llm_provider
-    )
+    assert metadata.llm_provider == settings.llm_provider
 
-    assert (
-        metadata.rag_top_k
-        == settings.rag_search_top_k
-    )
+    assert metadata.rag_top_k == settings.rag_search_top_k
 
 
 def test_complete_metadata_without_ready_embedding() -> None:
@@ -514,10 +467,7 @@ def test_complete_metadata_without_ready_embedding() -> None:
         duration_ms=10.0,
     )
 
-    assert (
-        metadata.embedding_dimension
-        is None
-    )
+    assert metadata.embedding_dimension is None
 
 
 def test_complete_metadata_without_optional_results() -> None:
@@ -535,13 +485,11 @@ def test_complete_metadata_without_optional_results() -> None:
 
     assert metadata.stockfish_depth is None
 
-    assert (
-        metadata.retrieved_document_count
-        is None
-    )
+    assert metadata.retrieved_document_count is None
 
 
 # État initial
+
 
 def test_build_initial_state() -> None:
     """Vérifie l'état initial transmis à LangGraph."""
@@ -571,33 +519,19 @@ def test_build_initial_state() -> None:
         "e7e5",
     ]
 
-    assert (
-        state.question
-        == "Que jouer ?"
-    )
+    assert state.question == "Que jouer ?"
 
-    assert (
-        state.status
-        == AnalysisStatus.PENDING
-    )
+    assert state.status == AnalysisStatus.PENDING
 
-    assert (
-        state.metadata.request_id
-        == REQUEST_ID
-    )
+    assert state.metadata.request_id == REQUEST_ID
 
-    assert (
-        state.metadata.started_at
-        == STARTED_AT
-    )
+    assert state.metadata.started_at == STARTED_AT
 
-    assert (
-        state.options.response_language
-        == "fr"
-    )
+    assert state.options.response_language == "fr"
 
 
 # Résultat du graphe
+
 
 def test_normalize_graph_result_returns_existing_state() -> None:
     """Vérifie un état déjà validé."""
@@ -606,12 +540,7 @@ def test_normalize_graph_result_returns_existing_state() -> None:
 
     state = build_state()
 
-    assert (
-        service._normalize_graph_result(
-            state
-        )
-        is state
-    )
+    assert service._normalize_graph_result(state) is state
 
 
 def test_normalize_graph_result_validates_dict() -> None:
@@ -633,10 +562,7 @@ def test_normalize_graph_result_validates_dict() -> None:
 
     assert result.fen == STARTING_FEN
 
-    assert (
-        result.status
-        == AnalysisStatus.SUCCESS
-    )
+    assert result.status == AnalysisStatus.SUCCESS
 
 
 def test_normalize_graph_result_rejects_invalid_dict() -> None:
@@ -644,9 +570,7 @@ def test_normalize_graph_result_rejects_invalid_dict() -> None:
 
     service = build_service()
 
-    with pytest.raises(
-        WorkflowStateError
-    ):
+    with pytest.raises(WorkflowStateError):
         service._normalize_graph_result(
             {
                 "status": "invalid",
@@ -655,6 +579,7 @@ def test_normalize_graph_result_rejects_invalid_dict() -> None:
 
 
 # Configuration LangGraph
+
 
 def test_build_config(
     monkeypatch: pytest.MonkeyPatch,
@@ -676,8 +601,7 @@ def test_build_config(
     )
 
     monkeypatch.setattr(
-        "app.services.analysis_service."
-        "build_graph_config",
+        "app.services.analysis_service.build_graph_config",
         build_config,
     )
 
@@ -685,36 +609,21 @@ def test_build_config(
         thread_id=REQUEST_ID,
     )
 
-    configurable = config.get(
-        "configurable"
-    )
+    configurable = config.get("configurable")
 
     assert configurable is not None
 
-    assert (
-        configurable["existing"]
-        == "value"
-    )
+    assert configurable["existing"] == "value"
 
-    assert (
-        configurable["thread_id"]
-        == REQUEST_ID
-    )
+    assert configurable["thread_id"] == REQUEST_ID
 
-    recursion_limit = config.get(
-        "recursion_limit"
-    )
+    recursion_limit = config.get("recursion_limit")
 
     assert recursion_limit is not None
 
-    assert (
-        recursion_limit
-        == settings.max_agent_iterations
-    )
+    assert recursion_limit == settings.max_agent_iterations
 
-    build_config.assert_called_once_with(
-        dependencies
-    )
+    build_config.assert_called_once_with(dependencies)
 
 
 def test_build_config_creates_configurable_section(
@@ -725,8 +634,7 @@ def test_build_config_creates_configurable_section(
     service = build_service()
 
     monkeypatch.setattr(
-        "app.services.analysis_service."
-        "build_graph_config",
+        "app.services.analysis_service.build_graph_config",
         MagicMock(
             return_value={},
         ),
@@ -736,19 +644,15 @@ def test_build_config_creates_configurable_section(
         thread_id=REQUEST_ID,
     )
 
-    configurable = config.get(
-        "configurable"
-    )
+    configurable = config.get("configurable")
 
     assert configurable is not None
 
-    assert (
-        configurable["thread_id"]
-        == REQUEST_ID
-    )
+    assert configurable["thread_id"] == REQUEST_ID
 
 
 # Exécution du graphe
+
 
 @pytest.mark.asyncio
 async def test_run_graph_success() -> None:
@@ -824,10 +728,7 @@ async def test_run_graph_normalizes_dict_result() -> None:
         ChessAnalysisState,
     )
 
-    assert (
-        result.status
-        == AnalysisStatus.SUCCESS
-    )
+    assert result.status == AnalysisStatus.SUCCESS
 
 
 @pytest.mark.asyncio
@@ -837,9 +738,7 @@ async def test_run_graph_wraps_unexpected_exception() -> None:
     graph = MagicMock()
 
     graph.ainvoke = AsyncMock(
-        side_effect=RuntimeError(
-            "graph failure"
-        ),
+        side_effect=RuntimeError("graph failure"),
     )
 
     service = build_service(
@@ -853,9 +752,7 @@ async def test_run_graph_wraps_unexpected_exception() -> None:
         ),
     )
 
-    with pytest.raises(
-        WorkflowExecutionError
-    ):
+    with pytest.raises(WorkflowExecutionError):
         await service._run_graph(
             state,
             cast(
@@ -866,6 +763,7 @@ async def test_run_graph_wraps_unexpected_exception() -> None:
 
 
 # Streaming brut
+
 
 @pytest.mark.asyncio
 async def test_stream_graph_returns_only_dict_parts() -> None:
@@ -893,8 +791,7 @@ async def test_stream_graph_returns_only_dict_parts() -> None:
 
     parts = [
         part
-        async for part
-        in service._stream_graph(
+        async for part in service._stream_graph(
             ChessAnalysisState(
                 fen=STARTING_FEN,
             ),
@@ -907,15 +804,9 @@ async def test_stream_graph_returns_only_dict_parts() -> None:
 
     assert len(parts) == 2
 
-    assert (
-        parts[0]["type"]
-        == "custom"
-    )
+    assert parts[0]["type"] == "custom"
 
-    assert (
-        parts[1]["type"]
-        == "values"
-    )
+    assert parts[1]["type"] == "values"
 
 
 @pytest.mark.asyncio
@@ -926,9 +817,7 @@ async def test_stream_graph_wraps_unexpected_exception() -> None:
         graph=InvalidStreamingGraph(),
     )
 
-    with pytest.raises(
-        WorkflowExecutionError
-    ):
+    with pytest.raises(WorkflowExecutionError):
         async for _ in service._stream_graph(
             ChessAnalysisState(
                 fen=STARTING_FEN,
@@ -946,43 +835,30 @@ async def test_stream_graph_wraps_unexpected_exception() -> None:
 
 # Progression d'étape
 
+
 def test_extract_step_progress_event() -> None:
     """Vérifie la conversion d'une mise à jour de nœud."""
 
     service = build_service()
 
-    event = (
-        service
-        ._extract_step_progress_event(
-            {
-                "current_step": (
-                    WorkflowStep.ENGINE_ANALYSIS
-                ),
-                "completed_steps": [
-                    WorkflowStep.VALIDATE_POSITION,
-                    WorkflowStep.ENGINE_ANALYSIS,
-                ],
-            },
-            request_id=REQUEST_ID,
-        )
+    event = service._extract_step_progress_event(
+        {
+            "current_step": (WorkflowStep.ENGINE_ANALYSIS),
+            "completed_steps": [
+                WorkflowStep.VALIDATE_POSITION,
+                WorkflowStep.ENGINE_ANALYSIS,
+            ],
+        },
+        request_id=REQUEST_ID,
     )
 
     assert event is not None
 
-    assert (
-        event.request_id
-        == REQUEST_ID
-    )
+    assert event.request_id == REQUEST_ID
 
-    assert (
-        event.step
-        == WorkflowStep.ENGINE_ANALYSIS
-    )
+    assert event.step == WorkflowStep.ENGINE_ANALYSIS
 
-    assert (
-        event.status
-        == WorkflowStepStatus.COMPLETED
-    )
+    assert event.status == WorkflowStepStatus.COMPLETED
 
     assert event.completed_steps == [
         WorkflowStep.VALIDATE_POSITION,
@@ -996,8 +872,7 @@ def test_extract_step_progress_event_returns_none_without_step() -> None:
     service = build_service()
 
     assert (
-        service
-        ._extract_step_progress_event(
+        service._extract_step_progress_event(
             {},
             request_id=REQUEST_ID,
         )
@@ -1011,12 +886,9 @@ def test_extract_step_progress_event_rejects_unknown_step() -> None:
     service = build_service()
 
     assert (
-        service
-        ._extract_step_progress_event(
+        service._extract_step_progress_event(
             {
-                "current_step": (
-                    "unknown_step"
-                ),
+                "current_step": ("unknown_step"),
             },
             request_id=REQUEST_ID,
         )
@@ -1029,21 +901,16 @@ def test_extract_step_progress_event_filters_invalid_completed_steps() -> None:
 
     service = build_service()
 
-    event = (
-        service
-        ._extract_step_progress_event(
-            {
-                "current_step": (
-                    WorkflowStep.ENGINE_ANALYSIS
-                ),
-                "completed_steps": [
-                    WorkflowStep.VALIDATE_POSITION,
-                    "invalid",
-                    WorkflowStep.VALIDATE_POSITION,
-                ],
-            },
-            request_id=REQUEST_ID,
-        )
+    event = service._extract_step_progress_event(
+        {
+            "current_step": (WorkflowStep.ENGINE_ANALYSIS),
+            "completed_steps": [
+                WorkflowStep.VALIDATE_POSITION,
+                "invalid",
+                WorkflowStep.VALIDATE_POSITION,
+            ],
+        },
+        request_id=REQUEST_ID,
     )
 
     assert event is not None
@@ -1055,52 +922,34 @@ def test_extract_step_progress_event_filters_invalid_completed_steps() -> None:
 
 # Progression de service
 
+
 def test_extract_service_progress_event() -> None:
     """Vérifie un événement de progression valide."""
 
     service = build_service()
 
-    event = (
-        service
-        ._extract_service_progress_event(
-            {
-                "step": (
-                    WorkflowStep.ENGINE_ANALYSIS
-                ),
-                "status": (
-                    WorkflowStepStatus.RUNNING
-                ),
-                "service": ServiceType.STOCKFISH,
-                "message": "Analyse en cours.",
-            },
-            request_id=REQUEST_ID,
-            completed_steps=[
-                WorkflowStep.VALIDATE_POSITION,
-            ],
-        )
+    event = service._extract_service_progress_event(
+        {
+            "step": (WorkflowStep.ENGINE_ANALYSIS),
+            "status": (WorkflowStepStatus.RUNNING),
+            "service": ServiceType.STOCKFISH,
+            "message": "Analyse en cours.",
+        },
+        request_id=REQUEST_ID,
+        completed_steps=[
+            WorkflowStep.VALIDATE_POSITION,
+        ],
     )
 
     assert event is not None
 
-    assert (
-        event.step
-        == WorkflowStep.ENGINE_ANALYSIS
-    )
+    assert event.step == WorkflowStep.ENGINE_ANALYSIS
 
-    assert (
-        event.status
-        == WorkflowStepStatus.RUNNING
-    )
+    assert event.status == WorkflowStepStatus.RUNNING
 
-    assert (
-        event.service
-        == ServiceType.STOCKFISH
-    )
+    assert event.service == ServiceType.STOCKFISH
 
-    assert (
-        event.message
-        == "Analyse en cours."
-    )
+    assert event.message == "Analyse en cours."
 
     assert event.completed_steps == [
         WorkflowStep.VALIDATE_POSITION,
@@ -1112,20 +961,13 @@ def test_extract_service_progress_event_without_service() -> None:
 
     service = build_service()
 
-    event = (
-        service
-        ._extract_service_progress_event(
-            {
-                "step": (
-                    WorkflowStep.GENERATE_RESPONSE
-                ),
-                "status": (
-                    WorkflowStepStatus.RUNNING
-                ),
-            },
-            request_id=REQUEST_ID,
-            completed_steps=[],
-        )
+    event = service._extract_service_progress_event(
+        {
+            "step": (WorkflowStep.GENERATE_RESPONSE),
+            "status": (WorkflowStepStatus.RUNNING),
+        },
+        request_id=REQUEST_ID,
+        completed_steps=[],
     )
 
     assert event is not None
@@ -1157,8 +999,7 @@ def test_extract_service_progress_event_rejects_invalid_data(
     service = build_service()
 
     assert (
-        service
-        ._extract_service_progress_event(
+        service._extract_service_progress_event(
             data,
             request_id=REQUEST_ID,
             completed_steps=[],
@@ -1172,21 +1013,14 @@ def test_extract_service_progress_event_ignores_non_string_message() -> None:
 
     service = build_service()
 
-    event = (
-        service
-        ._extract_service_progress_event(
-            {
-                "step": (
-                    WorkflowStep.ENGINE_ANALYSIS
-                ),
-                "status": (
-                    WorkflowStepStatus.RUNNING
-                ),
-                "message": 42,
-            },
-            request_id=REQUEST_ID,
-            completed_steps=[],
-        )
+    event = service._extract_service_progress_event(
+        {
+            "step": (WorkflowStep.ENGINE_ANALYSIS),
+            "status": (WorkflowStepStatus.RUNNING),
+            "message": 42,
+        },
+        request_id=REQUEST_ID,
+        completed_steps=[],
     )
 
     assert event is not None
@@ -1195,21 +1029,18 @@ def test_extract_service_progress_event_ignores_non_string_message() -> None:
 
 # Mises à jour LangGraph
 
+
 def test_extract_node_updates() -> None:
     """Vérifie l'extraction des mises à jour de nœuds."""
 
     service = build_service()
 
     first = {
-        "current_step": (
-            WorkflowStep.VALIDATE_POSITION
-        ),
+        "current_step": (WorkflowStep.VALIDATE_POSITION),
     }
 
     second = {
-        "current_step": (
-            WorkflowStep.ENGINE_ANALYSIS
-        ),
+        "current_step": (WorkflowStep.ENGINE_ANALYSIS),
     }
 
     result = service._extract_node_updates(
@@ -1249,13 +1080,11 @@ def test_extract_node_updates_returns_empty(
 
     service = build_service()
 
-    assert (
-        service._extract_node_updates(part)
-        == []
-    )
+    assert service._extract_node_updates(part) == []
 
 
 # État diffusé
+
 
 def test_extract_state_value_returns_state() -> None:
     """Vérifie un état déjà validé."""
@@ -1285,19 +1114,14 @@ def test_extract_state_value_validates_dict() -> None:
             "type": "values",
             "data": {
                 "fen": STARTING_FEN,
-                "status": (
-                    AnalysisStatus.SUCCESS
-                ),
+                "status": (AnalysisStatus.SUCCESS),
             },
         }
     )
 
     assert state is not None
 
-    assert (
-        state.status
-        == AnalysisStatus.SUCCESS
-    )
+    assert state.status == AnalysisStatus.SUCCESS
 
 
 def test_extract_state_value_returns_none_for_wrong_type() -> None:
@@ -1352,17 +1176,13 @@ def test_extract_state_value_returns_none_for_invalid_state() -> None:
 
 # Erreurs
 
+
 def test_extract_error_message_returns_none() -> None:
     """Vérifie un état sans erreur."""
 
     service = build_service()
 
-    assert (
-        service._extract_error_message(
-            build_state()
-        )
-        is None
-    )
+    assert service._extract_error_message(build_state()) is None
 
 
 def test_extract_error_message_returns_last_error() -> None:
@@ -1393,27 +1213,18 @@ def test_extract_error_message_returns_last_error() -> None:
         }
     )
 
-    assert (
-        service._extract_error_message(
-            state
-        )
-        == "Dernière erreur."
-    )
+    assert service._extract_error_message(state) == "Dernière erreur."
 
 
 # Documents
+
 
 def test_extract_documents_returns_empty() -> None:
     """Vérifie un état sans contexte RAG."""
 
     service = build_service()
 
-    assert (
-        service._extract_documents(
-            build_state()
-        )
-        == []
-    )
+    assert service._extract_documents(build_state()) == []
 
 
 def test_extract_documents_returns_documents() -> None:
@@ -1449,18 +1260,14 @@ def test_extract_documents_returns_documents() -> None:
         }
     )
 
-    assert (
-        service._extract_documents(
-            state
-        )
-        == [
-            document_a,
-            document_b,
-        ]
-    )
+    assert service._extract_documents(state) == [
+        document_a,
+        document_b,
+    ]
 
 
 # Réponse API
+
 
 def test_build_response() -> None:
     """Vérifie la réponse API minimale."""
@@ -1477,26 +1284,15 @@ def test_build_response() -> None:
         }
     )
 
-    response = service._build_response(
-        state
-    )
+    response = service._build_response(state)
 
-    assert (
-        response.status
-        == AnalysisStatus.SUCCESS
-    )
+    assert response.status == AnalysisStatus.SUCCESS
 
     assert response.fen == STARTING_FEN
 
-    assert (
-        response.explanation
-        == "Explication finale."
-    )
+    assert response.explanation == "Explication finale."
 
-    assert (
-        response.analysis_id
-        == "analysis-123"
-    )
+    assert response.analysis_id == "analysis-123"
 
     assert response.documents == []
     assert response.videos == []
@@ -1504,6 +1300,7 @@ def test_build_response() -> None:
 
 
 # Analyse complète
+
 
 @pytest.mark.asyncio
 async def test_analyze_success(
@@ -1562,20 +1359,11 @@ async def test_analyze_success(
         request_id=REQUEST_ID,
     )
 
-    assert (
-        response.status
-        == AnalysisStatus.SUCCESS
-    )
+    assert response.status == AnalysisStatus.SUCCESS
 
-    assert (
-        service.get_analysis_count()
-        == 1
-    )
+    assert service.get_analysis_count() == 1
 
-    assert (
-        service.get_last_analysis_duration()
-        is not None
-    )
+    assert service.get_last_analysis_duration() is not None
 
     build_config.assert_called_once_with(
         thread_id=REQUEST_ID,
@@ -1583,18 +1371,9 @@ async def test_analyze_success(
 
     run_graph.assert_awaited_once()
 
-    initial_state = (
-        run_graph
-        .call_args
-        .args[0]
-    )
+    initial_state = run_graph.call_args.args[0]
 
-    assert (
-        initial_state
-        .metadata
-        .request_id
-        == REQUEST_ID
-    )
+    assert initial_state.metadata.request_id == REQUEST_ID
 
     assert initial_state.moves == [
         "e2e4",
@@ -1615,8 +1394,7 @@ async def test_analyze_generates_request_id(
     )
 
     monkeypatch.setattr(
-        "app.services.analysis_service."
-        "uuid4",
+        "app.services.analysis_service.uuid4",
         MagicMock(
             return_value="generated-id",
         ),
@@ -1642,13 +1420,11 @@ async def test_analyze_generates_request_id(
         build_request(),
     )
 
-    assert (
-        response.status
-        == AnalysisStatus.SUCCESS
-    )
+    assert response.status == AnalysisStatus.SUCCESS
 
 
 # Streaming complet
+
 
 @pytest.mark.asyncio
 async def test_stream_analysis_emits_progress_and_completed_event(
@@ -1664,12 +1440,8 @@ async def test_stream_analysis_emits_progress_and_completed_event(
         {
             "type": "custom",
             "data": {
-                "step": (
-                    WorkflowStep.VALIDATE_POSITION
-                ),
-                "status": (
-                    WorkflowStepStatus.RUNNING
-                ),
+                "step": (WorkflowStep.VALIDATE_POSITION),
+                "status": (WorkflowStepStatus.RUNNING),
                 "service": ServiceType.CHESS,
                 "message": "Validation.",
             },
@@ -1678,9 +1450,7 @@ async def test_stream_analysis_emits_progress_and_completed_event(
             "type": "updates",
             "data": {
                 "validate_position": {
-                    "current_step": (
-                        WorkflowStep.VALIDATE_POSITION
-                    ),
+                    "current_step": (WorkflowStep.VALIDATE_POSITION),
                     "completed_steps": [
                         WorkflowStep.VALIDATE_POSITION,
                     ],
@@ -1719,8 +1489,7 @@ async def test_stream_analysis_emits_progress_and_completed_event(
 
     events = [
         event
-        async for event
-        in service.stream_analysis(
+        async for event in service.stream_analysis(
             build_request(),
             request_id=REQUEST_ID,
         )
@@ -1733,40 +1502,25 @@ async def test_stream_analysis_emits_progress_and_completed_event(
         AnalysisProgressEvent,
     )
 
-    assert (
-        events[0].status
-        == WorkflowStepStatus.RUNNING
-    )
+    assert events[0].status == WorkflowStepStatus.RUNNING
 
     assert isinstance(
         events[1],
         AnalysisProgressEvent,
     )
 
-    assert (
-        events[1].status
-        == WorkflowStepStatus.COMPLETED
-    )
+    assert events[1].status == WorkflowStepStatus.COMPLETED
 
     assert isinstance(
         events[2],
         AnalysisCompletedEvent,
     )
 
-    assert (
-        events[2].request_id
-        == REQUEST_ID
-    )
+    assert events[2].request_id == REQUEST_ID
 
-    assert (
-        service.get_analysis_count()
-        == 1
-    )
+    assert service.get_analysis_count() == 1
 
-    assert (
-        service.get_last_analysis_duration()
-        is not None
-    )
+    assert service.get_last_analysis_duration() is not None
 
 
 @pytest.mark.asyncio
@@ -1787,12 +1541,8 @@ async def test_stream_analysis_rejects_missing_final_state(
         yield {
             "type": "custom",
             "data": {
-                "step": (
-                    WorkflowStep.VALIDATE_POSITION
-                ),
-                "status": (
-                    WorkflowStepStatus.RUNNING
-                ),
+                "step": (WorkflowStep.VALIDATE_POSITION),
+                "status": (WorkflowStepStatus.RUNNING),
             },
         }
 
@@ -1802,9 +1552,7 @@ async def test_stream_analysis_rejects_missing_final_state(
         stream_graph,
     )
 
-    with pytest.raises(
-        WorkflowStateError
-    ):
+    with pytest.raises(WorkflowStateError):
         async for _ in service.stream_analysis(
             build_request(),
             request_id=REQUEST_ID,
@@ -1813,6 +1561,7 @@ async def test_stream_analysis_rejects_missing_final_state(
 
 
 # État public
+
 
 @pytest.mark.asyncio
 async def test_ping_returns_readiness() -> None:
@@ -1834,29 +1583,12 @@ async def test_health() -> None:
 
     status = await service.health()
 
-    assert (
-        status["service"]
-        == "analysis"
-    )
+    assert status["service"] == "analysis"
 
-    assert (
-        status["available"]
-        is True
-    )
+    assert status["available"] is True
 
-    assert (
-        status["is_ready"]
-        is True
-    )
+    assert status["is_ready"] is True
 
-    assert (
-        status["analysis_count"]
-        == 3
-    )
+    assert status["analysis_count"] == 3
 
-    assert (
-        status[
-            "last_analysis_duration_ms"
-        ]
-        == 125.5
-    )
+    assert status["last_analysis_duration_ms"] == 125.5

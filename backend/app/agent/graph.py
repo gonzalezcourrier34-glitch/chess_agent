@@ -52,17 +52,11 @@ from app.services.vector_search_service import VectorSearchService
 # Types
 
 type GraphBuilder = StateGraph[
-    ChessAnalysisState,
-    None,
-    ChessAnalysisState,
-    ChessAnalysisState
+    ChessAnalysisState, None, ChessAnalysisState, ChessAnalysisState
 ]
 
 type ChessAnalysisGraph = CompiledStateGraph[
-    ChessAnalysisState,
-    None,
-    ChessAnalysisState,
-    ChessAnalysisState
+    ChessAnalysisState, None, ChessAnalysisState, ChessAnalysisState
 ]
 
 type RouteMap = dict[Hashable, str]
@@ -139,10 +133,7 @@ def _register_nodes(graph_builder: GraphBuilder) -> None:
     graph_builder.add_node(VALIDATE_POSITION_NODE, validate_position)
     graph_builder.add_node(DETECT_THEORY_NODE, detect_theory)
     graph_builder.add_node(ENGINE_ANALYSIS_NODE, engine_analysis)
-    graph_builder.add_node(
-        UNKNOWN_POSITION_ANALYSIS_NODE,
-        unknown_position_analysis
-    )
+    graph_builder.add_node(UNKNOWN_POSITION_ANALYSIS_NODE, unknown_position_analysis)
     graph_builder.add_node(RETRIEVE_CONTEXT_NODE, retrieve_context)
     graph_builder.add_node(RETRIEVE_VIDEOS_NODE, retrieve_videos)
     graph_builder.add_node(GENERATE_RESPONSE_NODE, generate_response)
@@ -162,8 +153,8 @@ def _register_edges(graph_builder: GraphBuilder) -> None:
             RETRIEVE_CONTEXT_NODE,
             RETRIEVE_VIDEOS_NODE,
             GENERATE_RESPONSE_NODE,
-            SAVE_ANALYSIS_NODE
-        )
+            SAVE_ANALYSIS_NODE,
+        ),
     )
     graph_builder.add_conditional_edges(
         DETECT_THEORY_NODE,
@@ -173,8 +164,8 @@ def _register_edges(graph_builder: GraphBuilder) -> None:
             RETRIEVE_CONTEXT_NODE,
             RETRIEVE_VIDEOS_NODE,
             GENERATE_RESPONSE_NODE,
-            SAVE_ANALYSIS_NODE
-        )
+            SAVE_ANALYSIS_NODE,
+        ),
     )
     graph_builder.add_conditional_edges(
         ENGINE_ANALYSIS_NODE,
@@ -184,38 +175,30 @@ def _register_edges(graph_builder: GraphBuilder) -> None:
             RETRIEVE_CONTEXT_NODE,
             RETRIEVE_VIDEOS_NODE,
             GENERATE_RESPONSE_NODE,
-            SAVE_ANALYSIS_NODE
-        )
+            SAVE_ANALYSIS_NODE,
+        ),
     )
     graph_builder.add_conditional_edges(
         UNKNOWN_POSITION_ANALYSIS_NODE,
         route_after_unknown_position_analysis,
-        _build_route_map(
-            GENERATE_RESPONSE_NODE,
-            SAVE_ANALYSIS_NODE
-        )
+        _build_route_map(GENERATE_RESPONSE_NODE, SAVE_ANALYSIS_NODE),
     )
     graph_builder.add_conditional_edges(
         RETRIEVE_CONTEXT_NODE,
         route_after_context,
         _build_route_map(
-            RETRIEVE_VIDEOS_NODE,
-            GENERATE_RESPONSE_NODE,
-            SAVE_ANALYSIS_NODE
-        )
+            RETRIEVE_VIDEOS_NODE, GENERATE_RESPONSE_NODE, SAVE_ANALYSIS_NODE
+        ),
     )
     graph_builder.add_conditional_edges(
         RETRIEVE_VIDEOS_NODE,
         route_after_videos,
-        _build_route_map(
-            GENERATE_RESPONSE_NODE,
-            SAVE_ANALYSIS_NODE
-        )
+        _build_route_map(GENERATE_RESPONSE_NODE, SAVE_ANALYSIS_NODE),
     )
     graph_builder.add_conditional_edges(
         GENERATE_RESPONSE_NODE,
         route_after_response,
-        _build_route_map(SAVE_ANALYSIS_NODE)
+        _build_route_map(SAVE_ANALYSIS_NODE),
     )
 
     graph_builder.add_edge(SAVE_ANALYSIS_NODE, END)
@@ -243,7 +226,7 @@ def build_graph_config(dependencies: GraphDependencies) -> RunnableConfig:
         "vector_search_service": dependencies.vector_search_service,
         "youtube_service": dependencies.youtube_service,
         "llm": dependencies.llm_service,
-        "mongodb_service": dependencies.mongodb_service
+        "mongodb_service": dependencies.mongodb_service,
     }
 
     return {"configurable": dict(configurable)}

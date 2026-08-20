@@ -18,39 +18,28 @@ from pydantic import BaseModel, ConfigDict, Field
 
 # Requête
 
+
 class VectorSearchRequest(BaseModel):
     """Requête de recherche vectorielle."""
 
-    model_config = ConfigDict(
-        extra="forbid",
-        str_strip_whitespace=True
-    )
+    model_config = ConfigDict(extra="forbid", str_strip_whitespace=True)
 
     # La requête peut être le nom d'une ouverture ou une question
     # formulée librement par l'utilisateur.
-    query: str = Field(
-        ...,
-        min_length=2,
-        max_length=500
-    )
+    query: str = Field(..., min_length=2, max_length=500)
 
     # Le nombre de résultats peut être ajusté pour une recherche
     # ponctuelle sans dépasser la limite prévue par l'API.
-    limit: int = Field(
-        default=5,
-        ge=1,
-        le=20
-    )
+    limit: int = Field(default=5, ge=1, le=20)
 
 
 # Résultat
 
+
 class VectorSearchResult(BaseModel):
     """Document retrouvé dans Milvus."""
 
-    model_config = ConfigDict(
-        extra="forbid"
-    )
+    model_config = ConfigDict(extra="forbid")
 
     # Identifiant technique du document ou du chunk.
     id: str
@@ -59,32 +48,23 @@ class VectorSearchResult(BaseModel):
     content: str
 
     # Score normalisé de similarité avec la requête.
-    similarity: float = Field(
-        ...,
-        ge=0,
-        le=1
-    )
+    similarity: float = Field(..., ge=0, le=1)
 
     # Métadonnées associées au document, par exemple l'ouverture,
     # la source ou l'index du chunk.
-    metadata: dict[str, Any] = Field(
-        default_factory=dict
-    )
+    metadata: dict[str, Any] = Field(default_factory=dict)
 
 
 # Réponse
 
+
 class VectorSearchResponse(BaseModel):
     """Résultat complet d'une recherche vectorielle."""
 
-    model_config = ConfigDict(
-        extra="forbid"
-    )
+    model_config = ConfigDict(extra="forbid")
 
     # Requête originale transmise par le client.
     query: str
 
     # Résultats ordonnés du plus pertinent au moins pertinent.
-    results: list[VectorSearchResult] = Field(
-        default_factory=list
-    )
+    results: list[VectorSearchResult] = Field(default_factory=list)

@@ -59,18 +59,18 @@ REQUEST_ID = "request-123"
 
 # Modèle de test
 
+
 class SerializableModel(BaseModel):
     """Petit modèle Pydantic utilisé pour tester la sérialisation."""
 
-    model_config = ConfigDict(
-        extra="forbid"
-    )
+    model_config = ConfigDict(extra="forbid")
 
     name: str
     value: int
 
 
 # Fixtures
+
 
 @pytest.fixture
 def state() -> ChessAnalysisState:
@@ -107,6 +107,7 @@ def save_result() -> AnalysisSaveResult:
 
 # Service
 
+
 def test_get_mongodb_service_returns_configured_service(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
@@ -121,8 +122,7 @@ def test_get_mongodb_service_returns_configured_service(
     )
 
     monkeypatch.setattr(
-        "app.agent.nodes.H_save_analysis."
-        "get_configured_service",
+        "app.agent.nodes.H_save_analysis.get_configured_service",
         configured_service,
     )
 
@@ -131,9 +131,7 @@ def test_get_mongodb_service_returns_configured_service(
         {},
     )
 
-    result = _get_mongodb_service(
-        config
-    )
+    result = _get_mongodb_service(config)
 
     assert result is service
 
@@ -150,8 +148,7 @@ def test_get_mongodb_service_returns_none_when_missing(
     """Vérifie l'absence du service MongoDB."""
 
     monkeypatch.setattr(
-        "app.agent.nodes.H_save_analysis."
-        "get_configured_service",
+        "app.agent.nodes.H_save_analysis.get_configured_service",
         MagicMock(
             return_value=None,
         ),
@@ -173,8 +170,7 @@ def test_get_mongodb_service_rejects_invalid_type(
     """Vérifie le rejet d'un service d'un autre type."""
 
     monkeypatch.setattr(
-        "app.agent.nodes.H_save_analysis."
-        "get_configured_service",
+        "app.agent.nodes.H_save_analysis.get_configured_service",
         MagicMock(
             return_value=object(),
         ),
@@ -191,6 +187,7 @@ def test_get_mongodb_service_rejects_invalid_type(
 
 
 # Statuts
+
 
 @pytest.mark.parametrize(
     ("initial", "expected"),
@@ -226,12 +223,7 @@ def test_get_success_status(
         }
     )
 
-    assert (
-        _get_success_status(
-            current_state
-        )
-        == expected
-    )
+    assert _get_success_status(current_state) == expected
 
 
 @pytest.mark.parametrize(
@@ -268,15 +260,11 @@ def test_get_partial_success_status(
         }
     )
 
-    assert (
-        _get_partial_success_status(
-            current_state
-        )
-        == expected
-    )
+    assert _get_partial_success_status(current_state) == expected
 
 
 # Normalisation
+
 
 @pytest.mark.parametrize(
     ("value", "expected"),
@@ -309,10 +297,7 @@ def test_normalize_optional_text(
 ) -> None:
     """Vérifie la normalisation d'un texte facultatif."""
 
-    assert (
-        _normalize_optional_text(value)
-        == expected
-    )
+    assert _normalize_optional_text(value) == expected
 
 
 def test_get_request_id(
@@ -320,10 +305,7 @@ def test_get_request_id(
 ) -> None:
     """Vérifie la récupération du request_id."""
 
-    assert (
-        _get_request_id(state)
-        == REQUEST_ID
-    )
+    assert _get_request_id(state) == REQUEST_ID
 
 
 def test_get_request_id_normalizes_value(
@@ -343,12 +325,7 @@ def test_get_request_id_normalizes_value(
         }
     )
 
-    assert (
-        _get_request_id(
-            current_state
-        )
-        == "request 123"
-    )
+    assert _get_request_id(current_state) == "request 123"
 
 
 def test_get_request_id_returns_none(
@@ -368,26 +345,18 @@ def test_get_request_id_returns_none(
         }
     )
 
-    assert (
-        _get_request_id(
-            current_state
-        )
-        is None
-    )
+    assert _get_request_id(current_state) is None
 
 
 # Identifiants
 
+
 def test_build_analysis_id_is_deterministic() -> None:
     """Vérifie l'idempotence de l'identifiant d'analyse."""
 
-    first = _build_analysis_id(
-        REQUEST_ID
-    )
+    first = _build_analysis_id(REQUEST_ID)
 
-    second = _build_analysis_id(
-        REQUEST_ID
-    )
+    second = _build_analysis_id(REQUEST_ID)
 
     assert first == second
     assert first
@@ -396,13 +365,9 @@ def test_build_analysis_id_is_deterministic() -> None:
 def test_build_analysis_id_changes_with_request_id() -> None:
     """Vérifie qu'un autre request_id produit un autre identifiant."""
 
-    first = _build_analysis_id(
-        "request-a"
-    )
+    first = _build_analysis_id("request-a")
 
-    second = _build_analysis_id(
-        "request-b"
-    )
+    second = _build_analysis_id("request-b")
 
     assert first != second
 
@@ -410,13 +375,11 @@ def test_build_analysis_id_changes_with_request_id() -> None:
 def test_analysis_identifier_namespace_is_stable() -> None:
     """Vérifie le namespace utilisé par la génération UUID."""
 
-    assert (
-        ANALYSIS_IDENTIFIER_NAMESPACE
-        == "chess-agent-analysis"
-    )
+    assert ANALYSIS_IDENTIFIER_NAMESPACE == "chess-agent-analysis"
 
 
 # Dates
+
 
 def test_get_created_at_uses_started_at(
     state: ChessAnalysisState,
@@ -521,6 +484,7 @@ def test_get_created_at_supports_legacy_created_at(
 
 # Sérialisation JSON
 
+
 def test_serialize_json_object_from_pydantic_model() -> None:
     """Vérifie la sérialisation d'un BaseModel."""
 
@@ -529,9 +493,7 @@ def test_serialize_json_object_from_pydantic_model() -> None:
         value=42,
     )
 
-    result = _serialize_json_object(
-        model
-    )
+    result = _serialize_json_object(model)
 
     assert result == {
         "name": "test",
@@ -570,10 +532,7 @@ def test_serialize_json_object_rejects_non_object(
 ) -> None:
     """Vérifie les types non pris en charge."""
 
-    assert (
-        _serialize_json_object(value)
-        is None
-    )
+    assert _serialize_json_object(value) is None
 
 
 def test_serialize_json_object_rejects_invalid_json_mapping() -> None:
@@ -591,10 +550,7 @@ def test_serialize_json_object_rejects_invalid_json_mapping() -> None:
 def test_serialize_model_returns_none() -> None:
     """Vérifie un modèle absent."""
 
-    assert (
-        _serialize_model(None)
-        is None
-    )
+    assert _serialize_model(None) is None
 
 
 def test_serialize_model_returns_json_object() -> None:
@@ -605,16 +561,14 @@ def test_serialize_model_returns_json_object() -> None:
         value=42,
     )
 
-    assert (
-        _serialize_model(model)
-        == {
-            "name": "test",
-            "value": 42,
-        }
-    )
+    assert _serialize_model(model) == {
+        "name": "test",
+        "value": 42,
+    }
 
 
 # Construction du record
+
 
 def test_build_analysis_record(
     state: ChessAnalysisState,
@@ -637,10 +591,7 @@ def test_build_analysis_record(
         REQUEST_ID,
     )
 
-    assert (
-        record.id
-        == _build_analysis_id(REQUEST_ID)
-    )
+    assert record.id == _build_analysis_id(REQUEST_ID)
 
     assert record.request_id == REQUEST_ID
     assert record.fen == STARTING_FEN
@@ -652,30 +603,15 @@ def test_build_analysis_record(
 
     assert record.question == "Que jouer ?"
 
-    assert (
-        record.response
-        == "Réponse finale."
-    )
+    assert record.response == "Réponse finale."
 
-    assert (
-        record.response_language
-        == current_state.options.response_language
-    )
+    assert record.response_language == current_state.options.response_language
 
-    assert (
-        record.status
-        == AnalysisStatus.SUCCESS
-    )
+    assert record.status == AnalysisStatus.SUCCESS
 
-    assert (
-        record.current_step
-        == WorkflowStep.SAVE_ANALYSIS
-    )
+    assert record.current_step == WorkflowStep.SAVE_ANALYSIS
 
-    assert (
-        WorkflowStep.SAVE_ANALYSIS
-        in record.completed_steps
-    )
+    assert WorkflowStep.SAVE_ANALYSIS in record.completed_steps
 
     assert record.saved_at.tzinfo is not None
 
@@ -687,9 +623,7 @@ def test_build_analysis_record_preserves_partial_status(
 
     current_state = state.model_copy(
         update={
-            "status": (
-                AnalysisStatus.PARTIAL_SUCCESS
-            ),
+            "status": (AnalysisStatus.PARTIAL_SUCCESS),
         }
     )
 
@@ -698,10 +632,7 @@ def test_build_analysis_record_preserves_partial_status(
         REQUEST_ID,
     )
 
-    assert (
-        record.status
-        == AnalysisStatus.PARTIAL_SUCCESS
-    )
+    assert record.status == AnalysisStatus.PARTIAL_SUCCESS
 
 
 def test_build_analysis_record_uses_started_at(
@@ -735,13 +666,11 @@ def test_build_analysis_record_uses_started_at(
         REQUEST_ID,
     )
 
-    assert (
-        record.created_at
-        == started_at
-    )
+    assert record.created_at == started_at
 
 
 # Mises à jour
+
 
 def test_build_success_update(
     state: ChessAnalysisState,
@@ -754,25 +683,13 @@ def test_build_success_update(
         save_result,
     )
 
-    assert (
-        update["status"]
-        == AnalysisStatus.SUCCESS
-    )
+    assert update["status"] == AnalysisStatus.SUCCESS
 
-    assert (
-        update["current_step"]
-        == WorkflowStep.SAVE_ANALYSIS
-    )
+    assert update["current_step"] == WorkflowStep.SAVE_ANALYSIS
 
-    assert (
-        WorkflowStep.SAVE_ANALYSIS
-        in update["completed_steps"]
-    )
+    assert WorkflowStep.SAVE_ANALYSIS in update["completed_steps"]
 
-    assert (
-        update["analysis_id"]
-        == save_result.analysis_id
-    )
+    assert update["analysis_id"] == save_result.analysis_id
 
     assert update["errors"] == []
     assert update["warnings"] == []
@@ -794,20 +711,11 @@ def test_build_warning_update(
         warning,
     )
 
-    assert (
-        update["status"]
-        == AnalysisStatus.PARTIAL_SUCCESS
-    )
+    assert update["status"] == AnalysisStatus.PARTIAL_SUCCESS
 
-    assert (
-        update["current_step"]
-        == WorkflowStep.SAVE_ANALYSIS
-    )
+    assert update["current_step"] == WorkflowStep.SAVE_ANALYSIS
 
-    assert (
-        WorkflowStep.SAVE_ANALYSIS
-        in update["completed_steps"]
-    )
+    assert WorkflowStep.SAVE_ANALYSIS in update["completed_steps"]
 
     assert update["analysis_id"] is None
 
@@ -838,10 +746,7 @@ def test_build_warning_update_preserves_failed_status(
         warning,
     )
 
-    assert (
-        update["status"]
-        == AnalysisStatus.FAILED
-    )
+    assert update["status"] == AnalysisStatus.FAILED
 
 
 def test_build_configuration_warning_update(
@@ -854,20 +759,11 @@ def test_build_configuration_warning_update(
         "Configuration invalide.",
     )
 
-    assert (
-        update["status"]
-        == AnalysisStatus.PARTIAL_SUCCESS
-    )
+    assert update["status"] == AnalysisStatus.PARTIAL_SUCCESS
 
-    assert (
-        update["warnings"][-1].code
-        == ERROR_CONFIGURATION
-    )
+    assert update["warnings"][-1].code == ERROR_CONFIGURATION
 
-    assert (
-        update["warnings"][-1].message
-        == "Configuration invalide."
-    )
+    assert update["warnings"][-1].message == "Configuration invalide."
 
 
 def test_build_missing_service_update(
@@ -875,19 +771,11 @@ def test_build_missing_service_update(
 ) -> None:
     """Vérifie l'absence du MongoDBService."""
 
-    update = _build_missing_service_update(
-        state
-    )
+    update = _build_missing_service_update(state)
 
-    assert (
-        update["warnings"][-1].code
-        == ERROR_CONFIGURATION
-    )
+    assert update["warnings"][-1].code == ERROR_CONFIGURATION
 
-    assert (
-        "MongoDBService"
-        in update["warnings"][-1].message
-    )
+    assert "MongoDBService" in update["warnings"][-1].message
 
     assert update["analysis_id"] is None
 
@@ -897,19 +785,11 @@ def test_build_missing_request_id_update(
 ) -> None:
     """Vérifie l'absence du request_id."""
 
-    update = _build_missing_request_id_update(
-        state
-    )
+    update = _build_missing_request_id_update(state)
 
-    assert (
-        update["warnings"][-1].code
-        == ERROR_CONFIGURATION
-    )
+    assert update["warnings"][-1].code == ERROR_CONFIGURATION
 
-    assert (
-        "request_id"
-        in update["warnings"][-1].message
-    )
+    assert "request_id" in update["warnings"][-1].message
 
     assert update["analysis_id"] is None
 
@@ -928,20 +808,11 @@ def test_build_database_warning_update(
         error,
     )
 
-    assert (
-        update["warnings"][-1].code
-        == error.code
-    )
+    assert update["warnings"][-1].code == error.code
 
-    assert (
-        update["warnings"][-1].message
-        == str(error)
-    )
+    assert update["warnings"][-1].message == str(error)
 
-    assert (
-        update["status"]
-        == AnalysisStatus.PARTIAL_SUCCESS
-    )
+    assert update["status"] == AnalysisStatus.PARTIAL_SUCCESS
 
 
 def test_build_unexpected_warning_update(
@@ -949,27 +820,17 @@ def test_build_unexpected_warning_update(
 ) -> None:
     """Vérifie une erreur inattendue."""
 
-    update = _build_unexpected_warning_update(
-        state
-    )
+    update = _build_unexpected_warning_update(state)
 
-    assert (
-        update["warnings"][-1].code
-        == ERROR_UNEXPECTED
-    )
+    assert update["warnings"][-1].code == ERROR_UNEXPECTED
 
-    assert (
-        update["warnings"][-1].message
-        == UNEXPECTED_SAVE_MESSAGE
-    )
+    assert update["warnings"][-1].message == UNEXPECTED_SAVE_MESSAGE
 
-    assert (
-        update["status"]
-        == AnalysisStatus.PARTIAL_SUCCESS
-    )
+    assert update["status"] == AnalysisStatus.PARTIAL_SUCCESS
 
 
 # API publique
+
 
 @pytest.mark.asyncio
 async def test_save_analysis_without_request_id(
@@ -997,17 +858,11 @@ async def test_save_analysis_without_request_id(
         ),
     )
 
-    assert (
-        update["status"]
-        == AnalysisStatus.PARTIAL_SUCCESS
-    )
+    assert update["status"] == AnalysisStatus.PARTIAL_SUCCESS
 
     assert update["analysis_id"] is None
 
-    assert (
-        update["warnings"][-1].code
-        == ERROR_CONFIGURATION
-    )
+    assert update["warnings"][-1].code == ERROR_CONFIGURATION
 
 
 @pytest.mark.asyncio
@@ -1020,16 +875,14 @@ async def test_save_analysis_missing_service(
     emit_progress = MagicMock()
 
     monkeypatch.setattr(
-        "app.agent.nodes.H_save_analysis."
-        "_get_mongodb_service",
+        "app.agent.nodes.H_save_analysis._get_mongodb_service",
         MagicMock(
             return_value=None,
         ),
     )
 
     monkeypatch.setattr(
-        "app.agent.nodes.H_save_analysis."
-        "emit_progress",
+        "app.agent.nodes.H_save_analysis.emit_progress",
         emit_progress,
     )
 
@@ -1041,17 +894,11 @@ async def test_save_analysis_missing_service(
         ),
     )
 
-    assert (
-        update["status"]
-        == AnalysisStatus.PARTIAL_SUCCESS
-    )
+    assert update["status"] == AnalysisStatus.PARTIAL_SUCCESS
 
     assert update["analysis_id"] is None
 
-    assert (
-        update["warnings"][-1].code
-        == ERROR_CONFIGURATION
-    )
+    assert update["warnings"][-1].code == ERROR_CONFIGURATION
 
     emit_progress.assert_called_once()
 
@@ -1077,16 +924,14 @@ async def test_save_analysis_success(
     emit_progress = MagicMock()
 
     monkeypatch.setattr(
-        "app.agent.nodes.H_save_analysis."
-        "_get_mongodb_service",
+        "app.agent.nodes.H_save_analysis._get_mongodb_service",
         MagicMock(
             return_value=service,
         ),
     )
 
     monkeypatch.setattr(
-        "app.agent.nodes.H_save_analysis."
-        "emit_progress",
+        "app.agent.nodes.H_save_analysis.emit_progress",
         emit_progress,
     )
 
@@ -1098,20 +943,11 @@ async def test_save_analysis_success(
         ),
     )
 
-    assert (
-        update["status"]
-        == AnalysisStatus.SUCCESS
-    )
+    assert update["status"] == AnalysisStatus.SUCCESS
 
-    assert (
-        update["analysis_id"]
-        == save_result.analysis_id
-    )
+    assert update["analysis_id"] == save_result.analysis_id
 
-    assert (
-        WorkflowStep.SAVE_ANALYSIS
-        in update["completed_steps"]
-    )
+    assert WorkflowStep.SAVE_ANALYSIS in update["completed_steps"]
 
     save.assert_awaited_once()
 
@@ -1119,10 +955,7 @@ async def test_save_analysis_success(
 
     assert analysis.request_id == REQUEST_ID
 
-    assert (
-        analysis.id
-        == _build_analysis_id(REQUEST_ID)
-    )
+    assert analysis.id == _build_analysis_id(REQUEST_ID)
 
     assert emit_progress.call_count == 2
 
@@ -1151,16 +984,14 @@ async def test_save_analysis_handles_database_error(
     emit_progress = MagicMock()
 
     monkeypatch.setattr(
-        "app.agent.nodes.H_save_analysis."
-        "_get_mongodb_service",
+        "app.agent.nodes.H_save_analysis._get_mongodb_service",
         MagicMock(
             return_value=service,
         ),
     )
 
     monkeypatch.setattr(
-        "app.agent.nodes.H_save_analysis."
-        "emit_progress",
+        "app.agent.nodes.H_save_analysis.emit_progress",
         emit_progress,
     )
 
@@ -1172,22 +1003,13 @@ async def test_save_analysis_handles_database_error(
         ),
     )
 
-    assert (
-        update["status"]
-        == AnalysisStatus.PARTIAL_SUCCESS
-    )
+    assert update["status"] == AnalysisStatus.PARTIAL_SUCCESS
 
     assert update["analysis_id"] is None
 
-    assert (
-        update["warnings"][-1].code
-        == database_error.code
-    )
+    assert update["warnings"][-1].code == database_error.code
 
-    assert (
-        update["warnings"][-1].message
-        == str(database_error)
-    )
+    assert update["warnings"][-1].message == str(database_error)
 
     assert emit_progress.call_count == 2
 
@@ -1200,9 +1022,7 @@ async def test_save_analysis_handles_unexpected_error(
     """Vérifie une erreur inattendue pendant la persistance."""
 
     save = AsyncMock(
-        side_effect=RuntimeError(
-            "unexpected"
-        ),
+        side_effect=RuntimeError("unexpected"),
     )
 
     service = MagicMock(
@@ -1214,16 +1034,14 @@ async def test_save_analysis_handles_unexpected_error(
     emit_progress = MagicMock()
 
     monkeypatch.setattr(
-        "app.agent.nodes.H_save_analysis."
-        "_get_mongodb_service",
+        "app.agent.nodes.H_save_analysis._get_mongodb_service",
         MagicMock(
             return_value=service,
         ),
     )
 
     monkeypatch.setattr(
-        "app.agent.nodes.H_save_analysis."
-        "emit_progress",
+        "app.agent.nodes.H_save_analysis.emit_progress",
         emit_progress,
     )
 
@@ -1235,27 +1053,15 @@ async def test_save_analysis_handles_unexpected_error(
         ),
     )
 
-    assert (
-        update["status"]
-        == AnalysisStatus.PARTIAL_SUCCESS
-    )
+    assert update["status"] == AnalysisStatus.PARTIAL_SUCCESS
 
     assert update["analysis_id"] is None
 
-    assert (
-        update["warnings"][-1].code
-        == ERROR_UNEXPECTED
-    )
+    assert update["warnings"][-1].code == ERROR_UNEXPECTED
 
-    assert (
-        update["warnings"][-1].message
-        == UNEXPECTED_SAVE_MESSAGE
-    )
+    assert update["warnings"][-1].message == UNEXPECTED_SAVE_MESSAGE
 
-    assert (
-        WorkflowStep.SAVE_ANALYSIS
-        in update["completed_steps"]
-    )
+    assert WorkflowStep.SAVE_ANALYSIS in update["completed_steps"]
 
     assert emit_progress.call_count == 2
 
@@ -1270,9 +1076,7 @@ async def test_save_analysis_preserves_partial_status(
 
     partial_state = state.model_copy(
         update={
-            "status": (
-                AnalysisStatus.PARTIAL_SUCCESS
-            ),
+            "status": (AnalysisStatus.PARTIAL_SUCCESS),
         }
     )
 
@@ -1287,16 +1091,14 @@ async def test_save_analysis_preserves_partial_status(
     service.save_analysis = save
 
     monkeypatch.setattr(
-        "app.agent.nodes.H_save_analysis."
-        "_get_mongodb_service",
+        "app.agent.nodes.H_save_analysis._get_mongodb_service",
         MagicMock(
             return_value=service,
         ),
     )
 
     monkeypatch.setattr(
-        "app.agent.nodes.H_save_analysis."
-        "emit_progress",
+        "app.agent.nodes.H_save_analysis.emit_progress",
         MagicMock(),
     )
 
@@ -1308,7 +1110,4 @@ async def test_save_analysis_preserves_partial_status(
         ),
     )
 
-    assert (
-        update["status"]
-        == AnalysisStatus.PARTIAL_SUCCESS
-    )
+    assert update["status"] == AnalysisStatus.PARTIAL_SUCCESS

@@ -190,9 +190,7 @@ async def test_check_service_handles_exception(
     """Vérifie qu'une exception devient une indisponibilité."""
 
     ping = AsyncMock(
-        side_effect=RuntimeError(
-            "Service indisponible."
-        ),
+        side_effect=RuntimeError("Service indisponible."),
     )
 
     result = await service._check_service(
@@ -328,9 +326,7 @@ async def test_check_readiness_raises_when_required_service_is_unavailable(
         result=False,
     )
 
-    with pytest.raises(
-        ApplicationNotReadyError
-    ):
+    with pytest.raises(ApplicationNotReadyError):
         await service.check_readiness()
 
 
@@ -383,12 +379,7 @@ def test_get_service_status(
 ) -> None:
     """Vérifie la conversion vers ServiceStatus."""
 
-    assert (
-        service._get_service_status(
-            available
-        )
-        is expected
-    )
+    assert service._get_service_status(available) is expected
 
 
 def test_get_application_status_returns_healthy(
@@ -407,9 +398,7 @@ def test_get_application_status_returns_healthy(
         "langgraph": True,
     }
 
-    result = service._get_application_status(
-        services
-    )
+    result = service._get_application_status(services)
 
     assert result == HEALTHY_STATUS
 
@@ -444,9 +433,7 @@ def test_get_application_status_returns_degraded(
 
     services[failed_service] = False
 
-    result = service._get_application_status(
-        services
-    )
+    result = service._get_application_status(services)
 
     assert result == DEGRADED_STATUS
 
@@ -466,9 +453,7 @@ def test_get_application_status_returns_degraded_if_required_key_missing(
         "llm": True,
     }
 
-    result = service._get_application_status(
-        services
-    )
+    result = service._get_application_status(services)
 
     assert result == DEGRADED_STATUS
 
@@ -481,9 +466,7 @@ def test_build_service_health_available(
 ) -> None:
     """Vérifie la santé d'un service disponible."""
 
-    result = service._build_service_health(
-        True
-    )
+    result = service._build_service_health(True)
 
     assert result.available is True
     assert result.status is ServiceStatus.AVAILABLE
@@ -495,9 +478,7 @@ def test_build_service_health_unavailable(
 ) -> None:
     """Vérifie la santé d'un service indisponible."""
 
-    result = service._build_service_health(
-        False
-    )
+    result = service._build_service_health(False)
 
     assert result.available is False
     assert result.status is ServiceStatus.UNAVAILABLE
@@ -520,19 +501,14 @@ def test_build_response(
         "langgraph": True,
     }
 
-    result = service._build_response(
-        services
-    )
+    result = service._build_response(services)
 
     assert result.status == HEALTHY_STATUS
     assert result.application == settings.app_name
     assert result.version == settings.app_version
     assert result.environment == settings.app_env
     assert result.embedding_model == settings.embedding_model
-    assert (
-        result.milvus_collection
-        == settings.milvus_collection_name
-    )
+    assert result.milvus_collection == settings.milvus_collection_name
 
     assert result.services.mongodb.available is True
     assert result.services.milvus.available is True
@@ -628,9 +604,7 @@ async def test_check_handles_ping_exception(
     )
 
     service_mocks["stockfish_service"].ping = AsyncMock(
-        side_effect=RuntimeError(
-            "Stockfish indisponible."
-        ),
+        side_effect=RuntimeError("Stockfish indisponible."),
     )
 
     result = await service.check()

@@ -44,6 +44,7 @@ STARTING_FEN = chess.STARTING_FEN
 
 # Fixtures
 
+
 @pytest.fixture
 def state() -> ChessAnalysisState:
     """Construit un état minimal valide."""
@@ -75,6 +76,7 @@ def position(
 
 # Service
 
+
 def test_get_chess_service_returns_configured_service(
     chess_service: ChessService,
     monkeypatch: pytest.MonkeyPatch,
@@ -86,8 +88,7 @@ def test_get_chess_service_returns_configured_service(
     )
 
     monkeypatch.setattr(
-        "app.agent.nodes.A_validate_position."
-        "get_configured_service",
+        "app.agent.nodes.A_validate_position.get_configured_service",
         configured_service,
     )
 
@@ -96,9 +97,7 @@ def test_get_chess_service_returns_configured_service(
         {},
     )
 
-    result = _get_chess_service(
-        config
-    )
+    result = _get_chess_service(config)
 
     assert result is chess_service
 
@@ -119,8 +118,7 @@ def test_get_chess_service_returns_none_when_missing(
     )
 
     monkeypatch.setattr(
-        "app.agent.nodes.A_validate_position."
-        "get_configured_service",
+        "app.agent.nodes.A_validate_position.get_configured_service",
         configured_service,
     )
 
@@ -144,8 +142,7 @@ def test_get_chess_service_returns_none_for_invalid_type(
     )
 
     monkeypatch.setattr(
-        "app.agent.nodes.A_validate_position."
-        "get_configured_service",
+        "app.agent.nodes.A_validate_position.get_configured_service",
         configured_service,
     )
 
@@ -161,26 +158,23 @@ def test_get_chess_service_returns_none_for_invalid_type(
 
 # Résumé
 
+
 def test_build_position_summary_contains_fullmove_number(
     position: BoardPosition,
 ) -> None:
     """Vérifie le résumé factuel de la position."""
 
-    result = _build_position_summary(
-        position
-    )
+    result = _build_position_summary(position)
 
-    assert (
-        result
-        == (
-            "La position FEN est valide au coup "
-            f"{position.fullmove_number} "
-            "et peut être analysée."
-        )
+    assert result == (
+        "La position FEN est valide au coup "
+        f"{position.fullmove_number} "
+        "et peut être analysée."
     )
 
 
 # Mise à jour d'erreur
+
 
 def test_build_error_update_marks_state_as_failed(
     state: ChessAnalysisState,
@@ -199,15 +193,9 @@ def test_build_error_update_marks_state_as_failed(
         error,
     )
 
-    assert (
-        result["status"]
-        == AnalysisStatus.FAILED
-    )
+    assert result["status"] == AnalysisStatus.FAILED
 
-    assert (
-        result["current_step"]
-        == WorkflowStep.VALIDATE_POSITION
-    )
+    assert result["current_step"] == WorkflowStep.VALIDATE_POSITION
 
     assert result["completed_steps"] == []
     assert result["errors"] == [error]
@@ -254,6 +242,7 @@ def test_build_error_update_preserves_existing_state_data(
 
 # Mise à jour réussie
 
+
 def test_build_success_update_returns_position(
     state: ChessAnalysisState,
     position: BoardPosition,
@@ -265,34 +254,17 @@ def test_build_success_update_returns_position(
         position,
     )
 
-    assert (
-        result["status"]
-        == state.status
-    )
+    assert result["status"] == state.status
 
-    assert (
-        result["current_step"]
-        == WorkflowStep.VALIDATE_POSITION
-    )
+    assert result["current_step"] == WorkflowStep.VALIDATE_POSITION
 
-    assert (
-        result["position"]
-        == position
-    )
+    assert result["position"] == position
 
-    assert (
-        WorkflowStep.VALIDATE_POSITION
-        in result["completed_steps"]
-    )
+    assert WorkflowStep.VALIDATE_POSITION in result["completed_steps"]
 
-    workflow_context = result[
-        "workflow_context"
-    ]
+    workflow_context = result["workflow_context"]
 
-    assert (
-        workflow_context.position_summary
-        == _build_position_summary(position)
-    )
+    assert workflow_context.position_summary == _build_position_summary(position)
 
 
 def test_build_success_update_does_not_mutate_original_state(
@@ -301,63 +273,39 @@ def test_build_success_update_does_not_mutate_original_state(
 ) -> None:
     """Vérifie le fonctionnement transformationnel du nœud."""
 
-    original_completed_steps = list(
-        state.completed_steps
-    )
+    original_completed_steps = list(state.completed_steps)
 
-    original_summary = (
-        state
-        .workflow_context
-        .position_summary
-    )
+    original_summary = state.workflow_context.position_summary
 
     _build_success_update(
         state,
         position,
     )
 
-    assert (
-        state.completed_steps
-        == original_completed_steps
-    )
+    assert state.completed_steps == original_completed_steps
 
-    assert (
-        state
-        .workflow_context
-        .position_summary
-        == original_summary
-    )
+    assert state.workflow_context.position_summary == original_summary
 
 
 # Erreurs spécialisées
+
 
 def test_build_missing_service_update_uses_configuration_error(
     state: ChessAnalysisState,
 ) -> None:
     """Vérifie l'erreur de configuration."""
 
-    result = _build_missing_service_update(
-        state
-    )
+    result = _build_missing_service_update(state)
 
-    assert (
-        result["status"]
-        == AnalysisStatus.FAILED
-    )
+    assert result["status"] == AnalysisStatus.FAILED
 
     errors = result["errors"]
 
     assert len(errors) == 1
 
-    assert (
-        errors[0].code
-        == ERROR_CONFIGURATION
-    )
+    assert errors[0].code == ERROR_CONFIGURATION
 
-    assert (
-        errors[0].recoverable
-        is False
-    )
+    assert errors[0].recoverable is False
 
 
 def test_build_unexpected_error_update_uses_unexpected_code(
@@ -365,26 +313,19 @@ def test_build_unexpected_error_update_uses_unexpected_code(
 ) -> None:
     """Vérifie l'erreur inattendue."""
 
-    result = _build_unexpected_error_update(
-        state
-    )
+    result = _build_unexpected_error_update(state)
 
     errors = result["errors"]
 
     assert len(errors) == 1
 
-    assert (
-        errors[0].code
-        == ERROR_UNEXPECTED
-    )
+    assert errors[0].code == ERROR_UNEXPECTED
 
-    assert (
-        result["status"]
-        == AnalysisStatus.FAILED
-    )
+    assert result["status"] == AnalysisStatus.FAILED
 
 
 # Validation publique
+
 
 @pytest.mark.asyncio
 async def test_validate_position_returns_success_update(
@@ -412,14 +353,12 @@ async def test_validate_position_returns_success_update(
     emit_progress = MagicMock()
 
     monkeypatch.setattr(
-        "app.agent.nodes.A_validate_position."
-        "_get_chess_service",
+        "app.agent.nodes.A_validate_position._get_chess_service",
         get_service,
     )
 
     monkeypatch.setattr(
-        "app.agent.nodes.A_validate_position."
-        "emit_progress",
+        "app.agent.nodes.A_validate_position.emit_progress",
         emit_progress,
     )
 
@@ -431,20 +370,11 @@ async def test_validate_position_returns_success_update(
         ),
     )
 
-    assert (
-        result["status"]
-        == state.status
-    )
+    assert result["status"] == state.status
 
-    assert (
-        result["position"]
-        == position
-    )
+    assert result["position"] == position
 
-    assert (
-        WorkflowStep.VALIDATE_POSITION
-        in result["completed_steps"]
-    )
+    assert WorkflowStep.VALIDATE_POSITION in result["completed_steps"]
 
     get_position.assert_called_once()
 
@@ -474,14 +404,12 @@ async def test_validate_position_fails_when_service_is_missing(
     emit_progress = MagicMock()
 
     monkeypatch.setattr(
-        "app.agent.nodes.A_validate_position."
-        "_get_chess_service",
+        "app.agent.nodes.A_validate_position._get_chess_service",
         get_service,
     )
 
     monkeypatch.setattr(
-        "app.agent.nodes.A_validate_position."
-        "emit_progress",
+        "app.agent.nodes.A_validate_position.emit_progress",
         emit_progress,
     )
 
@@ -493,15 +421,9 @@ async def test_validate_position_fails_when_service_is_missing(
         ),
     )
 
-    assert (
-        result["status"]
-        == AnalysisStatus.FAILED
-    )
+    assert result["status"] == AnalysisStatus.FAILED
 
-    assert (
-        result["errors"][0].code
-        == ERROR_CONFIGURATION
-    )
+    assert result["errors"][0].code == ERROR_CONFIGURATION
 
     assert result["completed_steps"] == []
 
@@ -529,14 +451,12 @@ async def test_validate_position_handles_pydantic_validation_error(
     emit_progress = MagicMock()
 
     monkeypatch.setattr(
-        "app.agent.nodes.A_validate_position."
-        "_get_chess_service",
+        "app.agent.nodes.A_validate_position._get_chess_service",
         get_service,
     )
 
     monkeypatch.setattr(
-        "app.agent.nodes.A_validate_position."
-        "emit_progress",
+        "app.agent.nodes.A_validate_position.emit_progress",
         emit_progress,
     )
 
@@ -548,15 +468,9 @@ async def test_validate_position_handles_pydantic_validation_error(
         ),
     )
 
-    assert (
-        result["status"]
-        == AnalysisStatus.FAILED
-    )
+    assert result["status"] == AnalysisStatus.FAILED
 
-    assert (
-        result["errors"][0].code
-        == ERROR_INVALID_FEN
-    )
+    assert result["errors"][0].code == ERROR_INVALID_FEN
 
     assert result["completed_steps"] == []
 
@@ -572,9 +486,7 @@ async def test_validate_position_handles_unexpected_error(
     """Vérifie une erreur inattendue de ChessService."""
 
     get_position = MagicMock(
-        side_effect=RuntimeError(
-            "unexpected failure"
-        ),
+        side_effect=RuntimeError("unexpected failure"),
     )
 
     monkeypatch.setattr(
@@ -590,14 +502,12 @@ async def test_validate_position_handles_unexpected_error(
     emit_progress = MagicMock()
 
     monkeypatch.setattr(
-        "app.agent.nodes.A_validate_position."
-        "_get_chess_service",
+        "app.agent.nodes.A_validate_position._get_chess_service",
         get_service,
     )
 
     monkeypatch.setattr(
-        "app.agent.nodes.A_validate_position."
-        "emit_progress",
+        "app.agent.nodes.A_validate_position.emit_progress",
         emit_progress,
     )
 
@@ -609,15 +519,9 @@ async def test_validate_position_handles_unexpected_error(
         ),
     )
 
-    assert (
-        result["status"]
-        == AnalysisStatus.FAILED
-    )
+    assert result["status"] == AnalysisStatus.FAILED
 
-    assert (
-        result["errors"][0].code
-        == ERROR_UNEXPECTED
-    )
+    assert result["errors"][0].code == ERROR_UNEXPECTED
 
     assert result["completed_steps"] == []
 
@@ -634,8 +538,7 @@ async def test_validate_position_handles_unexpected_error(
                 service=ServiceType.CHESS,
                 status=WorkflowStepStatus.FAILED,
                 message=(
-                    "Une erreur inattendue a interrompu "
-                    "la validation de la position."
+                    "Une erreur inattendue a interrompu la validation de la position."
                 ),
             ),
         ]

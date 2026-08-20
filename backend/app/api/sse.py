@@ -9,13 +9,6 @@ from __future__ import annotations
 # Sérialisation
 
 
-def format_sse_event(
-    *,
-    event: str,
-    data: str
-) -> str:
+def format_sse_event(*, event: str, data: str) -> str:
     """Construit un événement Server-Sent Events."""
-    return (
-        f"event: {event}\n"
-        f"data: {data}\n\n"
-    )
+    return f"event: {event}\ndata: {data}\n\n"

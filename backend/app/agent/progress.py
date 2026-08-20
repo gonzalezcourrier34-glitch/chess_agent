@@ -24,7 +24,7 @@ def emit_progress(
     step: WorkflowStep,
     service: ServiceType | None,
     status: WorkflowStepStatus,
-    message: str | None = None
+    message: str | None = None,
 ) -> None:
     """Émet un événement de progression LangGraph."""
 
@@ -33,12 +33,8 @@ def emit_progress(
     writer(
         {
             "step": step.value,
-            "service": (
-                service.value
-                if service is not None
-                else None
-            ),
+            "service": (service.value if service is not None else None),
             "status": status.value,
-            "message": message
+            "message": message,
         }
     )

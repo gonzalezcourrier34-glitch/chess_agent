@@ -37,10 +37,7 @@ from pymongo.errors import PyMongoError
 ANALYSIS_ID = "analysis-1"
 REQUEST_ID = "request-1"
 
-STARTING_FEN = (
-    "rnbqkbnr/pppppppp/8/8/8/8/"
-    "PPPPPPPP/RNBQKBNR w KQkq - 0 1"
-)
+STARTING_FEN = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1"
 
 CREATED_AT = datetime(
     2026,
@@ -63,6 +60,7 @@ SAVED_AT = datetime(
 
 # Faux curseur
 
+
 class FakeCursor:
     """Curseur asynchrone minimal utilisé par les tests."""
 
@@ -73,9 +71,7 @@ class FakeCursor:
         """Initialise le curseur."""
 
         self._documents = documents
-        self.sort_calls: list[
-            tuple[str, int]
-        ] = []
+        self.sort_calls: list[tuple[str, int]] = []
         self.skip_calls: list[int] = []
         self.limit_calls: list[int] = []
 
@@ -101,9 +97,7 @@ class FakeCursor:
     ) -> FakeCursor:
         """Simule skip()."""
 
-        self.skip_calls.append(
-            value
-        )
+        self.skip_calls.append(value)
 
         return self
 
@@ -113,9 +107,7 @@ class FakeCursor:
     ) -> FakeCursor:
         """Simule limit()."""
 
-        self.limit_calls.append(
-            value
-        )
+        self.limit_calls.append(value)
 
         return self
 
@@ -137,13 +129,13 @@ class FakeCursor:
 
 # Construction des données de test
 
+
 def build_analysis_record(
     *,
     analysis_id: str = ANALYSIS_ID,
     request_id: str = REQUEST_ID,
     response: str | None = (
-        "La position initiale ne présente "
-        "aucun avantage particulier."
+        "La position initiale ne présente aucun avantage particulier."
     ),
 ) -> AnalysisRecord:
     """Construit une analyse adaptée aux besoins du service testé."""
@@ -177,13 +169,9 @@ def build_mongo_document(
 ) -> MongoDocument:
     """Construit un document MongoDB depuis une analyse."""
 
-    document = analysis.model_dump(
-        mode="python"
-    )
+    document = analysis.model_dump(mode="python")
 
-    document["_id"] = document.pop(
-        "id"
-    )
+    document["_id"] = document.pop("id")
 
     return cast(
         MongoDocument,
@@ -193,31 +181,22 @@ def build_mongo_document(
 
 # Fixtures
 
+
 @pytest.fixture
 def collection() -> MagicMock:
     """Construit une fausse collection MongoDB."""
 
     mocked_collection = MagicMock()
 
-    mocked_collection.create_index = (
-        AsyncMock()
-    )
+    mocked_collection.create_index = AsyncMock()
 
-    mocked_collection.update_one = (
-        AsyncMock()
-    )
+    mocked_collection.update_one = AsyncMock()
 
-    mocked_collection.find_one = (
-        AsyncMock()
-    )
+    mocked_collection.find_one = AsyncMock()
 
-    mocked_collection.delete_one = (
-        AsyncMock()
-    )
+    mocked_collection.delete_one = AsyncMock()
 
-    mocked_collection.count_documents = (
-        AsyncMock()
-    )
+    mocked_collection.count_documents = AsyncMock()
 
     return mocked_collection
 
@@ -245,6 +224,7 @@ def analysis() -> AnalysisRecord:
 
 # Construction
 
+
 def test_service_is_not_initialized_after_creation(
     service: MongoDBService,
 ) -> None:
@@ -259,10 +239,7 @@ def test_get_collection_returns_injected_collection(
 ) -> None:
     """Vérifie la récupération de la collection injectée."""
 
-    assert (
-        service._get_collection()
-        is collection
-    )
+    assert service._get_collection() is collection
 
 
 def test_get_collection_loads_default_collection(
@@ -271,13 +248,10 @@ def test_get_collection_loads_default_collection(
 ) -> None:
     """Vérifie la récupération tardive de la collection."""
 
-    get_collection = MagicMock(
-        return_value=collection
-    )
+    get_collection = MagicMock(return_value=collection)
 
     monkeypatch.setattr(
-        "app.adapters.mongodb_service."
-        "get_collection",
+        "app.adapters.mongodb_service.get_collection",
         get_collection,
     )
 
@@ -287,12 +261,11 @@ def test_get_collection_loads_default_collection(
 
     assert result is collection
 
-    get_collection.assert_called_once_with(
-        ANALYSES_COLLECTION
-    )
+    get_collection.assert_called_once_with(ANALYSES_COLLECTION)
 
 
 # Cycle de vie
+
 
 @pytest.mark.asyncio
 async def test_close_resets_service(
@@ -310,6 +283,7 @@ async def test_close_resets_service(
 
 # Initialisation
 
+
 @pytest.mark.asyncio
 async def test_initialize_creates_required_indexes(
     service: MongoDBService,
@@ -321,10 +295,7 @@ async def test_initialize_creates_required_indexes(
 
     assert service.is_initialized() is True
 
-    assert (
-        collection.create_index.await_count
-        == 2
-    )
+    assert collection.create_index.await_count == 2
 
     collection.create_index.assert_any_await(
         [
@@ -358,10 +329,7 @@ async def test_initialize_is_idempotent(
     await service.initialize()
     await service.initialize()
 
-    assert (
-        collection.create_index.await_count
-        == 2
-    )
+    assert collection.create_index.await_count == 2
 
 
 @pytest.mark.asyncio
@@ -371,21 +339,16 @@ async def test_initialize_translates_pymongo_error(
 ) -> None:
     """Vérifie la traduction d'une erreur d'indexation."""
 
-    collection.create_index.side_effect = (
-        PyMongoError(
-            "index failure"
-        )
-    )
+    collection.create_index.side_effect = PyMongoError("index failure")
 
-    with pytest.raises(
-        DatabaseOperationError
-    ):
+    with pytest.raises(DatabaseOperationError):
         await service.initialize()
 
     assert service.is_initialized() is False
 
 
 # Identifiants
+
 
 def test_normalize_identifier_strips_spaces(
     service: MongoDBService,
@@ -413,9 +376,7 @@ def test_normalize_identifier_rejects_empty_value(
 ) -> None:
     """Vérifie le rejet d'un identifiant vide."""
 
-    with pytest.raises(
-        ValueError
-    ):
+    with pytest.raises(ValueError):
         service._normalize_identifier(
             value,
             "analysis_id",
@@ -424,16 +385,13 @@ def test_normalize_identifier_rejects_empty_value(
 
 # Limite d'historique
 
+
 def test_normalize_history_limit_accepts_positive_value(
     service: MongoDBService,
 ) -> None:
     """Vérifie une limite valide."""
 
-    result = (
-        service._normalize_history_limit(
-            5
-        )
-    )
+    result = service._normalize_history_limit(5)
 
     assert result >= 1
 
@@ -453,9 +411,7 @@ def test_normalize_history_limit_rejects_non_integer(
 ) -> None:
     """Vérifie qu'une limite doit être entière."""
 
-    with pytest.raises(
-        TypeError
-    ):
+    with pytest.raises(TypeError):
         service._normalize_history_limit(
             value  # type: ignore[arg-type]
         )
@@ -474,27 +430,19 @@ def test_normalize_history_limit_rejects_non_positive_value(
 ) -> None:
     """Vérifie qu'une limite doit être positive."""
 
-    with pytest.raises(
-        ValueError
-    ):
-        service._normalize_history_limit(
-            value
-        )
+    with pytest.raises(ValueError):
+        service._normalize_history_limit(value)
 
 
 # Offset
+
 
 def test_normalize_history_offset_accepts_zero(
     service: MongoDBService,
 ) -> None:
     """Vérifie l'offset zéro."""
 
-    assert (
-        service._normalize_history_offset(
-            0
-        )
-        == 0
-    )
+    assert service._normalize_history_offset(0) == 0
 
 
 def test_normalize_history_offset_accepts_positive_value(
@@ -502,12 +450,7 @@ def test_normalize_history_offset_accepts_positive_value(
 ) -> None:
     """Vérifie un offset positif."""
 
-    assert (
-        service._normalize_history_offset(
-            10
-        )
-        == 10
-    )
+    assert service._normalize_history_offset(10) == 10
 
 
 @pytest.mark.parametrize(
@@ -525,9 +468,7 @@ def test_normalize_history_offset_rejects_non_integer(
 ) -> None:
     """Vérifie que l'offset doit être entier."""
 
-    with pytest.raises(
-        TypeError
-    ):
+    with pytest.raises(TypeError):
         service._normalize_history_offset(
             value  # type: ignore[arg-type]
         )
@@ -538,27 +479,19 @@ def test_normalize_history_offset_rejects_negative_value(
 ) -> None:
     """Vérifie qu'un offset négatif est refusé."""
 
-    with pytest.raises(
-        ValueError
-    ):
-        service._normalize_history_offset(
-            -1
-        )
+    with pytest.raises(ValueError):
+        service._normalize_history_offset(-1)
 
 
 # Longueur d'extrait
+
 
 def test_normalize_preview_length_accepts_positive_value(
     service: MongoDBService,
 ) -> None:
     """Vérifie une longueur valide."""
 
-    assert (
-        service._normalize_preview_length(
-            20
-        )
-        == 20
-    )
+    assert service._normalize_preview_length(20) == 20
 
 
 @pytest.mark.parametrize(
@@ -576,9 +509,7 @@ def test_normalize_preview_length_rejects_non_integer(
 ) -> None:
     """Vérifie le type de la longueur."""
 
-    with pytest.raises(
-        TypeError
-    ):
+    with pytest.raises(TypeError):
         service._normalize_preview_length(
             value  # type: ignore[arg-type]
         )
@@ -597,27 +528,19 @@ def test_normalize_preview_length_rejects_non_positive_value(
 ) -> None:
     """Vérifie une longueur strictement positive."""
 
-    with pytest.raises(
-        ValueError
-    ):
-        service._normalize_preview_length(
-            value
-        )
+    with pytest.raises(ValueError):
+        service._normalize_preview_length(value)
 
 
 # Aperçu de réponse
+
 
 def test_build_response_preview_returns_none_for_none(
     service: MongoDBService,
 ) -> None:
     """Vérifie une réponse absente."""
 
-    assert (
-        service._build_response_preview(
-            None
-        )
-        is None
-    )
+    assert service._build_response_preview(None) is None
 
 
 def test_build_response_preview_returns_none_for_whitespace(
@@ -625,12 +548,7 @@ def test_build_response_preview_returns_none_for_whitespace(
 ) -> None:
     """Vérifie une réponse vide après normalisation."""
 
-    assert (
-        service._build_response_preview(
-            "   \n   "
-        )
-        is None
-    )
+    assert service._build_response_preview("   \n   ") is None
 
 
 def test_build_response_preview_normalizes_whitespace(
@@ -638,16 +556,12 @@ def test_build_response_preview_normalizes_whitespace(
 ) -> None:
     """Vérifie la normalisation des espaces."""
 
-    result = (
-        service._build_response_preview(
-            "Une   réponse\navec   espaces.",
-            max_length=100,
-        )
+    result = service._build_response_preview(
+        "Une   réponse\navec   espaces.",
+        max_length=100,
     )
 
-    assert result == (
-        "Une réponse avec espaces."
-    )
+    assert result == ("Une réponse avec espaces.")
 
 
 def test_build_response_preview_truncates_long_response(
@@ -655,11 +569,9 @@ def test_build_response_preview_truncates_long_response(
 ) -> None:
     """Vérifie la troncature de l'extrait."""
 
-    result = (
-        service._build_response_preview(
-            "abcdefghij",
-            max_length=5,
-        )
+    result = service._build_response_preview(
+        "abcdefghij",
+        max_length=5,
     )
 
     assert result == "abcde..."
@@ -670,9 +582,7 @@ def test_build_response_preview_rejects_invalid_length(
 ) -> None:
     """Vérifie une longueur d'extrait invalide."""
 
-    with pytest.raises(
-        ValueError
-    ):
+    with pytest.raises(ValueError):
         service._build_response_preview(
             "response",
             max_length=0,
@@ -681,23 +591,19 @@ def test_build_response_preview_rejects_invalid_length(
 
 # Sérialisation
 
+
 def test_analysis_to_document_moves_id_to_mongodb_id(
     service: MongoDBService,
     analysis: AnalysisRecord,
 ) -> None:
     """Vérifie la conversion vers le format MongoDB."""
 
-    document = service._analysis_to_document(
-        analysis
-    )
+    document = service._analysis_to_document(analysis)
 
     assert document["_id"] == ANALYSIS_ID
     assert "id" not in document
 
-    assert (
-        document[REQUEST_ID_FIELD]
-        == REQUEST_ID
-    )
+    assert document[REQUEST_ID_FIELD] == REQUEST_ID
 
 
 def test_document_to_analysis_rejects_missing_identifier(
@@ -712,12 +618,8 @@ def test_document_to_analysis_rejects_missing_identifier(
         },
     )
 
-    with pytest.raises(
-        DatabaseOperationError
-    ):
-        service._document_to_analysis(
-            document
-        )
+    with pytest.raises(DatabaseOperationError):
+        service._document_to_analysis(document)
 
 
 def test_document_to_analysis_rejects_invalid_document(
@@ -733,15 +635,12 @@ def test_document_to_analysis_rejects_invalid_document(
         },
     )
 
-    with pytest.raises(
-        DatabaseOperationError
-    ):
-        service._document_to_analysis(
-            document
-        )
+    with pytest.raises(DatabaseOperationError):
+        service._document_to_analysis(document)
 
 
 # Nom d'ouverture
+
 
 def test_extract_opening_name_returns_none_without_opening(
     service: MongoDBService,
@@ -749,15 +648,11 @@ def test_extract_opening_name_returns_none_without_opening(
 ) -> None:
     """Vérifie une analyse sans ouverture."""
 
-    assert (
-        service._extract_opening_name(
-            analysis
-        )
-        is None
-    )
+    assert service._extract_opening_name(analysis) is None
 
 
 # Résumé
+
 
 def test_build_summary_uses_analysis_data(
     service: MongoDBService,
@@ -765,38 +660,25 @@ def test_build_summary_uses_analysis_data(
 ) -> None:
     """Vérifie la construction du résumé d'historique."""
 
-    summary = service._build_summary(
-        analysis
-    )
+    summary = service._build_summary(analysis)
 
     assert summary.id == ANALYSIS_ID
 
-    assert (
-        summary.request_id
-        == REQUEST_ID
-    )
+    assert summary.request_id == REQUEST_ID
 
     assert summary.fen == STARTING_FEN
 
-    assert (
-        summary.status
-        == AnalysisStatus.SUCCESS
-    )
+    assert summary.status == AnalysisStatus.SUCCESS
 
     assert summary.opening_name is None
 
-    assert (
-        summary.warning_count
-        == 0
-    )
+    assert summary.warning_count == 0
 
-    assert (
-        summary.error_count
-        == 0
-    )
+    assert summary.error_count == 0
 
 
 # Sauvegarde
+
 
 @pytest.mark.asyncio
 async def test_save_analysis_returns_created_result(
@@ -812,21 +694,15 @@ async def test_save_analysis_returns_created_result(
     update_result = MagicMock()
     update_result.upserted_id = ANALYSIS_ID
 
-    collection.update_one.return_value = (
-        update_result
-    )
+    collection.update_one.return_value = update_result
 
     monkeypatch.setattr(
         service,
         "get_analysis_by_request_id",
-        AsyncMock(
-            return_value=analysis
-        ),
+        AsyncMock(return_value=analysis),
     )
 
-    result = await service.save_analysis(
-        analysis
-    )
+    result = await service.save_analysis(analysis)
 
     assert result.analysis_id == ANALYSIS_ID
     assert result.request_id == REQUEST_ID
@@ -849,21 +725,15 @@ async def test_save_analysis_returns_updated_result(
     update_result = MagicMock()
     update_result.upserted_id = None
 
-    collection.update_one.return_value = (
-        update_result
-    )
+    collection.update_one.return_value = update_result
 
     monkeypatch.setattr(
         service,
         "get_analysis_by_request_id",
-        AsyncMock(
-            return_value=analysis
-        ),
+        AsyncMock(return_value=analysis),
     )
 
-    result = await service.save_analysis(
-        analysis
-    )
+    result = await service.save_analysis(analysis)
 
     assert result.created is False
 
@@ -878,18 +748,10 @@ async def test_save_analysis_translates_pymongo_error(
 
     service._initialized = True
 
-    collection.update_one.side_effect = (
-        PyMongoError(
-            "write failure"
-        )
-    )
+    collection.update_one.side_effect = PyMongoError("write failure")
 
-    with pytest.raises(
-        DatabaseOperationError
-    ):
-        await service.save_analysis(
-            analysis
-        )
+    with pytest.raises(DatabaseOperationError):
+        await service.save_analysis(analysis)
 
 
 @pytest.mark.asyncio
@@ -906,27 +768,20 @@ async def test_save_analysis_fails_when_document_cannot_be_reloaded(
     update_result = MagicMock()
     update_result.upserted_id = ANALYSIS_ID
 
-    collection.update_one.return_value = (
-        update_result
-    )
+    collection.update_one.return_value = update_result
 
     monkeypatch.setattr(
         service,
         "get_analysis_by_request_id",
-        AsyncMock(
-            return_value=None
-        ),
+        AsyncMock(return_value=None),
     )
 
-    with pytest.raises(
-        DatabaseOperationError
-    ):
-        await service.save_analysis(
-            analysis
-        )
+    with pytest.raises(DatabaseOperationError):
+        await service.save_analysis(analysis)
 
 
 # Lecture par identifiant
+
 
 @pytest.mark.asyncio
 async def test_get_analysis_returns_none_when_missing(
@@ -939,9 +794,7 @@ async def test_get_analysis_returns_none_when_missing(
 
     collection.find_one.return_value = None
 
-    result = await service.get_analysis(
-        ANALYSIS_ID
-    )
+    result = await service.get_analysis(ANALYSIS_ID)
 
     assert result is None
 
@@ -961,18 +814,10 @@ async def test_get_analysis_translates_pymongo_error(
 
     service._initialized = True
 
-    collection.find_one.side_effect = (
-        PyMongoError(
-            "read failure"
-        )
-    )
+    collection.find_one.side_effect = PyMongoError("read failure")
 
-    with pytest.raises(
-        DatabaseOperationError
-    ):
-        await service.get_analysis(
-            ANALYSIS_ID
-        )
+    with pytest.raises(DatabaseOperationError):
+        await service.get_analysis(ANALYSIS_ID)
 
 
 @pytest.mark.asyncio
@@ -986,16 +831,10 @@ async def test_get_required_analysis_returns_existing_analysis(
     monkeypatch.setattr(
         service,
         "get_analysis",
-        AsyncMock(
-            return_value=analysis
-        ),
+        AsyncMock(return_value=analysis),
     )
 
-    result = (
-        await service.get_required_analysis(
-            ANALYSIS_ID
-        )
-    )
+    result = await service.get_required_analysis(ANALYSIS_ID)
 
     assert result is analysis
 
@@ -1010,20 +849,15 @@ async def test_get_required_analysis_rejects_missing_analysis(
     monkeypatch.setattr(
         service,
         "get_analysis",
-        AsyncMock(
-            return_value=None
-        ),
+        AsyncMock(return_value=None),
     )
 
-    with pytest.raises(
-        DatabaseOperationError
-    ):
-        await service.get_required_analysis(
-            ANALYSIS_ID
-        )
+    with pytest.raises(DatabaseOperationError):
+        await service.get_required_analysis(ANALYSIS_ID)
 
 
 # Lecture par request_id
+
 
 @pytest.mark.asyncio
 async def test_get_analysis_by_request_id_returns_none_when_missing(
@@ -1036,11 +870,7 @@ async def test_get_analysis_by_request_id_returns_none_when_missing(
 
     collection.find_one.return_value = None
 
-    result = (
-        await service.get_analysis_by_request_id(
-            REQUEST_ID
-        )
-    )
+    result = await service.get_analysis_by_request_id(REQUEST_ID)
 
     assert result is None
 
@@ -1060,21 +890,14 @@ async def test_get_analysis_by_request_id_translates_pymongo_error(
 
     service._initialized = True
 
-    collection.find_one.side_effect = (
-        PyMongoError(
-            "read failure"
-        )
-    )
+    collection.find_one.side_effect = PyMongoError("read failure")
 
-    with pytest.raises(
-        DatabaseOperationError
-    ):
-        await service.get_analysis_by_request_id(
-            REQUEST_ID
-        )
+    with pytest.raises(DatabaseOperationError):
+        await service.get_analysis_by_request_id(REQUEST_ID)
 
 
 # Historique
+
 
 @pytest.mark.asyncio
 async def test_list_recent_analyses_returns_empty_list(
@@ -1085,9 +908,7 @@ async def test_list_recent_analyses_returns_empty_list(
 
     service._initialized = True
 
-    cursor = FakeCursor(
-        []
-    )
+    cursor = FakeCursor([])
 
     collection.find.return_value = cursor
 
@@ -1105,13 +926,9 @@ async def test_list_recent_analyses_returns_empty_list(
         )
     ]
 
-    assert cursor.skip_calls == [
-        0
-    ]
+    assert cursor.skip_calls == [0]
 
-    assert cursor.limit_calls == [
-        5
-    ]
+    assert cursor.limit_calls == [5]
 
 
 @pytest.mark.asyncio
@@ -1125,9 +942,7 @@ async def test_list_recent_analyses_builds_summaries(
 
     service._initialized = True
 
-    document = build_mongo_document(
-        analysis
-    )
+    document = build_mongo_document(analysis)
 
     cursor = FakeCursor(
         [
@@ -1140,9 +955,7 @@ async def test_list_recent_analyses_builds_summaries(
     monkeypatch.setattr(
         service,
         "_document_to_analysis",
-        MagicMock(
-            return_value=analysis
-        ),
+        MagicMock(return_value=analysis),
     )
 
     result = await service.list_recent_analyses(
@@ -1155,6 +968,7 @@ async def test_list_recent_analyses_builds_summaries(
 
 
 # Suppression
+
 
 @pytest.mark.asyncio
 async def test_delete_analysis_returns_true_when_deleted(
@@ -1170,9 +984,7 @@ async def test_delete_analysis_returns_true_when_deleted(
 
     collection.delete_one.return_value = result
 
-    deleted = await service.delete_analysis(
-        ANALYSIS_ID
-    )
+    deleted = await service.delete_analysis(ANALYSIS_ID)
 
     assert deleted is True
 
@@ -1191,9 +1003,7 @@ async def test_delete_analysis_returns_false_when_missing(
 
     collection.delete_one.return_value = result
 
-    deleted = await service.delete_analysis(
-        ANALYSIS_ID
-    )
+    deleted = await service.delete_analysis(ANALYSIS_ID)
 
     assert deleted is False
 
@@ -1207,18 +1017,10 @@ async def test_delete_analysis_translates_pymongo_error(
 
     service._initialized = True
 
-    collection.delete_one.side_effect = (
-        PyMongoError(
-            "delete failure"
-        )
-    )
+    collection.delete_one.side_effect = PyMongoError("delete failure")
 
-    with pytest.raises(
-        DatabaseOperationError
-    ):
-        await service.delete_analysis(
-            ANALYSIS_ID
-        )
+    with pytest.raises(DatabaseOperationError):
+        await service.delete_analysis(ANALYSIS_ID)
 
 
 @pytest.mark.asyncio
@@ -1231,14 +1033,10 @@ async def test_delete_required_analysis_accepts_deleted_analysis(
     monkeypatch.setattr(
         service,
         "delete_analysis",
-        AsyncMock(
-            return_value=True
-        ),
+        AsyncMock(return_value=True),
     )
 
-    await service.delete_required_analysis(
-        ANALYSIS_ID
-    )
+    await service.delete_required_analysis(ANALYSIS_ID)
 
 
 @pytest.mark.asyncio
@@ -1251,20 +1049,15 @@ async def test_delete_required_analysis_rejects_missing_analysis(
     monkeypatch.setattr(
         service,
         "delete_analysis",
-        AsyncMock(
-            return_value=False
-        ),
+        AsyncMock(return_value=False),
     )
 
-    with pytest.raises(
-        DatabaseOperationError
-    ):
-        await service.delete_required_analysis(
-            ANALYSIS_ID
-        )
+    with pytest.raises(DatabaseOperationError):
+        await service.delete_required_analysis(ANALYSIS_ID)
 
 
 # Santé
+
 
 @pytest.mark.asyncio
 async def test_ping_returns_true(
@@ -1274,11 +1067,8 @@ async def test_ping_returns_true(
     """Vérifie un ping MongoDB réussi."""
 
     monkeypatch.setattr(
-        "app.adapters.mongodb_service."
-        "ping_mongodb",
-        AsyncMock(
-            return_value=True
-        ),
+        "app.adapters.mongodb_service.ping_mongodb",
+        AsyncMock(return_value=True),
     )
 
     assert await service.ping() is True
@@ -1292,13 +1082,8 @@ async def test_ping_returns_false_on_unexpected_error(
     """Vérifie la protection du healthcheck."""
 
     monkeypatch.setattr(
-        "app.adapters.mongodb_service."
-        "ping_mongodb",
-        AsyncMock(
-            side_effect=RuntimeError(
-                "unexpected"
-            )
-        ),
+        "app.adapters.mongodb_service.ping_mongodb",
+        AsyncMock(side_effect=RuntimeError("unexpected")),
     )
 
     assert await service.ping() is False
@@ -1314,9 +1099,7 @@ async def test_health_returns_unavailable_status(
     monkeypatch.setattr(
         service,
         "ping",
-        AsyncMock(
-            return_value=False
-        ),
+        AsyncMock(return_value=False),
     )
 
     status = await service.health()
@@ -1340,9 +1123,7 @@ async def test_health_returns_analysis_count(
     monkeypatch.setattr(
         service,
         "ping",
-        AsyncMock(
-            return_value=True
-        ),
+        AsyncMock(return_value=True),
     )
 
     collection.count_documents.return_value = 12
@@ -1354,6 +1135,4 @@ async def test_health_returns_analysis_count(
     assert status["initialized"] is True
     assert status["analysis_count"] == 12
 
-    collection.count_documents.assert_awaited_once_with(
-        {}
-    )
+    collection.count_documents.assert_awaited_once_with({})

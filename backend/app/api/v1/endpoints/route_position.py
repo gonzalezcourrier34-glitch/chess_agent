@@ -69,9 +69,7 @@ async def validate_position(
         Représentation structurée de la position.
     """
 
-    return service.get_position(
-        payload
-    )
+    return service.get_position(payload)
 
 
 # Coups légaux
@@ -103,9 +101,7 @@ async def get_legal_moves(
         Liste structurée des coups légaux disponibles.
     """
 
-    return service.get_legal_moves(
-        payload
-    )
+    return service.get_legal_moves(payload)
 
 
 # Évaluation interne
@@ -141,6 +137,4 @@ async def evaluate_position(
         Évaluation technique produite par le moteur.
     """
 
-    return await service.analyze_position(
-        payload
-    )
+    return await service.analyze_position(payload)

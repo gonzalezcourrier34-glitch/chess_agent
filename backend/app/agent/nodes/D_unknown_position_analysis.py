@@ -41,10 +41,7 @@ def _get_success_status(state: ChessAnalysisState) -> AnalysisStatus:
 # Formatage
 
 
-def _format_score(
-    score: float,
-    evaluation_type: EvaluationType
-) -> str:
+def _format_score(score: float, evaluation_type: EvaluationType) -> str:
     """Formate un score Stockfish sans l'interpréter."""
     if evaluation_type is EvaluationType.MATE:
         return f"mat en {int(score)}"
@@ -65,23 +62,15 @@ def _format_moves(moves: list[str]) -> str | None:
 # Construction du contexte
 
 
-def _append_best_move(
-    sections: list[str],
-    evaluation: PositionEvaluation
-) -> None:
+def _append_best_move(sections: list[str], evaluation: PositionEvaluation) -> None:
     """Ajoute le meilleur coup calculé par Stockfish."""
     best_move = evaluation.engine.best_move
 
     if best_move is None:
-        sections.append(
-            "Meilleur coup calculé par Stockfish :\n- Non disponible."
-        )
+        sections.append("Meilleur coup calculé par Stockfish :\n- Non disponible.")
         return
 
-    formatted_score = _format_score(
-        best_move.score,
-        best_move.evaluation_type
-    )
+    formatted_score = _format_score(best_move.score, best_move.evaluation_type)
     sections.append(
         "Meilleur coup calculé par Stockfish :\n"
         f"- SAN : {best_move.san}\n"
@@ -91,10 +80,7 @@ def _append_best_move(
     )
 
 
-def _append_evaluation(
-    sections: list[str],
-    evaluation: PositionEvaluation
-) -> None:
+def _append_evaluation(sections: list[str], evaluation: PositionEvaluation) -> None:
     """Ajoute l'évaluation globale calculée par Stockfish."""
     engine_evaluation = evaluation.engine.evaluation
 
@@ -103,12 +89,11 @@ def _append_evaluation(
         return
 
     formatted_score = _format_score(
-        engine_evaluation.score,
-        engine_evaluation.evaluation_type
+        engine_evaluation.score, engine_evaluation.evaluation_type
     )
     lines = [
         f"- Score : {formatted_score}",
-        f"- Profondeur : {engine_evaluation.depth}"
+        f"- Profondeur : {engine_evaluation.depth}",
     ]
 
     if engine_evaluation.nodes is not None:
@@ -121,8 +106,7 @@ def _append_evaluation(
 
 
 def _append_principal_variation(
-    sections: list[str],
-    evaluation: PositionEvaluation
+    sections: list[str], evaluation: PositionEvaluation
 ) -> None:
     """Ajoute la variante principale calculée."""
     principal_variation = evaluation.engine.principal_variation
@@ -133,13 +117,12 @@ def _append_principal_variation(
 
     variation_evaluation = principal_variation.evaluation
     formatted_score = _format_score(
-        variation_evaluation.score,
-        variation_evaluation.evaluation_type
+        variation_evaluation.score, variation_evaluation.evaluation_type
     )
     lines = [
         f"- Coups : {moves}",
         f"- Score : {formatted_score}",
-        f"- Profondeur : {variation_evaluation.depth}"
+        f"- Profondeur : {variation_evaluation.depth}",
     ]
 
     if principal_variation.explanation:
@@ -148,10 +131,7 @@ def _append_principal_variation(
     sections.append("Variante principale :\n" + "\n".join(lines))
 
 
-def _append_alternatives(
-    sections: list[str],
-    evaluation: PositionEvaluation
-) -> None:
+def _append_alternatives(sections: list[str], evaluation: PositionEvaluation) -> None:
     """Ajoute les alternatives calculées par Stockfish."""
     alternatives = evaluation.engine.alternatives
 
@@ -161,14 +141,11 @@ def _append_alternatives(
     values: list[str] = []
 
     for alternative in alternatives:
-        formatted_score = _format_score(
-            alternative.score,
-            alternative.evaluation_type
-        )
+        formatted_score = _format_score(alternative.score, alternative.evaluation_type)
         lines = [
             f"- {alternative.san} ({alternative.uci})",
             f"  Score : {formatted_score}",
-            f"  Profondeur : {alternative.depth}"
+            f"  Profondeur : {alternative.depth}",
         ]
         moves = _format_moves(alternative.principal_variation)
 
@@ -180,10 +157,7 @@ def _append_alternatives(
     sections.append("Alternatives calculées :\n" + "\n\n".join(values))
 
 
-def _append_summary(
-    sections: list[str],
-    evaluation: PositionEvaluation
-) -> None:
+def _append_summary(sections: list[str], evaluation: PositionEvaluation) -> None:
     """Ajoute la synthèse moteur lorsqu'elle est disponible."""
     if not evaluation.summary:
         return
@@ -191,15 +165,10 @@ def _append_summary(
     sections.append(f"Synthèse moteur :\n{evaluation.summary}")
 
 
-def _build_unknown_position_context(
-    evaluation: PositionEvaluation
-) -> str:
+def _build_unknown_position_context(evaluation: PositionEvaluation) -> str:
     """Construit le contexte pédagogique de la position inconnue."""
     sections = [
-        (
-            "La position ne correspond à aucune ouverture "
-            "connue retournée par Lichess."
-        )
+        ("La position ne correspond à aucune ouverture connue retournée par Lichess.")
     ]
 
     _append_best_move(sections, evaluation)
@@ -215,8 +184,7 @@ def _build_unknown_position_context(
 
 
 def _build_workflow_context(
-    state: ChessAnalysisState,
-    unknown_position_context: str
+    state: ChessAnalysisState, unknown_position_context: str
 ) -> WorkflowContext:
     """Construit le contexte pédagogique de la position inconnue."""
     return state.workflow_context.model_copy(
@@ -228,8 +196,7 @@ def _build_workflow_context(
 
 
 def _build_success_update(
-    state: ChessAnalysisState,
-    unknown_position_context: str
+    state: ChessAnalysisState, unknown_position_context: str
 ) -> StateUpdate:
     """Construit la mise à jour après une préparation réussie."""
     current_step = WorkflowStep.UNKNOWN_POSITION_ANALYSIS
@@ -238,12 +205,9 @@ def _build_success_update(
         "status": _get_success_status(state),
         "current_step": current_step,
         "completed_steps": append_completed_step(state, current_step),
-        "workflow_context": _build_workflow_context(
-            state,
-            unknown_position_context
-        ),
+        "workflow_context": _build_workflow_context(state, unknown_position_context),
         "errors": list(state.errors),
-        "warnings": list(state.warnings)
+        "warnings": list(state.warnings),
     }
 
 
@@ -251,8 +215,7 @@ def _build_success_update(
 
 
 async def unknown_position_analysis(
-    state: ChessAnalysisState,
-    config: RunnableConfig
+    state: ChessAnalysisState, config: RunnableConfig
 ) -> StateUpdate:
     """Prépare l'analyse pédagogique d'une position inconnue."""
     del config
@@ -270,16 +233,14 @@ async def unknown_position_analysis(
     # dans le routage du workflow.
     if state.evaluation is None:
         raise RuntimeError(
-            "Le nœud unknown_position_analysis nécessite "
-            "une évaluation Stockfish."
+            "Le nœud unknown_position_analysis nécessite une évaluation Stockfish."
         )
 
     unknown_position_context = _build_unknown_position_context(state.evaluation)
 
     logger.info(
-        "Analyse pédagogique de la position inconnue préparée "
-        "avec %s alternative(s).",
-        len(state.evaluation.engine.alternatives)
+        "Analyse pédagogique de la position inconnue préparée avec %s alternative(s).",
+        len(state.evaluation.engine.alternatives),
     )
 
     return _build_success_update(state, unknown_position_context)

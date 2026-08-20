@@ -30,15 +30,10 @@ from typing import Any
 
 # Le dossier backend doit être disponible dans sys.path lorsque le
 # script est exécuté directement depuis la racine du projet.
-BACKEND_DIRECTORY = Path(
-    __file__
-).resolve().parents[1]
+BACKEND_DIRECTORY = Path(__file__).resolve().parents[1]
 
 if str(BACKEND_DIRECTORY) not in sys.path:
-    sys.path.insert(
-        0,
-        str(BACKEND_DIRECTORY)
-    )
+    sys.path.insert(0, str(BACKEND_DIRECTORY))
 
 
 from app.adapters.embedding_service import EmbeddingService
@@ -64,21 +59,12 @@ InitializationStatus = dict[str, Any]
 # Validation
 
 
-def validate_vector_dimension(
-    dimension: int
-) -> int:
+def validate_vector_dimension(dimension: int) -> int:
     """Valide une dimension vectorielle."""
 
     # Les booléens héritent de int en Python, mais ne représentent pas
     # une dimension vectorielle exploitable.
-    if (
-        isinstance(dimension, bool)
-        or not isinstance(
-            dimension,
-            int
-        )
-        or dimension < 1
-    ):
+    if isinstance(dimension, bool) or not isinstance(dimension, int) or dimension < 1:
         raise ConfigurationError(
             message=(
                 "La dimension du modèle d'embedding "
@@ -89,10 +75,7 @@ def validate_vector_dimension(
     return dimension
 
 
-def validate_dimensions(
-    embedding_dimension: int,
-    milvus_dimension: int
-) -> None:
+def validate_dimensions(embedding_dimension: int, milvus_dimension: int) -> None:
     """Vérifie la cohérence des dimensions vectorielles."""
 
     if embedding_dimension == milvus_dimension:
@@ -111,9 +94,7 @@ def validate_dimensions(
 # Collection
 
 
-async def recreate_collection(
-    milvus_service: MilvusService
-) -> None:
+async def recreate_collection(milvus_service: MilvusService) -> None:
     """Recrée la collection Milvus lorsque cette option est activée."""
 
     if not settings.milvus_recreate_collection:
@@ -121,7 +102,7 @@ async def recreate_collection(
 
     logger.warning(
         "Recréation demandée pour la collection Milvus %s.",
-        milvus_service.collection_name
+        milvus_service.collection_name,
     )
 
     await milvus_service.drop_collection()
@@ -134,18 +115,14 @@ async def recreate_collection(
     logger.info(
         "Collection Milvus %s recréée avec une dimension de %s.",
         milvus_service.collection_name,
-        milvus_service.get_vector_dimension()
+        milvus_service.get_vector_dimension(),
     )
 
 
 # Construction
 
 
-async def create_services(
-) -> tuple[
-    EmbeddingService,
-    MilvusService
-]:
+async def create_services() -> tuple[EmbeddingService, MilvusService]:
     """Construit et initialise les services vectoriels."""
 
     embedding_service = EmbeddingService()
@@ -156,20 +133,14 @@ async def create_services(
         # dimension réelle des embeddings.
         await embedding_service.start()
 
-        vector_dimension = validate_vector_dimension(
-            embedding_service.get_dimension()
-        )
+        vector_dimension = validate_vector_dimension(embedding_service.get_dimension())
 
         # Milvus utilise exactement la dimension exposée par le modèle.
-        milvus_service = MilvusService(
-            vector_dimension=vector_dimension
-        )
+        milvus_service = MilvusService(vector_dimension=vector_dimension)
 
         await milvus_service.start()
 
-        await recreate_collection(
-            milvus_service
-        )
+        await recreate_collection(milvus_service)
 
     except Exception:
         if milvus_service is not None:
@@ -179,18 +150,14 @@ async def create_services(
 
         raise
 
-    return (
-        embedding_service,
-        milvus_service
-    )
+    return (embedding_service, milvus_service)
 
 
 # Vérification
 
 
 async def build_initialization_status(
-    embedding_service: EmbeddingService,
-    milvus_service: MilvusService
+    embedding_service: EmbeddingService, milvus_service: MilvusService
 ) -> InitializationStatus:
     """Construit le bilan d'initialisation."""
 
@@ -198,30 +165,14 @@ async def build_initialization_status(
 
     milvus_health = await milvus_service.health()
 
-    embedding_dimension = validate_vector_dimension(
-        embedding_service.get_dimension()
-    )
+    embedding_dimension = validate_vector_dimension(embedding_service.get_dimension())
 
-    milvus_dimension = validate_vector_dimension(
-        milvus_service.get_vector_dimension()
-    )
+    milvus_dimension = validate_vector_dimension(milvus_service.get_vector_dimension())
 
-    validate_dimensions(
-        embedding_dimension,
-        milvus_dimension
-    )
+    validate_dimensions(embedding_dimension, milvus_dimension)
 
-    available = (
-        bool(
-            embedding_health.get(
-                "available"
-            )
-        )
-        and bool(
-            milvus_health.get(
-                "available"
-            )
-        )
+    available = bool(embedding_health.get("available")) and bool(
+        milvus_health.get("available")
     )
 
     return {
@@ -233,72 +184,33 @@ async def build_initialization_status(
         "milvus_dimension": milvus_dimension,
         "collection": milvus_service.collection_name,
         "metric_type": milvus_service.metric_type,
-        "index_type": milvus_service.index_type
+        "index_type": milvus_service.index_type,
     }
 
 
-def display_status(
-    initialization_status: InitializationStatus
-) -> None:
+def display_status(initialization_status: InitializationStatus) -> None:
     """Affiche le bilan d'initialisation."""
 
-    embedding_status = initialization_status.get(
-        "embedding",
-        {}
-    )
+    embedding_status = initialization_status.get("embedding", {})
 
-    milvus_status = initialization_status.get(
-        "milvus",
-        {}
-    )
+    milvus_status = initialization_status.get("milvus", {})
 
     print()
     print("Initialisation Milvus terminée.")
     print()
     print(
         "État global : "
-        f"{
-            'disponible'
-            if initialization_status['available']
-            else 'indisponible'
-        }"
+        f"{'disponible' if initialization_status['available'] else 'indisponible'}"
     )
-    print(
-        "Modèle d'embedding : "
-        f"{embedding_status.get('model')}"
-    )
-    print(
-        "Dimension des embeddings : "
-        f"{initialization_status['embedding_dimension']}"
-    )
-    print(
-        "Dimension Milvus : "
-        f"{initialization_status['milvus_dimension']}"
-    )
-    print(
-        "Collection Milvus : "
-        f"{initialization_status['collection']}"
-    )
-    print(
-        "Collection recréée : "
-        f"{initialization_status['recreated']}"
-    )
-    print(
-        "Métrique : "
-        f"{initialization_status['metric_type']}"
-    )
-    print(
-        "Type d'index : "
-        f"{initialization_status['index_type']}"
-    )
-    print(
-        "Milvus disponible : "
-        f"{milvus_status.get('available', False)}"
-    )
-    print(
-        "Milvus prêt : "
-        f"{milvus_status.get('is_ready', False)}"
-    )
+    print(f"Modèle d'embedding : {embedding_status.get('model')}")
+    print(f"Dimension des embeddings : {initialization_status['embedding_dimension']}")
+    print(f"Dimension Milvus : {initialization_status['milvus_dimension']}")
+    print(f"Collection Milvus : {initialization_status['collection']}")
+    print(f"Collection recréée : {initialization_status['recreated']}")
+    print(f"Métrique : {initialization_status['metric_type']}")
+    print(f"Type d'index : {initialization_status['index_type']}")
+    print(f"Milvus disponible : {milvus_status.get('available', False)}")
+    print(f"Milvus prêt : {milvus_status.get('is_ready', False)}")
 
 
 # Initialisation
@@ -307,37 +219,27 @@ def display_status(
 async def initialize_milvus() -> InitializationStatus:
     """Initialise la collection vectorielle Milvus."""
 
-    logger.info(
-        "Démarrage de l'initialisation Milvus."
-    )
+    logger.info("Démarrage de l'initialisation Milvus.")
 
     embedding_service: EmbeddingService | None = None
     milvus_service: MilvusService | None = None
 
     try:
-        (
-            embedding_service,
-            milvus_service
-        ) = await create_services()
+        (embedding_service, milvus_service) = await create_services()
 
         initialization_status = await build_initialization_status(
-            embedding_service,
-            milvus_service
+            embedding_service, milvus_service
         )
 
         if not initialization_status["available"]:
             raise MilvusConnectionError(
-                message=(
-                    "La chaîne vectorielle n'est pas "
-                    "entièrement disponible."
-                )
+                message=("La chaîne vectorielle n'est pas entièrement disponible.")
             )
 
         logger.info(
-            "Collection Milvus %s initialisée avec "
-            "une dimension de %s.",
+            "Collection Milvus %s initialisée avec une dimension de %s.",
             milvus_service.collection_name,
-            milvus_service.get_vector_dimension()
+            milvus_service.get_vector_dimension(),
         )
 
         return initialization_status
@@ -366,35 +268,24 @@ async def main() -> int:
         EmbeddingModelUnavailableError,
         MilvusConnectionError,
         MilvusIndexError,
-        MilvusOperationError
+        MilvusOperationError,
     ) as error:
-        logger.exception(
-            "Initialisation Milvus impossible."
-        )
+        logger.exception("Initialisation Milvus impossible.")
 
         print()
-        print(
-            f"Erreur : {error}"
-        )
+        print(f"Erreur : {error}")
 
         return 1
 
     except Exception as error:
-        logger.exception(
-            "Erreur inattendue pendant "
-            "l'initialisation Milvus."
-        )
+        logger.exception("Erreur inattendue pendant l'initialisation Milvus.")
 
         print()
-        print(
-            f"Erreur inattendue : {error}"
-        )
+        print(f"Erreur inattendue : {error}")
 
         return 1
 
-    display_status(
-        initialization_status
-    )
+    display_status(initialization_status)
 
     return 0
 
@@ -403,8 +294,4 @@ async def main() -> int:
 
 
 if __name__ == "__main__":
-    raise SystemExit(
-        asyncio.run(
-            main()
-        )
-    )
+    raise SystemExit(asyncio.run(main()))

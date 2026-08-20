@@ -83,12 +83,11 @@ NEXT_MOVE_SOURCE_URL_KEY = "source_url"
 
 # Services
 
+
 def _get_chess_service(config: RunnableConfig) -> ChessService | None:
     """Retourne le service d'échecs configuré avec un type vérifié."""
     service = get_configured_service(
-        config,
-        CHESS_SERVICE_KEY,
-        expected_type=ChessService
+        config, CHESS_SERVICE_KEY, expected_type=ChessService
     )
 
     if service is None:
@@ -98,21 +97,17 @@ def _get_chess_service(config: RunnableConfig) -> ChessService | None:
         logger.error(
             "Service %s invalide : %s reçu au lieu de ChessService.",
             CHESS_SERVICE_KEY,
-            type(service).__name__
+            type(service).__name__,
         )
         return None
 
     return service
 
 
-def _get_vector_search_service(
-    config: RunnableConfig
-) -> VectorSearchService | None:
+def _get_vector_search_service(config: RunnableConfig) -> VectorSearchService | None:
     """Retourne le service de recherche configuré avec un type vérifié."""
     service = get_configured_service(
-        config,
-        VECTOR_SEARCH_SERVICE_KEY,
-        expected_type=VectorSearchService
+        config, VECTOR_SEARCH_SERVICE_KEY, expected_type=VectorSearchService
     )
 
     if service is None:
@@ -122,7 +117,7 @@ def _get_vector_search_service(
         logger.error(
             "Service %s invalide : %s reçu au lieu de VectorSearchService.",
             VECTOR_SEARCH_SERVICE_KEY,
-            type(service).__name__
+            type(service).__name__,
         )
         return None
 
@@ -130,6 +125,7 @@ def _get_vector_search_service(
 
 
 # Statuts
+
 
 def _get_success_status(state: ChessAnalysisState) -> AnalysisStatus:
     """Retourne le statut applicable après une recherche réussie."""
@@ -143,9 +139,7 @@ def _get_success_status(state: ChessAnalysisState) -> AnalysisStatus:
     return AnalysisStatus.SUCCESS
 
 
-def _get_partial_success_status(
-    state: ChessAnalysisState
-) -> AnalysisStatus:
+def _get_partial_success_status(state: ChessAnalysisState) -> AnalysisStatus:
     """Retourne le statut applicable après une recherche dégradée."""
     if state.status is AnalysisStatus.FAILED:
         return AnalysisStatus.FAILED
@@ -154,6 +148,7 @@ def _get_partial_success_status(
 
 
 # Normalisation
+
 
 def _normalize_text(value: object) -> str | None:
     """Retourne une chaîne facultative nettoyée."""
@@ -178,6 +173,7 @@ def _normalize_moves(value: object) -> tuple[str, ...]:
 
 # Coups
 
+
 def _get_state_moves(state: ChessAnalysisState) -> tuple[str, ...]:
     """Retourne les coups réellement transmis au workflow."""
     return _normalize_moves(getattr(state, "moves", ()))
@@ -189,8 +185,7 @@ def _format_moves_path(moves: Sequence[str]) -> str:
 
 
 def _convert_moves_to_san(
-    service: ChessService,
-    moves: Sequence[str]
+    service: ChessService, moves: Sequence[str]
 ) -> tuple[str, ...]:
     """Convertit un historique UCI en une séquence SAN normalisée."""
     converted_moves = service.convert_uci_history_to_san(list(moves))
@@ -204,9 +199,8 @@ def _convert_moves_to_san(
 
 # Ouverture
 
-def _get_opening_identity(
-    state: ChessAnalysisState
-) -> tuple[str | None, str | None]:
+
+def _get_opening_identity(state: ChessAnalysisState) -> tuple[str | None, str | None]:
     """Retourne le nom et le code ECO de l'ouverture détectée."""
     if state.opening is None:
         return None, None
@@ -217,10 +211,8 @@ def _get_opening_identity(
 
 # Requête
 
-def _build_search_query(
-    state: ChessAnalysisState,
-    moves: Sequence[str]
-) -> str:
+
+def _build_search_query(state: ChessAnalysisState, moves: Sequence[str]) -> str:
     """Construit la description factuelle de la recherche."""
     opening_name, opening_eco = _get_opening_identity(state)
     sections = ["Type : présentation Wikichess"]
@@ -239,6 +231,7 @@ def _build_search_query(
 
 # Lecture des métadonnées
 
+
 def _get_result_metadata(result: VectorSearchResult) -> dict[str, object]:
     """Retourne les métadonnées normalisées d'un résultat."""
     metadata = result.metadata
@@ -249,26 +242,19 @@ def _get_result_metadata(result: VectorSearchResult) -> dict[str, object]:
     return {str(key): value for key, value in metadata.items()}
 
 
-def _get_metadata_string(
-    metadata: Mapping[str, object],
-    key: str,
-    default: str
-) -> str:
+def _get_metadata_string(metadata: Mapping[str, object], key: str, default: str) -> str:
     """Retourne une chaîne obligatoire issue des métadonnées."""
     return _normalize_text(metadata.get(key)) or default
 
 
 def _get_optional_metadata_string(
-    metadata: Mapping[str, object],
-    key: str
+    metadata: Mapping[str, object], key: str
 ) -> str | None:
     """Retourne une chaîne facultative issue des métadonnées."""
     return _normalize_text(metadata.get(key))
 
 
-def _get_metadata_moves(
-    metadata: Mapping[str, object]
-) -> tuple[str, ...]:
+def _get_metadata_moves(metadata: Mapping[str, object]) -> tuple[str, ...]:
     """Retourne les coups Wikichess présents dans les métadonnées."""
     return _normalize_moves(metadata.get(METADATA_MOVES_KEY))
 
@@ -288,7 +274,7 @@ def _build_next_move(value: object) -> DocumentNextMove | None:
 
 
 def _get_metadata_next_moves(
-    metadata: Mapping[str, object]
+    metadata: Mapping[str, object],
 ) -> tuple[DocumentNextMove, ...]:
     """Retourne les continuations Wikichess valides."""
     value = metadata.get(METADATA_NEXT_MOVES_KEY)
@@ -297,13 +283,12 @@ def _get_metadata_next_moves(
         return ()
 
     return tuple(
-        next_move
-        for item in value
-        if (next_move := _build_next_move(item)) is not None
+        next_move for item in value if (next_move := _build_next_move(item)) is not None
     )
 
 
 # Résultats vectoriels
+
 
 def _get_result_identifier(result: VectorSearchResult) -> str:
     """Retourne l'identifiant stable d'un résultat."""
@@ -371,11 +356,8 @@ def _get_document_type(metadata: Mapping[str, object]) -> DocumentType:
 
 # Conversion documentaire
 
-def _build_excerpt(
-    content: str,
-    *,
-    max_length: int = EXCERPT_MAX_LENGTH
-) -> str | None:
+
+def _build_excerpt(content: str, *, max_length: int = EXCERPT_MAX_LENGTH) -> str | None:
     """Construit un aperçu court du contenu pédagogique."""
     normalized_content = " ".join(content.split())
 
@@ -389,60 +371,41 @@ def _build_excerpt(
 
 
 def _build_document_metadata(
-    result: VectorSearchResult,
-    metadata: Mapping[str, object]
+    result: VectorSearchResult, metadata: Mapping[str, object]
 ) -> DocumentMetadata:
     """Construit les métadonnées métier d'un document RAG."""
     return DocumentMetadata(
         source=_get_result_source(result),
         language=_get_metadata_string(
-            metadata,
-            METADATA_LANGUAGE_KEY,
-            DEFAULT_DOCUMENT_LANGUAGE
+            metadata, METADATA_LANGUAGE_KEY, DEFAULT_DOCUMENT_LANGUAGE
         ),
         author=None,
-        url=_get_optional_metadata_string(
-            metadata,
-            METADATA_SOURCE_URL_KEY
-        ),
+        url=_get_optional_metadata_string(metadata, METADATA_SOURCE_URL_KEY),
         publication_date=None,
         eco=_get_optional_metadata_string(metadata, METADATA_ECO_KEY),
         moves=_get_metadata_moves(metadata),
-        moves_path=_get_optional_metadata_string(
-            metadata,
-            METADATA_MOVES_PATH_KEY
-        ),
+        moves_path=_get_optional_metadata_string(metadata, METADATA_MOVES_PATH_KEY),
         position_after=_get_optional_metadata_string(
-            metadata,
-            METADATA_POSITION_AFTER_KEY
+            metadata, METADATA_POSITION_AFTER_KEY
         ),
         wikichess_title=_get_optional_metadata_string(
-            metadata,
-            METADATA_WIKICHESS_TITLE_KEY
+            metadata, METADATA_WIKICHESS_TITLE_KEY
         ),
-        next_moves=_get_metadata_next_moves(metadata)
+        next_moves=_get_metadata_next_moves(metadata),
     )
 
 
-def _build_retrieved_document(
-    result: VectorSearchResult
-) -> RetrievedDocument:
+def _build_retrieved_document(result: VectorSearchResult) -> RetrievedDocument:
     """Construit un document RAG depuis un résultat vectoriel."""
     metadata = _get_result_metadata(result)
     identifier = _get_result_identifier(result)
-    article_slug = _get_metadata_string(
-        metadata,
-        METADATA_ARTICLE_SLUG_KEY,
-        identifier
-    )
+    article_slug = _get_metadata_string(metadata, METADATA_ARTICLE_SLUG_KEY, identifier)
     title = _get_metadata_string(
         metadata,
         METADATA_ARTICLE_TITLE_KEY,
         _get_metadata_string(
-            metadata,
-            METADATA_WIKICHESS_TITLE_KEY,
-            DEFAULT_DOCUMENT_TITLE
-        )
+            metadata, METADATA_WIKICHESS_TITLE_KEY, DEFAULT_DOCUMENT_TITLE
+        ),
     )
     content = _get_result_content(result)
     document = Document(
@@ -450,51 +413,38 @@ def _build_retrieved_document(
         type=_get_document_type(metadata),
         title=title,
         content=content,
-        metadata=_build_document_metadata(result, metadata)
+        metadata=_build_document_metadata(result, metadata),
     )
     chunk = DocumentChunk(
-        id=identifier,
-        document_id=article_slug,
-        content=content,
-        chunk_index=0
+        id=identifier, document_id=article_slug, content=content, chunk_index=0
     )
 
     return RetrievedDocument(
         document=document,
         similarity=_normalize_similarity(_get_result_similarity(result)),
         chunk=chunk,
-        excerpt=_build_excerpt(content)
+        excerpt=_build_excerpt(content),
     )
 
 
 # Contexte RAG
 
-def _select_results(
-    results: Sequence[VectorSearchResult]
-) -> list[VectorSearchResult]:
+
+def _select_results(results: Sequence[VectorSearchResult]) -> list[VectorSearchResult]:
     """Sélectionne les résultats les plus similaires."""
-    ordered_results = sorted(
-        results,
-        key=_get_result_similarity,
-        reverse=True
-    )
+    ordered_results = sorted(results, key=_get_result_similarity, reverse=True)
     return ordered_results[:SELECTED_DOCUMENT_LIMIT]
 
 
 def _build_retrieval_context(
-    query: str,
-    results: Sequence[VectorSearchResult]
+    query: str, results: Sequence[VectorSearchResult]
 ) -> RetrievalContext:
     """Construit le contexte documentaire du workflow."""
     selected_results = _select_results(results)
-    documents = [
-        _build_retrieved_document(result) for result in selected_results
-    ]
+    documents = [_build_retrieved_document(result) for result in selected_results]
 
     return RetrievalContext(
-        query=query,
-        documents=documents,
-        total_results=len(documents)
+        query=query, documents=documents, total_results=len(documents)
     )
 
 
@@ -505,9 +455,8 @@ def _build_empty_retrieval_context(query: str) -> RetrievalContext:
 
 # Contexte du workflow
 
-def _build_documents_summary(
-    retrieval_context: RetrievalContext
-) -> str | None:
+
+def _build_documents_summary(retrieval_context: RetrievalContext) -> str | None:
     """Construit le résumé documentaire destiné à la réponse finale."""
     if not retrieval_context.documents:
         return None
@@ -535,9 +484,7 @@ def _build_documents_summary(
             lines.append(f"Présentation Wikichess :\n{document.content}")
 
         if metadata.next_moves:
-            next_moves = ", ".join(
-                next_move.move for next_move in metadata.next_moves
-            )
+            next_moves = ", ".join(next_move.move for next_move in metadata.next_moves)
             lines.append(f"Continuations Wikichess : {next_moves}")
 
         sections.append("\n".join(lines))
@@ -546,26 +493,19 @@ def _build_documents_summary(
 
 
 def _build_workflow_context(
-    state: ChessAnalysisState,
-    retrieval_context: RetrievalContext
+    state: ChessAnalysisState, retrieval_context: RetrievalContext
 ) -> WorkflowContext:
     """Ajoute le résumé documentaire au contexte du workflow."""
     return state.workflow_context.model_copy(
-        update={
-            "documents_summary": _build_documents_summary(
-                retrieval_context
-            )
-        }
+        update={"documents_summary": _build_documents_summary(retrieval_context)}
     )
 
 
 # Recherche
 
+
 async def _search_documents(
-    *,
-    state: ChessAnalysisState,
-    moves: Sequence[str],
-    service: VectorSearchService
+    *, state: ChessAnalysisState, moves: Sequence[str], service: VectorSearchService
 ) -> RetrievalContext:
     """Recherche le document Wikichess correspondant au contexte."""
     _, opening_eco = _get_opening_identity(state)
@@ -577,21 +517,16 @@ async def _search_documents(
     logger.info(
         "Recherche Wikichess : eco=%r, moves=%r.",
         opening_eco,
-        _format_moves_path(moves) if moves else None
+        _format_moves_path(moves) if moves else None,
     )
     results = await service.search_wikichess(
-        query=query,
-        eco=opening_eco,
-        moves=moves,
-        limit=SELECTED_DOCUMENT_LIMIT
+        query=query, eco=opening_eco, moves=moves, limit=SELECTED_DOCUMENT_LIMIT
     )
 
     _log_search_results(results)
 
     if not results:
-        logger.info(
-            "Aucun document Wikichess correspondant au contexte disponible."
-        )
+        logger.info("Aucun document Wikichess correspondant au contexte disponible.")
         return _build_empty_retrieval_context(query)
 
     logger.info("%s document(s) Wikichess identifié(s).", len(results))
@@ -600,6 +535,7 @@ async def _search_documents(
 
 # Erreurs
 
+
 def _get_retrieval_error_code(error: RetrievalError) -> str:
     """Retourne le code public d'une erreur de recherche connue."""
     code = _normalize_text(getattr(error, "code", None))
@@ -607,14 +543,10 @@ def _get_retrieval_error_code(error: RetrievalError) -> str:
 
 
 def _build_missing_service_update(
-    state: ChessAnalysisState,
-    service_name: str
+    state: ChessAnalysisState, service_name: str
 ) -> StateUpdate:
     """Construit la mise à jour lorsqu'un service est indisponible."""
-    message = (
-        f"{service_name} est absent ou invalide dans la configuration "
-        "LangGraph."
-    )
+    message = f"{service_name} est absent ou invalide dans la configuration LangGraph."
     logger.error(message)
 
     return _build_error_update(
@@ -623,14 +555,13 @@ def _build_missing_service_update(
             step=WorkflowStep.RETRIEVE_CONTEXT,
             code=ERROR_CONFIGURATION,
             message=message,
-            recoverable=False
-        )
+            recoverable=False,
+        ),
     )
 
 
 def _build_unexpected_error_update(
-    state: ChessAnalysisState,
-    message: str
+    state: ChessAnalysisState, message: str
 ) -> StateUpdate:
     """Construit la mise à jour après une erreur inattendue."""
     return _build_error_update(
@@ -639,16 +570,16 @@ def _build_unexpected_error_update(
             step=WorkflowStep.RETRIEVE_CONTEXT,
             code=ERROR_UNEXPECTED,
             message=message,
-            recoverable=False
-        )
+            recoverable=False,
+        ),
     )
 
 
 # Mises à jour
 
+
 def _build_success_update(
-    state: ChessAnalysisState,
-    retrieval_context: RetrievalContext
+    state: ChessAnalysisState, retrieval_context: RetrievalContext
 ) -> StateUpdate:
     """Construit la mise à jour après une recherche réussie."""
     current_step = WorkflowStep.RETRIEVE_CONTEXT
@@ -658,20 +589,14 @@ def _build_success_update(
         "current_step": current_step,
         "completed_steps": append_completed_step(state, current_step),
         "retrieval_context": retrieval_context,
-        "workflow_context": _build_workflow_context(
-            state,
-            retrieval_context
-        ),
+        "workflow_context": _build_workflow_context(state, retrieval_context),
         "errors": list(state.errors),
-        "warnings": list(state.warnings)
+        "warnings": list(state.warnings),
     }
 
 
 def _build_warning_update(
-    state: ChessAnalysisState,
-    warning: WorkflowWarning,
-    *,
-    query: str
+    state: ChessAnalysisState, warning: WorkflowWarning, *, query: str
 ) -> StateUpdate:
     """Construit la mise à jour après une erreur récupérable."""
     current_step = WorkflowStep.RETRIEVE_CONTEXT
@@ -683,19 +608,13 @@ def _build_warning_update(
         # La recherche facultative est terminée malgré l'avertissement.
         "completed_steps": append_completed_step(state, current_step),
         "retrieval_context": retrieval_context,
-        "workflow_context": _build_workflow_context(
-            state,
-            retrieval_context
-        ),
+        "workflow_context": _build_workflow_context(state, retrieval_context),
         "errors": list(state.errors),
-        "warnings": [*state.warnings, warning]
+        "warnings": [*state.warnings, warning],
     }
 
 
-def _build_error_update(
-    state: ChessAnalysisState,
-    error: WorkflowError
-) -> StateUpdate:
+def _build_error_update(state: ChessAnalysisState, error: WorkflowError) -> StateUpdate:
     """Construit la mise à jour après un échec bloquant."""
     return {
         "status": AnalysisStatus.FAILED,
@@ -703,18 +622,16 @@ def _build_error_update(
         # Une étape échouée n'est jamais ajoutée aux étapes terminées.
         "completed_steps": list(state.completed_steps),
         "errors": [*state.errors, error],
-        "warnings": list(state.warnings)
+        "warnings": list(state.warnings),
     }
 
 
 # Journalisation
 
+
 def _log_search_results(results: Sequence[VectorSearchResult]) -> None:
     """Journalise les résultats documentaires sans exposer leur contenu."""
-    logger.info(
-        "Recherche Wikichess terminée : %s résultat(s).",
-        len(results)
-    )
+    logger.info("Recherche Wikichess terminée : %s résultat(s).", len(results))
 
     for index, result in enumerate(results, start=1):
         metadata = _get_result_metadata(result)
@@ -729,7 +646,7 @@ def _log_search_results(results: Sequence[VectorSearchResult]) -> None:
             _get_metadata_moves(metadata),
             metadata.get(METADATA_MOVES_PATH_KEY),
             metadata.get(METADATA_POSITION_AFTER_KEY),
-            len(_get_metadata_next_moves(metadata))
+            len(_get_metadata_next_moves(metadata)),
         )
 
 
@@ -752,25 +669,24 @@ def _log_retrieval_result(retrieval_context: RetrievalContext) -> None:
         metadata.eco,
         metadata.moves,
         metadata.position_after,
-        len(metadata.next_moves)
+        len(metadata.next_moves),
     )
 
 
 # Nœud
 
+
 async def retrieve_context(
-    state: ChessAnalysisState,
-    config: RunnableConfig
+    state: ChessAnalysisState, config: RunnableConfig
 ) -> StateUpdate:
     """Recherche le contexte pédagogique associé à la position."""
     opening_name, opening_eco = _get_opening_identity(state)
     uci_moves = _get_state_moves(state)
     logger.info(
-        "Préparation de la recherche documentaire : "
-        "moves=%r, ouverture=%r, eco=%r.",
+        "Préparation de la recherche documentaire : moves=%r, ouverture=%r, eco=%r.",
         _format_moves_path(uci_moves) if uci_moves else None,
         opening_name,
-        opening_eco
+        opening_eco,
     )
 
     if opening_eco is None and not uci_moves:
@@ -779,10 +695,7 @@ async def retrieve_context(
             "Aucun code ECO ni historique de coups disponible. "
             "Recherche Wikichess ignorée."
         )
-        return _build_success_update(
-            state,
-            _build_empty_retrieval_context(query)
-        )
+        return _build_success_update(state, _build_empty_retrieval_context(query))
 
     vector_search_service = _get_vector_search_service(config)
 
@@ -791,13 +704,10 @@ async def retrieve_context(
             step=WorkflowStep.RETRIEVE_CONTEXT,
             service=ServiceType.VECTOR_SEARCH,
             status=WorkflowStepStatus.FAILED,
-            message="VectorSearchService indisponible."
+            message="VectorSearchService indisponible.",
         )
 
-        return _build_missing_service_update(
-            state,
-            "VectorSearchService"
-        )
+        return _build_missing_service_update(state, "VectorSearchService")
 
     san_moves: tuple[str, ...] = ()
 
@@ -809,32 +719,26 @@ async def retrieve_context(
                 step=WorkflowStep.RETRIEVE_CONTEXT,
                 service=ServiceType.CHESS,
                 status=WorkflowStepStatus.FAILED,
-                message="ChessService indisponible."
+                message="ChessService indisponible.",
             )
 
-            return _build_missing_service_update(
-                state,
-                "ChessService"
-            )
-            
+            return _build_missing_service_update(state, "ChessService")
+
         try:
             emit_progress(
                 step=WorkflowStep.RETRIEVE_CONTEXT,
                 service=ServiceType.CHESS,
                 status=WorkflowStepStatus.RUNNING,
-                message="Conversion des coups UCI en SAN en cours."
+                message="Conversion des coups UCI en SAN en cours.",
             )
 
-            san_moves = _convert_moves_to_san(
-                chess_service,
-                uci_moves
-            )
+            san_moves = _convert_moves_to_san(chess_service, uci_moves)
 
             emit_progress(
                 step=WorkflowStep.RETRIEVE_CONTEXT,
                 service=ServiceType.CHESS,
                 status=WorkflowStepStatus.COMPLETED,
-                message="Conversion des coups UCI en SAN terminée."
+                message="Conversion des coups UCI en SAN terminée.",
             )
 
         except Exception:
@@ -842,22 +746,19 @@ async def retrieve_context(
                 step=WorkflowStep.RETRIEVE_CONTEXT,
                 service=ServiceType.CHESS,
                 status=WorkflowStepStatus.FAILED,
-                message="Conversion des coups UCI en SAN impossible."
+                message="Conversion des coups UCI en SAN impossible.",
             )
 
-            logger.exception(
-                "Impossible de convertir l'historique UCI en SAN."
-            )
+            logger.exception("Impossible de convertir l'historique UCI en SAN.")
 
             return _build_unexpected_error_update(
-                state,
-                "Une erreur inattendue a empêché la conversion des coups."
+                state, "Une erreur inattendue a empêché la conversion des coups."
             )
 
         logger.info(
             "Historique converti pour Wikichess : uci=%r, san=%r.",
             _format_moves_path(uci_moves),
-            _format_moves_path(san_moves)
+            _format_moves_path(san_moves),
         )
 
     query = _build_search_query(state, san_moves)
@@ -868,20 +769,18 @@ async def retrieve_context(
             step=WorkflowStep.RETRIEVE_CONTEXT,
             service=ServiceType.VECTOR_SEARCH,
             status=WorkflowStepStatus.RUNNING,
-            message="Recherche documentaire Wikichess en cours."
+            message="Recherche documentaire Wikichess en cours.",
         )
 
         retrieval_context = await _search_documents(
-            state=state,
-            moves=san_moves,
-            service=vector_search_service
+            state=state, moves=san_moves, service=vector_search_service
         )
 
         emit_progress(
             step=WorkflowStep.RETRIEVE_CONTEXT,
             service=ServiceType.VECTOR_SEARCH,
             status=WorkflowStepStatus.COMPLETED,
-            message="Recherche documentaire Wikichess terminée."
+            message="Recherche documentaire Wikichess terminée.",
         )
 
     except RetrievalError as error:
@@ -889,22 +788,19 @@ async def retrieve_context(
             step=WorkflowStep.RETRIEVE_CONTEXT,
             service=ServiceType.VECTOR_SEARCH,
             status=WorkflowStepStatus.WARNING,
-            message="Recherche documentaire Wikichess indisponible."
+            message="Recherche documentaire Wikichess indisponible.",
         )
 
-        logger.warning(
-            "Recherche documentaire indisponible : %s",
-            error
-        )
+        logger.warning("Recherche documentaire indisponible : %s", error)
 
         return _build_warning_update(
             state,
             WorkflowWarning(
                 step=WorkflowStep.RETRIEVE_CONTEXT,
                 code=_get_retrieval_error_code(error),
-                message=str(error)
+                message=str(error),
             ),
-            query=query
+            query=query,
         )
 
     except Exception:
@@ -912,20 +808,15 @@ async def retrieve_context(
             step=WorkflowStep.RETRIEVE_CONTEXT,
             service=ServiceType.VECTOR_SEARCH,
             status=WorkflowStepStatus.FAILED,
-            message=(
-                "Une erreur inattendue a interrompu "
-                "la recherche documentaire."
-            )
+            message=("Une erreur inattendue a interrompu la recherche documentaire."),
         )
 
         logger.exception(
-            "Erreur inattendue durant la récupération "
-            "du contexte documentaire."
+            "Erreur inattendue durant la récupération du contexte documentaire."
         )
 
         return _build_unexpected_error_update(
-            state,
-            "Une erreur inattendue a empêché la recherche documentaire."
+            state, "Une erreur inattendue a empêché la recherche documentaire."
         )
 
     _log_retrieval_result(retrieval_context)

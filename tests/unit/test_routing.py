@@ -57,11 +57,7 @@ def _build_state(
         save_analysis=save_analysis,
     )
 
-    opening = (
-        object()
-        if opening_present
-        else None
-    )
+    opening = object() if opening_present else None
 
     state = SimpleNamespace(
         status=status,
@@ -236,8 +232,9 @@ def test_route_after_engine_analysis_stops_failed_workflow() -> None:
     assert route_after_engine_analysis(state) == "end"
 
 
-def test_route_after_engine_analysis_skips_unknown_position_when_opening_disabled(
-) -> None:
+def test_route_after_engine_analysis_skips_unknown_position_when_opening_disabled() -> (
+    None
+):
     """Une ouverture non recherchée ne doit pas être considérée inconnue."""
 
     state = _build_state(
@@ -257,10 +254,7 @@ def test_route_after_engine_analysis_routes_unknown_position() -> None:
         opening_present=False,
     )
 
-    assert (
-        route_after_engine_analysis(state)
-        == "unknown_position_analysis"
-    )
+    assert route_after_engine_analysis(state) == "unknown_position_analysis"
 
 
 def test_route_after_engine_analysis_routes_known_opening_to_context() -> None:

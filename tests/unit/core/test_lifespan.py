@@ -122,9 +122,7 @@ def test_managed_resource_defaults() -> None:
 def test_resource_manager_starts_empty() -> None:
     """Vérifie un gestionnaire sans ressource."""
 
-    manager = ResourceManager(
-        build_container()
-    )
+    manager = ResourceManager(build_container())
 
     assert manager.resources == ()
 
@@ -132,25 +130,19 @@ def test_resource_manager_starts_empty() -> None:
 def test_register_resource() -> None:
     """Vérifie l'enregistrement d'une ressource."""
 
-    manager = ResourceManager(
-        build_container()
-    )
+    manager = ResourceManager(build_container())
 
     resource = build_resource()
 
     manager.register(resource)
 
-    assert manager.resources == (
-        resource,
-    )
+    assert manager.resources == (resource,)
 
 
 def test_register_rejects_duplicate_name() -> None:
     """Vérifie l'unicité du nom des ressources."""
 
-    manager = ResourceManager(
-        build_container()
-    )
+    manager = ResourceManager(build_container())
 
     manager.register(
         build_resource(
@@ -178,33 +170,25 @@ async def test_initialize_resource_success() -> None:
 
     container = build_container()
 
-    manager = ResourceManager(
-        container
-    )
+    manager = ResourceManager(container)
 
     resource = build_resource(
         health_result=True,
     )
 
-    await manager.initialize_resource(
-        resource
-    )
+    await manager.initialize_resource(resource)
 
     assert resource.initialized is True
 
     cast(
         AsyncMock,
         resource.initialize,
-    ).assert_awaited_once_with(
-        container
-    )
+    ).assert_awaited_once_with(container)
 
     cast(
         AsyncMock,
         resource.health,
-    ).assert_awaited_once_with(
-        container
-    )
+    ).assert_awaited_once_with(container)
 
 
 @pytest.mark.asyncio
@@ -213,17 +197,13 @@ async def test_initialize_resource_is_idempotent() -> None:
 
     container = build_container()
 
-    manager = ResourceManager(
-        container
-    )
+    manager = ResourceManager(container)
 
     resource = build_resource()
 
     resource.initialized = True
 
-    await manager.initialize_resource(
-        resource
-    )
+    await manager.initialize_resource(resource)
 
     cast(
         AsyncMock,
@@ -237,9 +217,7 @@ async def test_initialize_required_resource_fails_on_initialization_error() -> N
 
     container = build_container()
 
-    manager = ResourceManager(
-        container
-    )
+    manager = ResourceManager(container)
 
     resource = build_resource(
         required=True,
@@ -248,25 +226,17 @@ async def test_initialize_required_resource_fails_on_initialization_error() -> N
     cast(
         AsyncMock,
         resource.initialize,
-    ).side_effect = RuntimeError(
-        "initialization failure"
-    )
+    ).side_effect = RuntimeError("initialization failure")
 
-    with pytest.raises(
-        ResourceInitializationError
-    ):
-        await manager.initialize_resource(
-            resource
-        )
+    with pytest.raises(ResourceInitializationError):
+        await manager.initialize_resource(resource)
 
     assert resource.initialized is False
 
     cast(
         AsyncMock,
         resource.shutdown,
-    ).assert_awaited_once_with(
-        container
-    )
+    ).assert_awaited_once_with(container)
 
 
 @pytest.mark.asyncio
@@ -275,9 +245,7 @@ async def test_initialize_optional_resource_ignores_initialization_error() -> No
 
     container = build_container()
 
-    manager = ResourceManager(
-        container
-    )
+    manager = ResourceManager(container)
 
     resource = build_resource(
         required=False,
@@ -286,22 +254,16 @@ async def test_initialize_optional_resource_ignores_initialization_error() -> No
     cast(
         AsyncMock,
         resource.initialize,
-    ).side_effect = RuntimeError(
-        "optional failure"
-    )
+    ).side_effect = RuntimeError("optional failure")
 
-    await manager.initialize_resource(
-        resource
-    )
+    await manager.initialize_resource(resource)
 
     assert resource.initialized is False
 
     cast(
         AsyncMock,
         resource.shutdown,
-    ).assert_awaited_once_with(
-        container
-    )
+    ).assert_awaited_once_with(container)
 
 
 @pytest.mark.asyncio
@@ -310,48 +272,36 @@ async def test_initialize_required_resource_fails_on_unhealthy_resource() -> Non
 
     container = build_container()
 
-    manager = ResourceManager(
-        container
-    )
+    manager = ResourceManager(container)
 
     resource = build_resource(
         required=True,
         health_result=False,
     )
 
-    with pytest.raises(
-        ResourceHealthError
-    ):
-        await manager.initialize_resource(
-            resource
-        )
+    with pytest.raises(ResourceHealthError):
+        await manager.initialize_resource(resource)
 
     assert resource.initialized is False
 
     cast(
         AsyncMock,
         resource.shutdown,
-    ).assert_awaited_once_with(
-        container
-    )
+    ).assert_awaited_once_with(container)
 
 
 @pytest.mark.asyncio
 async def test_initialize_optional_resource_accepts_unhealthy_resource() -> None:
     """Vérifie le mode dégradé pour une ressource facultative."""
 
-    manager = ResourceManager(
-        build_container()
-    )
+    manager = ResourceManager(build_container())
 
     resource = build_resource(
         required=False,
         health_result=False,
     )
 
-    await manager.initialize_resource(
-        resource
-    )
+    await manager.initialize_resource(resource)
 
     assert resource.initialized is True
 
@@ -362,9 +312,7 @@ async def test_initialize_resource_propagates_cancelled_error() -> None:
 
     container = build_container()
 
-    manager = ResourceManager(
-        container
-    )
+    manager = ResourceManager(container)
 
     resource = build_resource()
 
@@ -373,21 +321,15 @@ async def test_initialize_resource_propagates_cancelled_error() -> None:
         resource.initialize,
     ).side_effect = CancelledError()
 
-    with pytest.raises(
-        CancelledError
-    ):
-        await manager.initialize_resource(
-            resource
-        )
+    with pytest.raises(CancelledError):
+        await manager.initialize_resource(resource)
 
     assert resource.initialized is False
 
     cast(
         AsyncMock,
         resource.shutdown,
-    ).assert_awaited_once_with(
-        container
-    )
+    ).assert_awaited_once_with(container)
 
 
 # Health post-initialisation
@@ -397,17 +339,13 @@ async def test_initialize_resource_propagates_cancelled_error() -> None:
 async def test_check_initialized_resource_success() -> None:
     """Vérifie un contrôle de santé réussi."""
 
-    manager = ResourceManager(
-        build_container()
-    )
+    manager = ResourceManager(build_container())
 
     resource = build_resource(
         health_result=True,
     )
 
-    result = await manager._check_initialized_resource(
-        resource
-    )
+    result = await manager._check_initialized_resource(resource)
 
     assert result is True
 
@@ -416,9 +354,7 @@ async def test_check_initialized_resource_success() -> None:
 async def test_check_initialized_optional_resource_handles_exception() -> None:
     """Vérifie une exception de santé sur ressource facultative."""
 
-    manager = ResourceManager(
-        build_container()
-    )
+    manager = ResourceManager(build_container())
 
     resource = build_resource(
         required=False,
@@ -427,13 +363,9 @@ async def test_check_initialized_optional_resource_handles_exception() -> None:
     cast(
         AsyncMock,
         resource.health,
-    ).side_effect = RuntimeError(
-        "health failure"
-    )
+    ).side_effect = RuntimeError("health failure")
 
-    result = await manager._check_initialized_resource(
-        resource
-    )
+    result = await manager._check_initialized_resource(resource)
 
     assert result is False
 
@@ -444,9 +376,7 @@ async def test_check_initialized_required_resource_handles_exception() -> None:
 
     container = build_container()
 
-    manager = ResourceManager(
-        container
-    )
+    manager = ResourceManager(container)
 
     resource = build_resource(
         required=True,
@@ -457,16 +387,10 @@ async def test_check_initialized_required_resource_handles_exception() -> None:
     cast(
         AsyncMock,
         resource.health,
-    ).side_effect = RuntimeError(
-        "health failure"
-    )
+    ).side_effect = RuntimeError("health failure")
 
-    with pytest.raises(
-        ResourceHealthError
-    ):
-        await manager._check_initialized_resource(
-            resource
-        )
+    with pytest.raises(ResourceHealthError):
+        await manager._check_initialized_resource(resource)
 
     assert resource.initialized is False
 
@@ -477,9 +401,7 @@ async def test_check_initialized_resource_propagates_cancelled_error() -> None:
 
     container = build_container()
 
-    manager = ResourceManager(
-        container
-    )
+    manager = ResourceManager(container)
 
     resource = build_resource()
 
@@ -490,12 +412,8 @@ async def test_check_initialized_resource_propagates_cancelled_error() -> None:
         resource.health,
     ).side_effect = CancelledError()
 
-    with pytest.raises(
-        CancelledError
-    ):
-        await manager._check_initialized_resource(
-            resource
-        )
+    with pytest.raises(CancelledError):
+        await manager._check_initialized_resource(resource)
 
     assert resource.initialized is False
 
@@ -509,35 +427,27 @@ async def test_cleanup_failed_initialization() -> None:
 
     container = build_container()
 
-    manager = ResourceManager(
-        container
-    )
+    manager = ResourceManager(container)
 
     resource = build_resource()
 
     resource.initialized = True
 
-    await manager._cleanup_failed_initialization(
-        resource
-    )
+    await manager._cleanup_failed_initialization(resource)
 
     assert resource.initialized is False
 
     cast(
         AsyncMock,
         resource.shutdown,
-    ).assert_awaited_once_with(
-        container
-    )
+    ).assert_awaited_once_with(container)
 
 
 @pytest.mark.asyncio
 async def test_cleanup_failed_initialization_handles_shutdown_error() -> None:
     """Vérifie une erreur pendant le nettoyage."""
 
-    manager = ResourceManager(
-        build_container()
-    )
+    manager = ResourceManager(build_container())
 
     resource = build_resource()
 
@@ -546,13 +456,9 @@ async def test_cleanup_failed_initialization_handles_shutdown_error() -> None:
     cast(
         AsyncMock,
         resource.shutdown,
-    ).side_effect = RuntimeError(
-        "shutdown failure"
-    )
+    ).side_effect = RuntimeError("shutdown failure")
 
-    await manager._cleanup_failed_initialization(
-        resource
-    )
+    await manager._cleanup_failed_initialization(resource)
 
     assert resource.initialized is False
 
@@ -564,16 +470,10 @@ async def test_cleanup_failed_initialization_handles_shutdown_error() -> None:
 async def test_initialize_all() -> None:
     """Vérifie l'initialisation ordonnée de toutes les ressources."""
 
-    manager = ResourceManager(
-        build_container()
-    )
+    manager = ResourceManager(build_container())
 
-    first = build_resource(
-        name="First"
-    )
-    second = build_resource(
-        name="Second"
-    )
+    first = build_resource(name="First")
+    second = build_resource(name="Second")
 
     manager.register(first)
     manager.register(second)
@@ -588,31 +488,21 @@ async def test_initialize_all() -> None:
 async def test_initialize_all_rolls_back_on_error() -> None:
     """Vérifie le rollback global en cas d'échec."""
 
-    manager = ResourceManager(
-        build_container()
-    )
+    manager = ResourceManager(build_container())
 
-    first = build_resource(
-        name="First"
-    )
+    first = build_resource(name="First")
 
-    second = build_resource(
-        name="Second"
-    )
+    second = build_resource(name="Second")
 
     cast(
         AsyncMock,
         second.initialize,
-    ).side_effect = RuntimeError(
-        "failure"
-    )
+    ).side_effect = RuntimeError("failure")
 
     manager.register(first)
     manager.register(second)
 
-    with pytest.raises(
-        ResourceInitializationError
-    ):
+    with pytest.raises(ResourceInitializationError):
         await manager.initialize_all()
 
     assert first.initialized is False
@@ -628,9 +518,7 @@ async def test_rollback_uses_reverse_order() -> None:
 
     container = build_container()
 
-    manager = ResourceManager(
-        container
-    )
+    manager = ResourceManager(container)
 
     calls: list[str] = []
 
@@ -650,9 +538,7 @@ async def test_rollback_uses_reverse_order() -> None:
         name="First",
         initialize=AsyncMock(),
         shutdown=shutdown_first,
-        health=AsyncMock(
-            return_value=True
-        ),
+        health=AsyncMock(return_value=True),
         initialized=True,
     )
 
@@ -660,9 +546,7 @@ async def test_rollback_uses_reverse_order() -> None:
         name="Second",
         initialize=AsyncMock(),
         shutdown=shutdown_second,
-        health=AsyncMock(
-            return_value=True
-        ),
+        health=AsyncMock(return_value=True),
         initialized=True,
     )
 
@@ -684,16 +568,10 @@ async def test_rollback_uses_reverse_order() -> None:
 async def test_shutdown_all() -> None:
     """Vérifie la fermeture de toutes les ressources."""
 
-    manager = ResourceManager(
-        build_container()
-    )
+    manager = ResourceManager(build_container())
 
-    first = build_resource(
-        name="First"
-    )
-    second = build_resource(
-        name="Second"
-    )
+    first = build_resource(name="First")
+    second = build_resource(name="Second")
 
     first.initialized = True
     second.initialized = True
@@ -711,9 +589,7 @@ async def test_shutdown_all() -> None:
 async def test_shutdown_resource_ignores_uninitialized_resource() -> None:
     """Vérifie qu'une ressource inactive n'est pas fermée."""
 
-    manager = ResourceManager(
-        build_container()
-    )
+    manager = ResourceManager(build_container())
 
     resource = build_resource()
 
@@ -732,9 +608,7 @@ async def test_shutdown_resource_ignores_uninitialized_resource() -> None:
 async def test_shutdown_resource_handles_exception() -> None:
     """Vérifie une erreur de fermeture."""
 
-    manager = ResourceManager(
-        build_container()
-    )
+    manager = ResourceManager(build_container())
 
     resource = build_resource()
 
@@ -743,9 +617,7 @@ async def test_shutdown_resource_handles_exception() -> None:
     cast(
         AsyncMock,
         resource.shutdown,
-    ).side_effect = RuntimeError(
-        "shutdown failure"
-    )
+    ).side_effect = RuntimeError("shutdown failure")
 
     await manager._shutdown_resource(
         resource,
@@ -759,9 +631,7 @@ async def test_shutdown_resource_handles_exception() -> None:
 async def test_shutdown_resource_handles_rollback_exception() -> None:
     """Vérifie une erreur de fermeture pendant rollback."""
 
-    manager = ResourceManager(
-        build_container()
-    )
+    manager = ResourceManager(build_container())
 
     resource = build_resource()
 
@@ -770,9 +640,7 @@ async def test_shutdown_resource_handles_rollback_exception() -> None:
     cast(
         AsyncMock,
         resource.shutdown,
-    ).side_effect = RuntimeError(
-        "rollback shutdown failure"
-    )
+    ).side_effect = RuntimeError("rollback shutdown failure")
 
     await manager._shutdown_resource(
         resource,
@@ -789,15 +657,11 @@ async def test_shutdown_resource_handles_rollback_exception() -> None:
 async def test_get_resource_status_false_when_not_initialized() -> None:
     """Vérifie une ressource non initialisée."""
 
-    manager = ResourceManager(
-        build_container()
-    )
+    manager = ResourceManager(build_container())
 
     resource = build_resource()
 
-    result = await manager._get_resource_status(
-        resource
-    )
+    result = await manager._get_resource_status(resource)
 
     assert result == (
         "Test",
@@ -809,9 +673,7 @@ async def test_get_resource_status_false_when_not_initialized() -> None:
 async def test_get_resource_status_success() -> None:
     """Vérifie une ressource initialisée et saine."""
 
-    manager = ResourceManager(
-        build_container()
-    )
+    manager = ResourceManager(build_container())
 
     resource = build_resource(
         health_result=True,
@@ -819,9 +681,7 @@ async def test_get_resource_status_success() -> None:
 
     resource.initialized = True
 
-    result = await manager._get_resource_status(
-        resource
-    )
+    result = await manager._get_resource_status(resource)
 
     assert result == (
         "Test",
@@ -833,9 +693,7 @@ async def test_get_resource_status_success() -> None:
 async def test_get_resource_status_handles_exception() -> None:
     """Vérifie une erreur lors du healthcheck."""
 
-    manager = ResourceManager(
-        build_container()
-    )
+    manager = ResourceManager(build_container())
 
     resource = build_resource()
 
@@ -844,13 +702,9 @@ async def test_get_resource_status_handles_exception() -> None:
     cast(
         AsyncMock,
         resource.health,
-    ).side_effect = RuntimeError(
-        "health failure"
-    )
+    ).side_effect = RuntimeError("health failure")
 
-    result = await manager._get_resource_status(
-        resource
-    )
+    result = await manager._get_resource_status(resource)
 
     assert result == (
         "Test",
@@ -862,9 +716,7 @@ async def test_get_resource_status_handles_exception() -> None:
 async def test_health() -> None:
     """Vérifie le healthcheck global du gestionnaire."""
 
-    manager = ResourceManager(
-        build_container()
-    )
+    manager = ResourceManager(build_container())
 
     healthy = build_resource(
         name="Healthy",
@@ -897,18 +749,14 @@ async def test_health() -> None:
 async def test_no_initialize() -> None:
     """Vérifie l'initialisation neutre."""
 
-    await no_initialize(
-        build_container()
-    )
+    await no_initialize(build_container())
 
 
 @pytest.mark.asyncio
 async def test_no_shutdown() -> None:
     """Vérifie la fermeture neutre."""
 
-    await no_shutdown(
-        build_container()
-    )
+    await no_shutdown(build_container())
 
 
 # Fonctions de ressources
@@ -1043,9 +891,7 @@ async def test_resource_adapter_functions(
         method,
     )
 
-    result = await function(
-        container
-    )
+    result = await function(container)
 
     method.assert_awaited_once_with()
 
@@ -1062,9 +908,7 @@ async def test_initialize_workflow() -> None:
 
     container = build_container()
 
-    await initialize_workflow(
-        container
-    )
+    await initialize_workflow(container)
 
     cast(
         Any,
@@ -1078,14 +922,13 @@ async def test_shutdown_workflow() -> None:
 
     container = build_container()
 
-    await shutdown_workflow(
-        container
-    )
+    await shutdown_workflow(container)
 
     cast(
         Any,
         container.destroy_graph,
     ).assert_called_once_with()
+
 
 @pytest.mark.asyncio
 async def test_workflow_health() -> None:
@@ -1098,12 +941,7 @@ async def test_workflow_health() -> None:
         container.is_ready,
     ).return_value = True
 
-    assert (
-        await workflow_health(
-            container
-        )
-        is True
-    )
+    assert await workflow_health(container) is True
 
 
 # Construction du ResourceManager
@@ -1114,14 +952,9 @@ def test_create_resource_manager() -> None:
 
     container = build_container()
 
-    manager = create_resource_manager(
-        container
-    )
+    manager = create_resource_manager(container)
 
-    names = [
-        resource.name
-        for resource in manager.resources
-    ]
+    names = [resource.name for resource in manager.resources]
 
     assert names == [
         "MongoDB",
@@ -1135,8 +968,7 @@ def test_create_resource_manager() -> None:
     ]
 
     required_by_name = {
-        resource.name: resource.required
-        for resource in manager.resources
+        resource.name: resource.required for resource in manager.resources
     }
 
     assert required_by_name == {
@@ -1172,31 +1004,23 @@ async def test_lifespan_success(
     manager.shutdown_all = AsyncMock()
 
     monkeypatch.setattr(
-        "app.core.lifespan."
-        "create_application_container",
+        "app.core.lifespan.create_application_container",
         MagicMock(
             return_value=container,
         ),
     )
 
     monkeypatch.setattr(
-        "app.core.lifespan."
-        "create_resource_manager",
+        "app.core.lifespan.create_resource_manager",
         MagicMock(
             return_value=manager,
         ),
     )
 
     async with lifespan(app):
-        assert (
-            app.state.container
-            is container
-        )
+        assert app.state.container is container
 
-        assert (
-            container.resource_manager
-            is manager
-        )
+        assert container.resource_manager is manager
 
     manager.initialize_all.assert_awaited_once_with()
     manager.shutdown_all.assert_awaited_once_with()
@@ -1227,25 +1051,19 @@ async def test_lifespan_rolls_back_visibility_when_initialization_fails(
         spec=ResourceManager,
     )
 
-    manager.initialize_all = AsyncMock(
-        side_effect=RuntimeError(
-            "startup failure"
-        )
-    )
+    manager.initialize_all = AsyncMock(side_effect=RuntimeError("startup failure"))
 
     manager.shutdown_all = AsyncMock()
 
     monkeypatch.setattr(
-        "app.core.lifespan."
-        "create_application_container",
+        "app.core.lifespan.create_application_container",
         MagicMock(
             return_value=container,
         ),
     )
 
     monkeypatch.setattr(
-        "app.core.lifespan."
-        "create_resource_manager",
+        "app.core.lifespan.create_resource_manager",
         MagicMock(
             return_value=manager,
         ),
@@ -1290,16 +1108,14 @@ async def test_lifespan_shutdown_runs_when_application_body_fails(
     manager.shutdown_all = AsyncMock()
 
     monkeypatch.setattr(
-        "app.core.lifespan."
-        "create_application_container",
+        "app.core.lifespan.create_application_container",
         MagicMock(
             return_value=container,
         ),
     )
 
     monkeypatch.setattr(
-        "app.core.lifespan."
-        "create_resource_manager",
+        "app.core.lifespan.create_resource_manager",
         MagicMock(
             return_value=manager,
         ),
@@ -1310,9 +1126,7 @@ async def test_lifespan_shutdown_runs_when_application_body_fails(
         match="application failure",
     ):
         async with lifespan(app):
-            raise RuntimeError(
-                "application failure"
-            )
+            raise RuntimeError("application failure")
 
     manager.shutdown_all.assert_awaited_once_with()
 

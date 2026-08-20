@@ -24,10 +24,7 @@ from app.schemas.common.enums import DifficultyLevel
 class Opening(BaseModel):
     """Représente une ouverture."""
 
-    model_config = ConfigDict(
-        extra="forbid",
-        frozen=True
-    )
+    model_config = ConfigDict(extra="forbid", frozen=True)
 
     # Informations générales permettant d'identifier une ouverture.
     eco: str
@@ -37,9 +34,7 @@ class Opening(BaseModel):
     family: str | None = None
 
     # Suite principale de coups menant à cette ouverture.
-    moves: list[str] = Field(
-        default_factory=list
-    )
+    moves: list[str] = Field(default_factory=list)
 
     # Positions de début et de fin de la variante lorsqu'elles sont
     # disponibles.
@@ -49,9 +44,7 @@ class Opening(BaseModel):
     # Informations complémentaires destinées à l'utilisateur.
     description: str | None = None
 
-    difficulty: DifficultyLevel = (
-        DifficultyLevel.INTERMEDIATE
-    )
+    difficulty: DifficultyLevel = DifficultyLevel.INTERMEDIATE
 
 
 # Variante
@@ -60,19 +53,14 @@ class Opening(BaseModel):
 class OpeningVariation(BaseModel):
     """Représente une variante complète d'ouverture."""
 
-    model_config = ConfigDict(
-        extra="forbid",
-        frozen=True
-    )
+    model_config = ConfigDict(extra="forbid", frozen=True)
 
     # Une variante possède son propre nom, son code ECO et la suite
     # de coups permettant de l'atteindre.
     name: str
     eco: str
 
-    moves: list[str] = Field(
-        default_factory=list
-    )
+    moves: list[str] = Field(default_factory=list)
 
     final_fen: str
 
@@ -85,40 +73,19 @@ class OpeningVariation(BaseModel):
 class OpeningStatistics(BaseModel):
     """Statistiques globales d'une ouverture ou d'une position."""
 
-    model_config = ConfigDict(
-        extra="forbid",
-        frozen=True
-    )
+    model_config = ConfigDict(extra="forbid", frozen=True)
 
     # Ces données proviennent d'une base de parties lorsqu'elles sont
     # disponibles.
-    games: int = Field(
-        default=0,
-        ge=0
-    )
+    games: int = Field(default=0, ge=0)
 
-    white_win_rate: float = Field(
-        default=0.0,
-        ge=0.0,
-        le=100.0
-    )
+    white_win_rate: float = Field(default=0.0, ge=0.0, le=100.0)
 
-    black_win_rate: float = Field(
-        default=0.0,
-        ge=0.0,
-        le=100.0
-    )
+    black_win_rate: float = Field(default=0.0, ge=0.0, le=100.0)
 
-    draw_rate: float = Field(
-        default=0.0,
-        ge=0.0,
-        le=100.0
-    )
+    draw_rate: float = Field(default=0.0, ge=0.0, le=100.0)
 
-    average_rating: int | None = Field(
-        default=None,
-        ge=0
-    )
+    average_rating: int | None = Field(default=None, ge=0)
 
 
 # Réponse Lichess
@@ -127,52 +94,24 @@ class OpeningStatistics(BaseModel):
 class OpeningMoveStatistics(BaseModel):
     """Statistiques d'un coup retourné par Lichess."""
 
-    model_config = ConfigDict(
-        extra="forbid",
-        frozen=True
-    )
+    model_config = ConfigDict(extra="forbid", frozen=True)
 
     # Le coup est conservé dans les deux notations retournées par
     # Lichess afin d'être exploitable par le backend et le frontend.
-    uci: str = Field(
-        ...,
-        min_length=4,
-        max_length=5
-    )
+    uci: str = Field(..., min_length=4, max_length=5)
 
-    san: str = Field(
-        ...,
-        min_length=1
-    )
+    san: str = Field(..., min_length=1)
 
     # Nombre total de parties ayant suivi ce coup.
-    games: int = Field(
-        default=0,
-        ge=0
-    )
+    games: int = Field(default=0, ge=0)
 
-    white_win_rate: float = Field(
-        default=0.0,
-        ge=0.0,
-        le=100.0
-    )
+    white_win_rate: float = Field(default=0.0, ge=0.0, le=100.0)
 
-    black_win_rate: float = Field(
-        default=0.0,
-        ge=0.0,
-        le=100.0
-    )
+    black_win_rate: float = Field(default=0.0, ge=0.0, le=100.0)
 
-    draw_rate: float = Field(
-        default=0.0,
-        ge=0.0,
-        le=100.0
-    )
+    draw_rate: float = Field(default=0.0, ge=0.0, le=100.0)
 
-    average_rating: int | None = Field(
-        default=None,
-        ge=0
-    )
+    average_rating: int | None = Field(default=None, ge=0)
 
 
 # Théorie
@@ -181,33 +120,21 @@ class OpeningMoveStatistics(BaseModel):
 class OpeningTheory(BaseModel):
     """Représente le contenu pédagogique d'une ouverture."""
 
-    model_config = ConfigDict(
-        extra="forbid"
-    )
+    model_config = ConfigDict(extra="forbid")
 
     # Cette partie rassemble les connaissances utiles pour comprendre
     # et apprendre l'ouverture.
     overview: str
 
-    strategic_ideas: list[str] = Field(
-        default_factory=list
-    )
+    strategic_ideas: list[str] = Field(default_factory=list)
 
-    tactical_patterns: list[str] = Field(
-        default_factory=list
-    )
+    tactical_patterns: list[str] = Field(default_factory=list)
 
-    typical_plans_white: list[str] = Field(
-        default_factory=list
-    )
+    typical_plans_white: list[str] = Field(default_factory=list)
 
-    typical_plans_black: list[str] = Field(
-        default_factory=list
-    )
+    typical_plans_black: list[str] = Field(default_factory=list)
 
-    common_mistakes: list[str] = Field(
-        default_factory=list
-    )
+    common_mistakes: list[str] = Field(default_factory=list)
 
 
 # Résultat
@@ -216,9 +143,7 @@ class OpeningTheory(BaseModel):
 class OpeningDetails(BaseModel):
     """Regroupe les informations disponibles sur une ouverture."""
 
-    model_config = ConfigDict(
-        extra="forbid"
-    )
+    model_config = ConfigDict(extra="forbid")
 
     opening: Opening
 
@@ -226,12 +151,8 @@ class OpeningDetails(BaseModel):
 
     # Les réponses correspondent aux coups disponibles depuis la
     # position analysée et à leurs statistiques Lichess.
-    responses: list[OpeningMoveStatistics] = Field(
-        default_factory=list
-    )
+    responses: list[OpeningMoveStatistics] = Field(default_factory=list)
 
     theory: OpeningTheory | None = None
 
-    variations: list[OpeningVariation] = Field(
-        default_factory=list
-    )
+    variations: list[OpeningVariation] = Field(default_factory=list)

@@ -14,6 +14,7 @@ DEFAULT_FRONTEND_URL = "http://localhost:4200"
 
 # Fixtures
 
+
 @pytest.fixture(scope="session")
 def backend_url() -> str:
     """Retourne l'URL du backend déployé."""

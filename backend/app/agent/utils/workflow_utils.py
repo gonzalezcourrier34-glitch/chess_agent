@@ -9,9 +9,7 @@ from app.schemas.common.enums import WorkflowStep
 
 
 def get_configured_service[ServiceType](
-    config: RunnableConfig,
-    key: str,
-    expected_type: type[ServiceType]
+    config: RunnableConfig, key: str, expected_type: type[ServiceType]
 ) -> ServiceType | None:
     """Retourne un service configuré après vérification de son type."""
     configurable = config.get("configurable", {})
@@ -31,8 +29,7 @@ def get_configured_service[ServiceType](
 
 
 def append_completed_step(
-    state: ChessAnalysisState,
-    step: WorkflowStep
+    state: ChessAnalysisState, step: WorkflowStep
 ) -> list[WorkflowStep]:
     """Ajoute une étape terminée sans créer de doublon."""
     completed_steps = list(state.completed_steps)

@@ -23,48 +23,33 @@ from app.core.exceptions import AuthenticationError
 
 # Sécurité
 
-bearer_scheme = HTTPBearer(
-    auto_error=False
-)
+bearer_scheme = HTTPBearer(auto_error=False)
 
 
 # Types
 
 BearerCredentials = Annotated[
-    HTTPAuthorizationCredentials | None,
-    Depends(bearer_scheme)
+    HTTPAuthorizationCredentials | None, Depends(bearer_scheme)
 ]
 
 
 # Dépendances
 
-def get_access_token(
-    credentials: BearerCredentials
-) -> str:
+
+def get_access_token(credentials: BearerCredentials) -> str:
     """Retourne le jeton Bearer transmis par le client."""
 
     if credentials is None:
-        raise AuthenticationError(
-            message=(
-                "Jeton d'authentification manquant."
-            )
-        )
+        raise AuthenticationError(message=("Jeton d'authentification manquant."))
 
     token = credentials.credentials.strip()
 
     if not token:
-        raise AuthenticationError(
-            message=(
-                "Jeton d'authentification vide."
-            )
-        )
+        raise AuthenticationError(message=("Jeton d'authentification vide."))
 
     return token
 
 
 # Dépendance typée
 
-AccessTokenDependency = Annotated[
-    str,
-    Depends(get_access_token)
-]
+AccessTokenDependency = Annotated[str, Depends(get_access_token)]

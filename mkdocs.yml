@@ -39,6 +39,9 @@ theme:
         icon: material/brightness-4
         name: Passer au thème clair
 
+extra_css:
+  - stylesheets/extra.css
+
 plugins:
   - search:
       lang: fr
@@ -115,18 +118,16 @@ nav:
       - Guide de présentation: 17-guide-presentation.md
       - Inventaire des sources: 18-inventaire-sources.md
 
-  - Étude MCP:
-      - Présentation: mcp/README.md
-      - Synthèse exécutive: mcp/01_documentation/00-synthese-executive.md
-      - Étude de faisabilité complète: mcp/01_documentation/01-etude-faisabilite-complete.md
-      - Exigences et traçabilité: mcp/01_documentation/02-exigences-et-tracabilite.md
-      - Architecture MCP: mcp/01_documentation/03-architecture-mcp.md
-      - Pipeline vidéo / FEN: mcp/01_documentation/04-pipeline-video-fen.md
-      - Sécurité et conformité: mcp/01_documentation/05-securite-conformite.md
-      - Qualité, tests et recette: mcp/01_documentation/06-qualite-tests-recette.md
-      - Plan et budget: mcp/01_documentation/07-plan-budget.md
-      - Risques et alternatives: mcp/01_documentation/08-risques-alternatives.md
-      - Décisions et hypothèses: mcp/01_documentation/09-decisions-hypotheses-questions.md
-      - Audit des fichiers: mcp/01_documentation/10-audit-fichiers-fournis.md
-      - Soutenance et preuves: mcp/01_documentation/11-soutenance-et-preuves.md
-      - Inventaire des sources: mcp/01_documentation/12-inventaire-sources.md
+  - Étude de faisabilité - Chess Video:
+      - Présentation de l'étude: mcp/00_INDEX.md
+      - 1. État initial et besoin: mcp/01_ETAT_INITIAL_ET_BESOIN.md
+      - 2. Description du module vidéo: mcp/02_MODULE_VIDEO_CIBLE.md
+      - 3. Étude technologique: mcp/03_ETUDE_TECHNOLOGIQUE.md
+      - 4. Solutions techniques étudiées: mcp/04_SOLUTIONS_TECHNIQUES.md
+      - 5. Architecture Chess Video avec MCP: mcp/05_ARCHITECTURE_CHESS_VIDEO_MCP.md
+      - 6. Faisabilité technique: mcp/06_FAISABILITE_TECHNIQUE.md
+      - 7. Faisabilité économique: mcp/07_FAISABILITE_ECONOMIQUE.md
+      - 8. Bénéfices, limites et risques: mcp/08_BENEFICES_LIMITES_RISQUES.md
+      - 9. Plan de développement: mcp/09_PLAN_DE_DEVELOPPEMENT.md
+      - 10. Alternatives étudiées: mcp/10_ALTERNATIVES_ETUDIEES.md
+      - 11. Conclusion et décision GO / NO-GO: mcp/11_CONCLUSION_GO_NOGO.md

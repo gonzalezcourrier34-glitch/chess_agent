@@ -56,14 +56,13 @@ STARTING_FEN = chess.STARTING_FEN
 
 # Construction des données de test
 
+
 def build_best_move(
     *,
     uci: str = "e2e4",
     san: str = "e4",
     score: float = 30.0,
-    evaluation_type: EvaluationType = (
-        EvaluationType.CENTIPAWN
-    ),
+    evaluation_type: EvaluationType = (EvaluationType.CENTIPAWN),
     depth: int = 15,
 ) -> BestMove:
     """Construit un meilleur coup Stockfish."""
@@ -85,9 +84,7 @@ def build_best_move(
 def build_evaluation(
     *,
     score: float = 30.0,
-    evaluation_type: EvaluationType = (
-        EvaluationType.CENTIPAWN
-    ),
+    evaluation_type: EvaluationType = (EvaluationType.CENTIPAWN),
     depth: int = 15,
     nodes: int | None = 1000,
     time_ms: int | None = 250,
@@ -148,6 +145,7 @@ def build_evaluation(
 
 # Fixtures
 
+
 @pytest.fixture
 def state() -> ChessAnalysisState:
     """Construit un état minimal valide."""
@@ -166,6 +164,7 @@ def evaluation() -> PositionEvaluation:
 
 # Service
 
+
 def test_get_stockfish_service_returns_configured_service(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
@@ -180,8 +179,7 @@ def test_get_stockfish_service_returns_configured_service(
     )
 
     monkeypatch.setattr(
-        "app.agent.nodes.C_engine_analysis."
-        "get_configured_service",
+        "app.agent.nodes.C_engine_analysis.get_configured_service",
         configured_service,
     )
 
@@ -190,9 +188,7 @@ def test_get_stockfish_service_returns_configured_service(
         {},
     )
 
-    result = _get_stockfish_service(
-        config
-    )
+    result = _get_stockfish_service(config)
 
     assert result is service
 
@@ -213,8 +209,7 @@ def test_get_stockfish_service_returns_none_when_missing(
     )
 
     monkeypatch.setattr(
-        "app.agent.nodes.C_engine_analysis."
-        "get_configured_service",
+        "app.agent.nodes.C_engine_analysis.get_configured_service",
         configured_service,
     )
 
@@ -238,8 +233,7 @@ def test_get_stockfish_service_rejects_invalid_type(
     )
 
     monkeypatch.setattr(
-        "app.agent.nodes.C_engine_analysis."
-        "get_configured_service",
+        "app.agent.nodes.C_engine_analysis.get_configured_service",
         configured_service,
     )
 
@@ -254,6 +248,7 @@ def test_get_stockfish_service_rejects_invalid_type(
 
 
 # Statut
+
 
 @pytest.mark.parametrize(
     ("initial_status", "expected_status"),
@@ -289,15 +284,11 @@ def test_get_success_status(
         }
     )
 
-    assert (
-        _get_success_status(
-            current_state
-        )
-        == expected_status
-    )
+    assert _get_success_status(current_state) == expected_status
 
 
 # Formatage du score
+
 
 def test_format_score_centipawn() -> None:
     """Vérifie le format centipion."""
@@ -349,53 +340,27 @@ def test_format_score_negative_mate() -> None:
 
 # Résumé moteur
 
+
 def test_build_engine_summary_contains_main_information(
     evaluation: PositionEvaluation,
 ) -> None:
     """Vérifie le résumé moteur complet."""
 
-    result = _build_engine_summary(
-        evaluation
-    )
+    result = _build_engine_summary(evaluation)
 
-    assert (
-        "Meilleur coup retourné par Stockfish : "
-        "e4 (e2e4)."
-        in result
-    )
+    assert "Meilleur coup retourné par Stockfish : e4 (e2e4)." in result
 
-    assert (
-        "Évaluation retournée : "
-        "30 centipions."
-        in result
-    )
+    assert "Évaluation retournée : 30 centipions." in result
 
-    assert (
-        "Profondeur d'analyse : 15."
-        in result
-    )
+    assert "Profondeur d'analyse : 15." in result
 
-    assert (
-        "Nœuds analysés : 1000."
-        in result
-    )
+    assert "Nœuds analysés : 1000." in result
 
-    assert (
-        "Temps d'analyse : 250 ms."
-        in result
-    )
+    assert "Temps d'analyse : 250 ms." in result
 
-    assert (
-        "Variante principale calculée : "
-        "e2e4 e7e5 g1f3."
-        in result
-    )
+    assert "Variante principale calculée : e2e4 e7e5 g1f3." in result
 
-    assert (
-        "Alternatives retournées : "
-        "d4 (20 centipions)."
-        in result
-    )
+    assert "Alternatives retournées : d4 (20 centipions)." in result
 
 
 def test_build_engine_summary_without_optional_values() -> None:
@@ -408,35 +373,17 @@ def test_build_engine_summary_without_optional_values() -> None:
         alternatives=[],
     )
 
-    result = _build_engine_summary(
-        value
-    )
+    result = _build_engine_summary(value)
 
-    assert (
-        "Évaluation retournée : "
-        "30 centipions."
-        in result
-    )
+    assert "Évaluation retournée : 30 centipions." in result
 
-    assert (
-        "Nœuds analysés"
-        not in result
-    )
+    assert "Nœuds analysés" not in result
 
-    assert (
-        "Temps d'analyse"
-        not in result
-    )
+    assert "Temps d'analyse" not in result
 
-    assert (
-        "Variante principale calculée"
-        not in result
-    )
+    assert "Variante principale calculée" not in result
 
-    assert (
-        "Alternatives retournées"
-        not in result
-    )
+    assert "Alternatives retournées" not in result
 
 
 def test_build_engine_summary_formats_mate() -> None:
@@ -448,44 +395,28 @@ def test_build_engine_summary_formats_mate() -> None:
         alternatives=[],
     )
 
-    result = _build_engine_summary(
-        value
-    )
+    result = _build_engine_summary(value)
 
     assert "mat en 3" in result
 
 
 # Variante principale
 
+
 def test_build_principal_variation_summary(
     evaluation: PositionEvaluation,
 ) -> None:
     """Vérifie le résumé de la variante principale."""
 
-    result = (
-        _build_principal_variation_summary(
-            evaluation
-        )
-    )
+    result = _build_principal_variation_summary(evaluation)
 
     assert result is not None
 
-    assert (
-        "Variante principale calculée par Stockfish "
-        "à la profondeur 15"
-        in result
-    )
+    assert "Variante principale calculée par Stockfish à la profondeur 15" in result
 
-    assert (
-        "e2e4 e7e5 g1f3"
-        in result
-    )
+    assert "e2e4 e7e5 g1f3" in result
 
-    assert (
-        "Évaluation associée : "
-        "30 centipions."
-        in result
-    )
+    assert "Évaluation associée : 30 centipions." in result
 
 
 def test_build_principal_variation_summary_returns_none() -> None:
@@ -496,12 +427,7 @@ def test_build_principal_variation_summary_returns_none() -> None:
         alternatives=[],
     )
 
-    assert (
-        _build_principal_variation_summary(
-            value
-        )
-        is None
-    )
+    assert _build_principal_variation_summary(value) is None
 
 
 def test_build_principal_variation_summary_formats_mate() -> None:
@@ -513,11 +439,7 @@ def test_build_principal_variation_summary_formats_mate() -> None:
         alternatives=[],
     )
 
-    result = (
-        _build_principal_variation_summary(
-            value
-        )
-    )
+    result = _build_principal_variation_summary(value)
 
     assert result is not None
     assert "mat en 4" in result
@@ -525,39 +447,22 @@ def test_build_principal_variation_summary_formats_mate() -> None:
 
 # Enrichissement
 
+
 def test_enrich_evaluation_adds_summary_and_explanation(
     evaluation: PositionEvaluation,
 ) -> None:
     """Vérifie l'enrichissement de l'évaluation."""
 
-    result = _enrich_evaluation(
-        evaluation
-    )
+    result = _enrich_evaluation(evaluation)
 
     assert result.summary is not None
 
-    assert (
-        result
-        .engine
-        .principal_variation
-        .explanation
-        is not None
-    )
+    assert result.engine.principal_variation.explanation is not None
 
-    assert (
-        "Meilleur coup retourné par Stockfish"
-        in result.summary
-    )
+    assert "Meilleur coup retourné par Stockfish" in result.summary
 
-    assert (
-        "Variante principale calculée par Stockfish"
-        in (
-            result
-            .engine
-            .principal_variation
-            .explanation
-            or ""
-        )
+    assert "Variante principale calculée par Stockfish" in (
+        result.engine.principal_variation.explanation or ""
     )
 
 
@@ -568,32 +473,19 @@ def test_enrich_evaluation_does_not_mutate_original(
 
     assert evaluation.summary is None
 
-    assert (
-        evaluation
-        .engine
-        .principal_variation
-        .explanation
-        is None
-    )
+    assert evaluation.engine.principal_variation.explanation is None
 
-    result = _enrich_evaluation(
-        evaluation
-    )
+    result = _enrich_evaluation(evaluation)
 
     assert result is not evaluation
 
     assert evaluation.summary is None
 
-    assert (
-        evaluation
-        .engine
-        .principal_variation
-        .explanation
-        is None
-    )
+    assert evaluation.engine.principal_variation.explanation is None
 
 
 # Mises à jour
+
 
 def test_build_error_update_marks_failed(
     state: ChessAnalysisState,
@@ -612,15 +504,9 @@ def test_build_error_update_marks_failed(
         error,
     )
 
-    assert (
-        result["status"]
-        == AnalysisStatus.FAILED
-    )
+    assert result["status"] == AnalysisStatus.FAILED
 
-    assert (
-        result["current_step"]
-        == WorkflowStep.ENGINE_ANALYSIS
-    )
+    assert result["current_step"] == WorkflowStep.ENGINE_ANALYSIS
 
     assert result["completed_steps"] == []
     assert result["errors"] == [error]
@@ -633,41 +519,22 @@ def test_build_success_update(
 ) -> None:
     """Vérifie la mise à jour réussie."""
 
-    enriched = _enrich_evaluation(
-        evaluation
-    )
+    enriched = _enrich_evaluation(evaluation)
 
     result = _build_success_update(
         state,
         enriched,
     )
 
-    assert (
-        result["status"]
-        == AnalysisStatus.SUCCESS
-    )
+    assert result["status"] == AnalysisStatus.SUCCESS
 
-    assert (
-        result["current_step"]
-        == WorkflowStep.ENGINE_ANALYSIS
-    )
+    assert result["current_step"] == WorkflowStep.ENGINE_ANALYSIS
 
-    assert (
-        result["evaluation"]
-        == enriched
-    )
+    assert result["evaluation"] == enriched
 
-    assert (
-        WorkflowStep.ENGINE_ANALYSIS
-        in result["completed_steps"]
-    )
+    assert WorkflowStep.ENGINE_ANALYSIS in result["completed_steps"]
 
-    assert (
-        result[
-            "workflow_context"
-        ].engine_context
-        == enriched.summary
-    )
+    assert result["workflow_context"].engine_context == enriched.summary
 
 
 def test_build_success_update_preserves_partial_status(
@@ -682,19 +549,14 @@ def test_build_success_update_preserves_partial_status(
         }
     )
 
-    enriched = _enrich_evaluation(
-        evaluation
-    )
+    enriched = _enrich_evaluation(evaluation)
 
     result = _build_success_update(
         partial_state,
         enriched,
     )
 
-    assert (
-        result["status"]
-        == AnalysisStatus.PARTIAL_SUCCESS
-    )
+    assert result["status"] == AnalysisStatus.PARTIAL_SUCCESS
 
 
 def test_build_success_update_uses_fallback_context(
@@ -709,9 +571,7 @@ def test_build_success_update_uses_fallback_context(
     )
 
     assert (
-        result[
-            "workflow_context"
-        ].engine_context
+        result["workflow_context"].engine_context
         == "Aucune synthèse moteur n'est disponible."
     )
 
@@ -721,24 +581,13 @@ def test_build_missing_service_update(
 ) -> None:
     """Vérifie l'erreur de configuration."""
 
-    result = _build_missing_service_update(
-        state
-    )
+    result = _build_missing_service_update(state)
 
-    assert (
-        result["status"]
-        == AnalysisStatus.FAILED
-    )
+    assert result["status"] == AnalysisStatus.FAILED
 
-    assert (
-        result["errors"][0].code
-        == ERROR_CONFIGURATION
-    )
+    assert result["errors"][0].code == ERROR_CONFIGURATION
 
-    assert (
-        result["errors"][0].recoverable
-        is False
-    )
+    assert result["errors"][0].recoverable is False
 
 
 def test_build_stockfish_error_update(
@@ -755,25 +604,13 @@ def test_build_stockfish_error_update(
         error,
     )
 
-    assert (
-        result["status"]
-        == AnalysisStatus.FAILED
-    )
+    assert result["status"] == AnalysisStatus.FAILED
 
-    assert (
-        result["errors"][0].code
-        == error.code
-    )
+    assert result["errors"][0].code == error.code
 
-    assert (
-        result["errors"][0].recoverable
-        == error.retryable
-    )
+    assert result["errors"][0].recoverable == error.retryable
 
-    assert (
-        result["errors"][0].message
-        == str(error)
-    )
+    assert result["errors"][0].message == str(error)
 
 
 def test_build_unexpected_error_update(
@@ -781,27 +618,17 @@ def test_build_unexpected_error_update(
 ) -> None:
     """Vérifie l'erreur inattendue."""
 
-    result = _build_unexpected_error_update(
-        state
-    )
+    result = _build_unexpected_error_update(state)
 
-    assert (
-        result["status"]
-        == AnalysisStatus.FAILED
-    )
+    assert result["status"] == AnalysisStatus.FAILED
 
-    assert (
-        result["errors"][0].code
-        == ERROR_UNEXPECTED
-    )
+    assert result["errors"][0].code == ERROR_UNEXPECTED
 
-    assert (
-        result["errors"][0].recoverable
-        is False
-    )
+    assert result["errors"][0].recoverable is False
 
 
 # API publique
+
 
 @pytest.mark.asyncio
 async def test_engine_analysis_success(
@@ -828,14 +655,12 @@ async def test_engine_analysis_success(
     emit_progress = MagicMock()
 
     monkeypatch.setattr(
-        "app.agent.nodes.C_engine_analysis."
-        "_get_stockfish_service",
+        "app.agent.nodes.C_engine_analysis._get_stockfish_service",
         get_service,
     )
 
     monkeypatch.setattr(
-        "app.agent.nodes.C_engine_analysis."
-        "emit_progress",
+        "app.agent.nodes.C_engine_analysis.emit_progress",
         emit_progress,
     )
 
@@ -847,42 +672,21 @@ async def test_engine_analysis_success(
         ),
     )
 
-    assert (
-        result["status"]
-        == AnalysisStatus.SUCCESS
-    )
+    assert result["status"] == AnalysisStatus.SUCCESS
 
-    assert (
-        result["current_step"]
-        == WorkflowStep.ENGINE_ANALYSIS
-    )
+    assert result["current_step"] == WorkflowStep.ENGINE_ANALYSIS
 
-    assert (
-        WorkflowStep.ENGINE_ANALYSIS
-        in result["completed_steps"]
-    )
+    assert WorkflowStep.ENGINE_ANALYSIS in result["completed_steps"]
 
-    returned_evaluation = result[
-        "evaluation"
-    ]
+    returned_evaluation = result["evaluation"]
 
     assert returned_evaluation.summary is not None
 
-    assert (
-        returned_evaluation
-        .engine
-        .principal_variation
-        .explanation
-        is not None
-    )
+    assert returned_evaluation.engine.principal_variation.explanation is not None
 
     analyze_position.assert_awaited_once()
 
-    request = (
-        analyze_position
-        .call_args
-        .args[0]
-    )
+    request = analyze_position.call_args.args[0]
 
     assert isinstance(
         request,
@@ -908,14 +712,12 @@ async def test_engine_analysis_missing_service(
     emit_progress = MagicMock()
 
     monkeypatch.setattr(
-        "app.agent.nodes.C_engine_analysis."
-        "_get_stockfish_service",
+        "app.agent.nodes.C_engine_analysis._get_stockfish_service",
         get_service,
     )
 
     monkeypatch.setattr(
-        "app.agent.nodes.C_engine_analysis."
-        "emit_progress",
+        "app.agent.nodes.C_engine_analysis.emit_progress",
         emit_progress,
     )
 
@@ -927,15 +729,9 @@ async def test_engine_analysis_missing_service(
         ),
     )
 
-    assert (
-        result["status"]
-        == AnalysisStatus.FAILED
-    )
+    assert result["status"] == AnalysisStatus.FAILED
 
-    assert (
-        result["errors"][0].code
-        == ERROR_CONFIGURATION
-    )
+    assert result["errors"][0].code == ERROR_CONFIGURATION
 
     assert result["completed_steps"] == []
 
@@ -966,16 +762,14 @@ async def test_engine_analysis_handles_stockfish_error(
     emit_progress = MagicMock()
 
     monkeypatch.setattr(
-        "app.agent.nodes.C_engine_analysis."
-        "_get_stockfish_service",
+        "app.agent.nodes.C_engine_analysis._get_stockfish_service",
         MagicMock(
             return_value=service,
         ),
     )
 
     monkeypatch.setattr(
-        "app.agent.nodes.C_engine_analysis."
-        "emit_progress",
+        "app.agent.nodes.C_engine_analysis.emit_progress",
         emit_progress,
     )
 
@@ -987,25 +781,13 @@ async def test_engine_analysis_handles_stockfish_error(
         ),
     )
 
-    assert (
-        result["status"]
-        == AnalysisStatus.FAILED
-    )
+    assert result["status"] == AnalysisStatus.FAILED
 
-    assert (
-        result["errors"][0].code
-        == stockfish_error.code
-    )
+    assert result["errors"][0].code == stockfish_error.code
 
-    assert (
-        result["errors"][0].recoverable
-        == stockfish_error.retryable
-    )
+    assert result["errors"][0].recoverable == stockfish_error.retryable
 
-    assert (
-        WorkflowStep.ENGINE_ANALYSIS
-        not in result["completed_steps"]
-    )
+    assert WorkflowStep.ENGINE_ANALYSIS not in result["completed_steps"]
 
     assert emit_progress.call_count == 2
 
@@ -1018,9 +800,7 @@ async def test_engine_analysis_handles_unexpected_error(
     """Vérifie une erreur inattendue."""
 
     analyze_position = AsyncMock(
-        side_effect=RuntimeError(
-            "unexpected failure"
-        ),
+        side_effect=RuntimeError("unexpected failure"),
     )
 
     service = MagicMock(
@@ -1032,16 +812,14 @@ async def test_engine_analysis_handles_unexpected_error(
     emit_progress = MagicMock()
 
     monkeypatch.setattr(
-        "app.agent.nodes.C_engine_analysis."
-        "_get_stockfish_service",
+        "app.agent.nodes.C_engine_analysis._get_stockfish_service",
         MagicMock(
             return_value=service,
         ),
     )
 
     monkeypatch.setattr(
-        "app.agent.nodes.C_engine_analysis."
-        "emit_progress",
+        "app.agent.nodes.C_engine_analysis.emit_progress",
         emit_progress,
     )
 
@@ -1053,19 +831,10 @@ async def test_engine_analysis_handles_unexpected_error(
         ),
     )
 
-    assert (
-        result["status"]
-        == AnalysisStatus.FAILED
-    )
+    assert result["status"] == AnalysisStatus.FAILED
 
-    assert (
-        result["errors"][0].code
-        == ERROR_UNEXPECTED
-    )
+    assert result["errors"][0].code == ERROR_UNEXPECTED
 
-    assert (
-        WorkflowStep.ENGINE_ANALYSIS
-        not in result["completed_steps"]
-    )
+    assert WorkflowStep.ENGINE_ANALYSIS not in result["completed_steps"]
 
     assert emit_progress.call_count == 2

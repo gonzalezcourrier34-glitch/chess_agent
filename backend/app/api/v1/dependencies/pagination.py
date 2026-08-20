@@ -22,10 +22,8 @@ from app.core.config import settings
 
 # Modèle
 
-@dataclass(
-    frozen=True,
-    slots=True
-)
+
+@dataclass(frozen=True, slots=True)
 class Pagination:
     """Paramètres normalisés de pagination."""
 
@@ -41,40 +39,27 @@ LimitParameter = Annotated[
     Query(
         ge=1,
         le=settings.mongodb_history_max_limit,
-        description=(
-            "Nombre maximal de résultats retournés."
-        )
-    )
+        description=("Nombre maximal de résultats retournés."),
+    ),
 ]
 
 OffsetParameter = Annotated[
-    int,
-    Query(
-        ge=0,
-        description=(
-            "Nombre de résultats ignorés."
-        )
-    )
+    int, Query(ge=0, description=("Nombre de résultats ignorés."))
 ]
 
 
 # Construction
 
+
 def get_pagination(
     limit: LimitParameter = settings.mongodb_history_default_limit,
-    offset: OffsetParameter = 0
+    offset: OffsetParameter = 0,
 ) -> Pagination:
     """Construit les paramètres de pagination."""
 
-    return Pagination(
-        limit=limit,
-        offset=offset
-    )
+    return Pagination(limit=limit, offset=offset)
 
 
 # Dépendance typée
 
-PaginationDependency = Annotated[
-    Pagination,
-    Depends(get_pagination)
-]
+PaginationDependency = Annotated[Pagination, Depends(get_pagination)]

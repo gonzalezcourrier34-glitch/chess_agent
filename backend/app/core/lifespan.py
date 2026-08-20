@@ -84,9 +84,7 @@ class ResourceManager:
     def register(self, resource: ManagedResource) -> None:
         """Enregistre une ressource dont le nom est unique."""
         if any(current.name == resource.name for current in self._resources):
-            raise ValueError(
-                f"La ressource {resource.name!r} est déjà enregistrée."
-            )
+            raise ValueError(f"La ressource {resource.name!r} est déjà enregistrée.")
 
         self._resources.append(resource)
 
@@ -100,10 +98,7 @@ class ResourceManager:
     async def _initialize_resource(self, resource: ManagedResource) -> None:
         """Initialise une ressource dans la section critique courante."""
         if resource.initialized:
-            logger.debug(
-                "La ressource %s est déjà initialisée.",
-                resource.name
-            )
+            logger.debug("La ressource %s est déjà initialisée.", resource.name)
             return
 
         logger.info("Initialisation de %s...", resource.name)
@@ -126,47 +121,35 @@ class ResourceManager:
 
         if not available and resource.required:
             await self._shutdown_resource(resource, rollback=True)
-            raise ResourceHealthError(
-                message=f"{resource.name} est indisponible."
-            )
+            raise ResourceHealthError(message=f"{resource.name} est indisponible.")
 
         if not available:
             logger.warning(
                 "%s est indisponible. L'application poursuit son démarrage "
                 "en mode dégradé.",
-                resource.name
+                resource.name,
             )
 
         logger.info(
-            "%s initialisé en %.3f s.",
-            resource.name,
-            perf_counter() - started_at
+            "%s initialisé en %.3f s.", resource.name, perf_counter() - started_at
         )
 
     def _handle_initialization_error(
-        self,
-        resource: ManagedResource,
-        error: Exception
+        self, resource: ManagedResource, error: Exception
     ) -> None:
         """Traite un échec d'initialisation selon le niveau d'exigence."""
         failure = ResourceInitializationError(
-            message=f"Impossible d'initialiser {resource.name}.",
-            cause=error
+            message=f"Impossible d'initialiser {resource.name}.", cause=error
         )
 
         if resource.required:
             raise failure from error
 
         logger.warning(
-            "Initialisation facultative de %s impossible : %s",
-            resource.name,
-            error
+            "Initialisation facultative de %s impossible : %s", resource.name, error
         )
 
-    async def _check_initialized_resource(
-        self,
-        resource: ManagedResource
-    ) -> bool:
+    async def _check_initialized_resource(self, resource: ManagedResource) -> bool:
         """Contrôle une ressource initialisée avant sa publication."""
         try:
             return await resource.health(self.container)
@@ -176,23 +159,18 @@ class ResourceManager:
         except Exception as error:
             if not resource.required:
                 logger.warning(
-                    "Le contrôle de la ressource facultative %s a échoué : "
-                    "%s",
+                    "Le contrôle de la ressource facultative %s a échoué : %s",
                     resource.name,
-                    error
+                    error,
                 )
                 return False
 
             await self._shutdown_resource(resource, rollback=True)
             raise ResourceHealthError(
-                message=f"Impossible de contrôler {resource.name}.",
-                cause=error
+                message=f"Impossible de contrôler {resource.name}.", cause=error
             ) from error
 
-    async def _cleanup_failed_initialization(
-        self,
-        resource: ManagedResource
-    ) -> None:
+    async def _cleanup_failed_initialization(self, resource: ManagedResource) -> None:
         """Nettoie une ressource dont l'initialisation a été interrompue."""
         try:
             await resource.shutdown(self.container)
@@ -202,7 +180,7 @@ class ResourceManager:
                     f"Impossible de nettoyer {resource.name} après un échec "
                     "d'initialisation."
                 ),
-                cause=error
+                cause=error,
             ).log()
         finally:
             resource.initialized = False
@@ -241,10 +219,7 @@ class ResourceManager:
                 await self._shutdown_resource(resource, rollback=False)
 
     async def _shutdown_resource(
-        self,
-        resource: ManagedResource,
-        *,
-        rollback: bool
+        self, resource: ManagedResource, *, rollback: bool
     ) -> None:
         """Ferme une ressource initialisée sans masquer les autres arrêts."""
         if not resource.initialized:
@@ -261,17 +236,11 @@ class ResourceManager:
             await resource.shutdown(self.container)
         except Exception as error:
             if rollback:
-                message = (
-                    f"Impossible d'arrêter {resource.name} pendant le "
-                    "rollback."
-                )
+                message = f"Impossible d'arrêter {resource.name} pendant le rollback."
             else:
                 message = f"Impossible d'arrêter {resource.name}."
 
-            ResourceShutdownError(
-                message=message,
-                cause=error
-            ).log()
+            ResourceShutdownError(message=message, cause=error).log()
             return
         finally:
             # Le gestionnaire est terminal après une tentative de fermeture.
@@ -280,9 +249,7 @@ class ResourceManager:
 
         if not rollback:
             logger.info(
-                "%s arrêté en %.3f s.",
-                resource.name,
-                perf_counter() - started_at
+                "%s arrêté en %.3f s.", resource.name, perf_counter() - started_at
             )
 
     # Santé
@@ -291,18 +258,12 @@ class ResourceManager:
         """Retourne l'état de santé des ressources initialisées."""
         async with self._lifecycle_lock:
             statuses = await gather(
-                *(
-                    self._get_resource_status(resource)
-                    for resource in self._resources
-                )
+                *(self._get_resource_status(resource) for resource in self._resources)
             )
 
         return dict(statuses)
 
-    async def _get_resource_status(
-        self,
-        resource: ManagedResource
-    ) -> tuple[str, bool]:
+    async def _get_resource_status(self, resource: ManagedResource) -> tuple[str, bool]:
         """Retourne le statut isolé d'une ressource."""
         if not resource.initialized:
             return resource.name, False
@@ -475,25 +436,25 @@ def create_resource_manager(container: ApplicationContainer) -> ResourceManager:
             name="MongoDB",
             initialize=initialize_mongodb,
             shutdown=shutdown_mongodb,
-            health=mongodb_health
+            health=mongodb_health,
         ),
         ManagedResource(
             name="Embedding",
             initialize=initialize_embedding,
             shutdown=shutdown_embedding,
-            health=embedding_health
+            health=embedding_health,
         ),
         ManagedResource(
             name="Milvus",
             initialize=initialize_milvus,
             shutdown=shutdown_milvus,
-            health=milvus_health
+            health=milvus_health,
         ),
         ManagedResource(
             name="Stockfish",
             initialize=initialize_stockfish,
             shutdown=shutdown_stockfish,
-            health=stockfish_health
+            health=stockfish_health,
         ),
         # Le nœud de génération possède une réponse de secours lorsque le
         # modèle est indisponible.
@@ -510,22 +471,22 @@ def create_resource_manager(container: ApplicationContainer) -> ResourceManager:
             initialize=no_initialize,
             shutdown=shutdown_lichess,
             health=lichess_health,
-            required=False
+            required=False,
         ),
         ManagedResource(
             name="YouTube",
             initialize=no_initialize,
             shutdown=shutdown_youtube,
             health=youtube_health,
-            required=False
+            required=False,
         ),
         # Le workflow est publié après toutes les dépendances techniques.
         ManagedResource(
             name="Workflow",
             initialize=initialize_workflow,
             shutdown=shutdown_workflow,
-            health=workflow_health
-        )
+            health=workflow_health,
+        ),
     )
 
     for resource in resources:
@@ -553,10 +514,7 @@ async def lifespan(app: FastAPI) -> AsyncIterator[None]:
         await resource_manager.initialize_all()
         app.state.container = container
 
-        logger.info(
-            "Chess Agent prêt en %.3f s.",
-            perf_counter() - started_at
-        )
+        logger.info("Chess Agent prêt en %.3f s.", perf_counter() - started_at)
 
         yield
     except Exception:
@@ -577,6 +535,5 @@ async def lifespan(app: FastAPI) -> AsyncIterator[None]:
             container.resource_manager = None
 
         logger.info(
-            "Chess Agent arrêté en %.3f s.",
-            perf_counter() - shutdown_started_at
+            "Chess Agent arrêté en %.3f s.", perf_counter() - shutdown_started_at
         )

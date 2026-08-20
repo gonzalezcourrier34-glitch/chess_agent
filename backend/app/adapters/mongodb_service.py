@@ -112,13 +112,12 @@ class MongoDBService:
                 await collection.create_index(
                     [(REQUEST_ID_FIELD, ASCENDING)],
                     unique=True,
-                    name="analyses_request_id_unique"
+                    name="analyses_request_id_unique",
                 )
 
                 # Cet index accélère l'affichage de l'historique récent.
                 await collection.create_index(
-                    [(SAVED_AT_FIELD, DESCENDING)],
-                    name="analyses_saved_at_desc"
+                    [(SAVED_AT_FIELD, DESCENDING)], name="analyses_saved_at_desc"
                 )
             except PyMongoError as error:
                 logger.exception("Impossible de préparer la collection des analyses.")
@@ -126,7 +125,7 @@ class MongoDBService:
                     message=(
                         "Impossible de préparer la collection MongoDB des analyses."
                     ),
-                    cause=error
+                    cause=error,
                 ) from error
 
             self._initialized = True
@@ -185,10 +184,7 @@ class MongoDBService:
         document["_id"] = document.pop("id")
         return document
 
-    def _document_to_analysis(
-        self,
-        document: MongoDocument
-    ) -> AnalysisRecord:
+    def _document_to_analysis(self, document: MongoDocument) -> AnalysisRecord:
         """Convertit un document MongoDB en analyse validée."""
         payload = dict(document)
         identifier = payload.pop("_id", None)
@@ -206,16 +202,13 @@ class MongoDBService:
             logger.exception("Le document MongoDB de l'analyse est invalide.")
             raise DatabaseOperationError(
                 message=("Le document MongoDB ne respecte pas le schéma d'analyse."),
-                cause=error
+                cause=error,
             ) from error
 
     # Construction
 
     def _build_response_preview(
-        self,
-        response: str | None,
-        *,
-        max_length: int | None = None
+        self, response: str | None, *, max_length: int | None = None
     ) -> str | None:
         """Construit un extrait normalisé de la réponse."""
         if response is None:
@@ -234,10 +227,7 @@ class MongoDBService:
 
         return f"{normalized_response[:normalized_length].rstrip()}..."
 
-    def _extract_opening_name(
-        self,
-        analysis: AnalysisRecord
-    ) -> str | None:
+    def _extract_opening_name(self, analysis: AnalysisRecord) -> str | None:
         """Retourne le nom normalisé de l'ouverture détectée."""
         if analysis.opening is None:
             return None
@@ -257,23 +247,17 @@ class MongoDBService:
             warning_count=len(analysis.warnings),
             error_count=len(analysis.errors),
             created_at=analysis.created_at,
-            saved_at=analysis.saved_at
+            saved_at=analysis.saved_at,
         )
 
     # Sauvegarde
 
-    async def save_analysis(
-        self,
-        analysis: AnalysisRecord
-    ) -> AnalysisSaveResult:
+    async def save_analysis(self, analysis: AnalysisRecord) -> AnalysisSaveResult:
         """Crée ou met à jour une analyse de manière idempotente."""
         await self.initialize()
 
         analysis_id = self._normalize_identifier(analysis.id, "analysis_id")
-        request_id = self._normalize_identifier(
-            analysis.request_id,
-            REQUEST_ID_FIELD
-        )
+        request_id = self._normalize_identifier(analysis.request_id, REQUEST_ID_FIELD)
         normalized_analysis = analysis.model_copy(
             update={"id": analysis_id, "request_id": request_id}
         )
@@ -291,16 +275,12 @@ class MongoDBService:
                         CREATED_AT_FIELD: created_at,
                     },
                 },
-                upsert=True
+                upsert=True,
             )
         except PyMongoError as error:
-            logger.exception(
-                "Impossible d'enregistrer l'analyse %s.",
-                request_id
-            )
+            logger.exception("Impossible d'enregistrer l'analyse %s.", request_id)
             raise DatabaseOperationError(
-                message="Impossible d'enregistrer l'analyse dans MongoDB.",
-                cause=error
+                message="Impossible d'enregistrer l'analyse dans MongoDB.", cause=error
             ) from error
 
         stored_analysis = await self.get_analysis_by_request_id(request_id)
@@ -318,7 +298,7 @@ class MongoDBService:
             analysis_id=stored_analysis.id,
             request_id=stored_analysis.request_id,
             saved_at=stored_analysis.saved_at,
-            created=created
+            created=created,
         )
 
     # Lecture
@@ -331,13 +311,9 @@ class MongoDBService:
         try:
             document = await self._get_collection().find_one({"_id": normalized_id})
         except PyMongoError as error:
-            logger.exception(
-                "Impossible de récupérer l'analyse %s.",
-                normalized_id
-            )
+            logger.exception("Impossible de récupérer l'analyse %s.", normalized_id)
             raise DatabaseOperationError(
-                message="Impossible de récupérer l'analyse depuis MongoDB.",
-                cause=error
+                message="Impossible de récupérer l'analyse depuis MongoDB.", cause=error
             ) from error
 
         if document is None:
@@ -355,15 +331,11 @@ class MongoDBService:
         return analysis
 
     async def get_analysis_by_request_id(
-        self,
-        request_id: str
+        self, request_id: str
     ) -> AnalysisRecord | None:
         """Retourne une analyse par son identifiant de requête."""
         await self.initialize()
-        normalized_request_id = self._normalize_identifier(
-            request_id,
-            REQUEST_ID_FIELD
-        )
+        normalized_request_id = self._normalize_identifier(request_id, REQUEST_ID_FIELD)
 
         try:
             document = await self._get_collection().find_one(
@@ -372,11 +344,11 @@ class MongoDBService:
         except PyMongoError as error:
             logger.exception(
                 "Impossible de récupérer l'analyse de la requête %s.",
-                normalized_request_id
+                normalized_request_id,
             )
             raise DatabaseOperationError(
                 message=("Impossible de récupérer l'analyse associée à la requête."),
-                cause=error
+                cause=error,
             ) from error
 
         if document is None:
@@ -385,10 +357,7 @@ class MongoDBService:
         return self._document_to_analysis(document)
 
     async def list_recent_analyses(
-        self,
-        *,
-        limit: int | None = None,
-        offset: int = 0
+        self, *, limit: int | None = None, offset: int = 0
     ) -> list[AnalysisSummary]:
         """Retourne les analyses les plus récentes."""
         await self.initialize()
@@ -417,7 +386,7 @@ class MongoDBService:
             logger.exception("Impossible de récupérer l'historique des analyses.")
             raise DatabaseOperationError(
                 message=("Impossible de récupérer l'historique des analyses."),
-                cause=error
+                cause=error,
             ) from error
 
         return summaries
@@ -432,13 +401,9 @@ class MongoDBService:
         try:
             result = await self._get_collection().delete_one({"_id": normalized_id})
         except PyMongoError as error:
-            logger.exception(
-                "Impossible de supprimer l'analyse %s.",
-                normalized_id
-            )
+            logger.exception("Impossible de supprimer l'analyse %s.", normalized_id)
             raise DatabaseOperationError(
-                message="Impossible de supprimer l'analyse dans MongoDB.",
-                cause=error
+                message="Impossible de supprimer l'analyse dans MongoDB.", cause=error
             ) from error
 
         deleted = result.deleted_count > 0
@@ -480,11 +445,7 @@ class MongoDBService:
             try:
                 await self.initialize()
                 analysis_count = await self._get_collection().count_documents({})
-            except (
-                DatabaseConnectionError,
-                DatabaseOperationError,
-                PyMongoError
-            ):
+            except (DatabaseConnectionError, DatabaseOperationError, PyMongoError):
                 logger.exception("Impossible de compter les analyses MongoDB.")
             except Exception:
                 # Un healthcheck ne doit pas faire échouer l'agrégateur de

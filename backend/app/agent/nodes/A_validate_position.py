@@ -38,12 +38,11 @@ CHESS_SERVICE_KEY = "chess_service"
 
 # Services
 
+
 def _get_chess_service(config: RunnableConfig) -> ChessService | None:
     """Retourne le service d'échecs configuré avec un type vérifié."""
     service = get_configured_service(
-        config,
-        CHESS_SERVICE_KEY,
-        expected_type=ChessService
+        config, CHESS_SERVICE_KEY, expected_type=ChessService
     )
 
     if service is None:
@@ -53,7 +52,7 @@ def _get_chess_service(config: RunnableConfig) -> ChessService | None:
         logger.error(
             "Service %s invalide : %s reçu au lieu de ChessService.",
             CHESS_SERVICE_KEY,
-            type(service).__name__
+            type(service).__name__,
         )
         return None
 
@@ -61,6 +60,7 @@ def _get_chess_service(config: RunnableConfig) -> ChessService | None:
 
 
 # Résumés
+
 
 def _build_position_summary(position: BoardPosition) -> str:
     """Construit un résumé factuel de la position validée."""
@@ -72,10 +72,8 @@ def _build_position_summary(position: BoardPosition) -> str:
 
 # Mises à jour
 
-def _build_error_update(
-    state: ChessAnalysisState,
-    error: WorkflowError
-) -> StateUpdate:
+
+def _build_error_update(state: ChessAnalysisState, error: WorkflowError) -> StateUpdate:
     """Construit la mise à jour retournée après un échec."""
     return {
         "status": AnalysisStatus.FAILED,
@@ -83,20 +81,17 @@ def _build_error_update(
         # Une étape échouée n'est jamais ajoutée aux étapes terminées.
         "completed_steps": list(state.completed_steps),
         "errors": [*state.errors, error],
-        "warnings": list(state.warnings)
+        "warnings": list(state.warnings),
     }
 
 
 def _build_success_update(
-    state: ChessAnalysisState,
-    position: BoardPosition
+    state: ChessAnalysisState, position: BoardPosition
 ) -> StateUpdate:
     """Construit la mise à jour après une validation réussie."""
     current_step = WorkflowStep.VALIDATE_POSITION
     workflow_context = state.workflow_context.model_copy(
-        update={
-            "position_summary": _build_position_summary(position)
-        }
+        update={"position_summary": _build_position_summary(position)}
     )
 
     return {
@@ -107,16 +102,13 @@ def _build_success_update(
         "position": position,
         "workflow_context": workflow_context,
         "errors": list(state.errors),
-        "warnings": list(state.warnings)
+        "warnings": list(state.warnings),
     }
 
 
 def _build_missing_service_update(state: ChessAnalysisState) -> StateUpdate:
     """Construit la mise à jour lorsque ChessService est indisponible."""
-    message = (
-        "ChessService est absent ou invalide dans la configuration "
-        "LangGraph."
-    )
+    message = "ChessService est absent ou invalide dans la configuration LangGraph."
 
     logger.error(message)
 
@@ -126,14 +118,13 @@ def _build_missing_service_update(state: ChessAnalysisState) -> StateUpdate:
             step=WorkflowStep.VALIDATE_POSITION,
             code=ERROR_CONFIGURATION,
             message=message,
-            recoverable=False
-        )
+            recoverable=False,
+        ),
     )
 
 
 def _build_invalid_fen_update(
-    state: ChessAnalysisState,
-    error: InvalidFenError | ValidationError
+    state: ChessAnalysisState, error: InvalidFenError | ValidationError
 ) -> StateUpdate:
     """Construit la mise à jour retournée pour une FEN invalide."""
     logger.warning("Position FEN invalide.")
@@ -144,8 +135,8 @@ def _build_invalid_fen_update(
             step=WorkflowStep.VALIDATE_POSITION,
             code=ERROR_INVALID_FEN,
             message=str(error),
-            recoverable=False
-        )
+            recoverable=False,
+        ),
     )
 
 
@@ -159,16 +150,16 @@ def _build_unexpected_error_update(state: ChessAnalysisState) -> StateUpdate:
             step=WorkflowStep.VALIDATE_POSITION,
             code=ERROR_UNEXPECTED,
             message=message,
-            recoverable=False
-        )
+            recoverable=False,
+        ),
     )
 
 
 # Validation
 
+
 async def validate_position(
-    state: ChessAnalysisState,
-    config: RunnableConfig
+    state: ChessAnalysisState, config: RunnableConfig
 ) -> StateUpdate:
     """Valide la position FEN reçue par le workflow."""
     logger.debug("Validation de la position FEN.")
@@ -180,34 +171,28 @@ async def validate_position(
             step=WorkflowStep.VALIDATE_POSITION,
             service=ServiceType.CHESS,
             status=WorkflowStepStatus.FAILED,
-            message="ChessService indisponible."
+            message="ChessService indisponible.",
         )
 
-        return _build_missing_service_update(
-            state
-        )
+        return _build_missing_service_update(state)
 
     try:
-        request = FenRequest(
-            fen=state.fen
-        )
+        request = FenRequest(fen=state.fen)
 
         emit_progress(
             step=WorkflowStep.VALIDATE_POSITION,
             service=ServiceType.CHESS,
             status=WorkflowStepStatus.RUNNING,
-            message="Validation de la position en cours."
+            message="Validation de la position en cours.",
         )
 
-        position = chess_service.get_position(
-            request
-        )
+        position = chess_service.get_position(request)
 
         emit_progress(
             step=WorkflowStep.VALIDATE_POSITION,
             service=ServiceType.CHESS,
             status=WorkflowStepStatus.COMPLETED,
-            message="Position validée."
+            message="Position validée.",
         )
 
     except (InvalidFenError, ValidationError) as error:
@@ -215,13 +200,10 @@ async def validate_position(
             step=WorkflowStep.VALIDATE_POSITION,
             service=ServiceType.CHESS,
             status=WorkflowStepStatus.FAILED,
-            message="Position FEN invalide."
+            message="Position FEN invalide.",
         )
 
-        return _build_invalid_fen_update(
-            state,
-            error
-        )
+        return _build_invalid_fen_update(state, error)
 
     except Exception:
         emit_progress(
@@ -229,23 +211,14 @@ async def validate_position(
             service=ServiceType.CHESS,
             status=WorkflowStepStatus.FAILED,
             message=(
-                "Une erreur inattendue a interrompu "
-                "la validation de la position."
-            )
+                "Une erreur inattendue a interrompu la validation de la position."
+            ),
         )
 
-        logger.exception(
-            "Erreur inattendue lors de la validation "
-            "de la position FEN."
-        )
+        logger.exception("Erreur inattendue lors de la validation de la position FEN.")
 
-        return _build_unexpected_error_update(
-            state
-        )
+        return _build_unexpected_error_update(state)
 
     logger.info("Position FEN validée.")
 
-    return _build_success_update(
-        state,
-        position
-    )
+    return _build_success_update(state, position)

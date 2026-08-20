@@ -44,80 +44,44 @@ api_router = APIRouter(prefix="/v1")
 
 # Analyse
 
-api_router.include_router(
-    analysis_router,
-    prefix="/analysis",
-    tags=[ANALYSIS_TAG]
-)
+api_router.include_router(analysis_router, prefix="/analysis", tags=[ANALYSIS_TAG])
 
 
 # Moteur
 
-api_router.include_router(
-    engine_router,
-    prefix="/engine",
-    tags=[ENGINE_TAG]
-)
+api_router.include_router(engine_router, prefix="/engine", tags=[ENGINE_TAG])
 
 
 # Supervision
 
-api_router.include_router(
-    healthcheck_router,
-    prefix="",
-    tags=[HEALTHCHECK_TAG]
-)
+api_router.include_router(healthcheck_router, prefix="", tags=[HEALTHCHECK_TAG])
 
 
 # Historique
 
-api_router.include_router(
-    history_router,
-    prefix="/history",
-    tags=[HISTORY_TAG]
-)
+api_router.include_router(history_router, prefix="/history", tags=[HISTORY_TAG])
 
 
 # Ouvertures
 
-api_router.include_router(
-    opening_router,
-    prefix="/openings",
-    tags=[OPENING_TAG]
-)
+api_router.include_router(opening_router, prefix="/openings", tags=[OPENING_TAG])
 
 
 # Position
 
-api_router.include_router(
-    position_router,
-    prefix="/position",
-    tags=[POSITION_TAG]
-)
+api_router.include_router(position_router, prefix="/position", tags=[POSITION_TAG])
 
 
 # Recherche documentaire
 
-api_router.include_router(
-    search_documents_router,
-    prefix="/search",
-    tags=[SEARCH_TAG]
-)
+api_router.include_router(search_documents_router, prefix="/search", tags=[SEARCH_TAG])
 
 
 # Recherche vidéo
 
-api_router.include_router(
-    search_videos_router,
-    prefix="/search",
-    tags=[SEARCH_TAG]
-)
+api_router.include_router(search_videos_router, prefix="/search", tags=[SEARCH_TAG])
 
 
 # Services
 
-api_router.include_router(
-    services_router,
-    prefix="/services",
-    tags=[SERVICES_TAG]
-)
+api_router.include_router(services_router, prefix="/services", tags=[SERVICES_TAG])

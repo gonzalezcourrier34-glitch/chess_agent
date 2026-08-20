@@ -42,20 +42,15 @@ router = APIRouter()
         "les résultats théoriques, moteur, documentaires et pédagogiques."
     ),
     response_description="Résultat complet de l'analyse de la position.",
-    responses=COMMON_ERROR_RESPONSES
+    responses=COMMON_ERROR_RESPONSES,
 )
 async def analyze_position(
-    request: Request,
-    payload: AnalysisRequest,
-    service: AnalysisServiceDependency
+    request: Request, payload: AnalysisRequest, service: AnalysisServiceDependency
 ) -> AnalysisResponse:
     """Analyse une position avec le workflow de l'agent."""
     request_id = request.state.request_id
 
-    return await service.analyze(
-        payload,
-        request_id=request_id
-    )
+    return await service.analyze(payload, request_id=request_id)
 
 
 @router.post(
@@ -70,36 +65,19 @@ async def analyze_position(
     responses=COMMON_ERROR_RESPONSES,
 )
 async def stream_analysis(
-    request: Request,
-    payload: AnalysisRequest,
-    service: AnalysisServiceDependency
+    request: Request, payload: AnalysisRequest, service: AnalysisServiceDependency
 ) -> StreamingResponse:
     """Diffuse la progression et le résultat final d'une analyse."""
     request_id = request.state.request_id
 
     async def event_generator() -> AsyncIterator[str]:
-        async for event in service.stream_analysis(
-            payload,
-            request_id=request_id
-        ):
-            if isinstance(
-                event,
-                AnalysisProgressEvent
-            ):
-                yield format_sse_event(
-                    event="progress",
-                    data=event.model_dump_json()
-                )
+        async for event in service.stream_analysis(payload, request_id=request_id):
+            if isinstance(event, AnalysisProgressEvent):
+                yield format_sse_event(event="progress", data=event.model_dump_json())
                 continue
 
-            if isinstance(
-                event,
-                AnalysisCompletedEvent
-            ):
-                yield format_sse_event(
-                    event="completed",
-                    data=event.model_dump_json()
-                )
+            if isinstance(event, AnalysisCompletedEvent):
+                yield format_sse_event(event="completed", data=event.model_dump_json())
 
     return StreamingResponse(
         event_generator(),
@@ -107,6 +85,6 @@ async def stream_analysis(
         headers={
             "Cache-Control": "no-cache",
             "Connection": "keep-alive",
-            "X-Accel-Buffering": "no"
-        }
+            "X-Accel-Buffering": "no",
+        },
     )

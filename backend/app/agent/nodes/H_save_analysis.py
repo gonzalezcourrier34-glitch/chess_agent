@@ -41,9 +41,7 @@ logger = get_logger(__name__)
 
 MONGODB_SERVICE_KEY = "mongodb_service"
 ANALYSIS_IDENTIFIER_NAMESPACE = "chess-agent-analysis"
-UNEXPECTED_SAVE_MESSAGE = (
-    "Une erreur inattendue a empêché la sauvegarde de l'analyse."
-)
+UNEXPECTED_SAVE_MESSAGE = "Une erreur inattendue a empêché la sauvegarde de l'analyse."
 
 
 # Types
@@ -55,12 +53,11 @@ JSON_OBJECT_ADAPTER = TypeAdapter(JsonObject)
 
 # Services
 
+
 def _get_mongodb_service(config: RunnableConfig) -> MongoDBService | None:
     """Retourne le service MongoDB configuré avec un type vérifié."""
     service = get_configured_service(
-        config,
-        MONGODB_SERVICE_KEY,
-        expected_type=MongoDBService
+        config, MONGODB_SERVICE_KEY, expected_type=MongoDBService
     )
 
     if service is None:
@@ -70,7 +67,7 @@ def _get_mongodb_service(config: RunnableConfig) -> MongoDBService | None:
         logger.error(
             "Service %s invalide : %s reçu au lieu de MongoDBService.",
             MONGODB_SERVICE_KEY,
-            type(service).__name__
+            type(service).__name__,
         )
         return None
 
@@ -78,6 +75,7 @@ def _get_mongodb_service(config: RunnableConfig) -> MongoDBService | None:
 
 
 # Statuts
+
 
 def _get_success_status(state: ChessAnalysisState) -> AnalysisStatus:
     """Retourne le statut final après une sauvegarde réussie."""
@@ -101,6 +99,7 @@ def _get_partial_success_status(state: ChessAnalysisState) -> AnalysisStatus:
 
 # Normalisation
 
+
 def _normalize_optional_text(value: str | None) -> str | None:
     """Retourne une chaîne facultative normalisée."""
     if value is None:
@@ -122,6 +121,7 @@ def _get_request_id(state: ChessAnalysisState) -> str | None:
 
 # Identifiants
 
+
 def _build_analysis_id(request_id: str) -> str:
     """Construit un identifiant d'analyse stable."""
     namespaced_request_id = f"{ANALYSIS_IDENTIFIER_NAMESPACE}:{request_id}"
@@ -130,11 +130,8 @@ def _build_analysis_id(request_id: str) -> str:
 
 # Dates
 
-def _get_created_at(
-    state: ChessAnalysisState,
-    *,
-    default: datetime
-) -> datetime:
+
+def _get_created_at(state: ChessAnalysisState, *, default: datetime) -> datetime:
     """Retourne la première date de création disponible."""
     for field_name in ("created_at", "started_at", "requested_at"):
         value = getattr(state.metadata, field_name, None)
@@ -146,6 +143,7 @@ def _get_created_at(
 
 
 # Sérialisation
+
 
 def _serialize_json_object(value: object) -> JsonObject | None:
     """Retourne un objet compatible JSON ou ignore une valeur invalide."""
@@ -161,7 +159,7 @@ def _serialize_json_object(value: object) -> JsonObject | None:
     except ValidationError:
         logger.warning(
             "Valeur %s ignorée car elle n'est pas sérialisable en JSON.",
-            type(value).__name__
+            type(value).__name__,
         )
         return None
 
@@ -176,9 +174,9 @@ def _serialize_model(value: BaseModel | None) -> JsonObject | None:
 
 # Construction
 
+
 def _build_analysis_record(
-    state: ChessAnalysisState,
-    request_id: str
+    state: ChessAnalysisState, request_id: str
 ) -> AnalysisRecord:
     """Construit le document complet destiné à MongoDB."""
     saved_at = datetime.now(UTC)
@@ -202,22 +200,19 @@ def _build_analysis_record(
         workflow_context=state.workflow_context.model_dump(mode="json"),
         metadata=state.metadata.model_dump(mode="json"),
         current_step=WorkflowStep.SAVE_ANALYSIS,
-        completed_steps=append_completed_step(
-            state,
-            WorkflowStep.SAVE_ANALYSIS
-        ),
+        completed_steps=append_completed_step(state, WorkflowStep.SAVE_ANALYSIS),
         warnings=list(state.warnings),
         errors=list(state.errors),
         created_at=_get_created_at(state, default=saved_at),
-        saved_at=saved_at
+        saved_at=saved_at,
     )
 
 
 # Mises à jour
 
+
 def _build_success_update(
-    state: ChessAnalysisState,
-    result: AnalysisSaveResult
+    state: ChessAnalysisState, result: AnalysisSaveResult
 ) -> StateUpdate:
     """Construit la mise à jour après une sauvegarde réussie."""
     current_step = WorkflowStep.SAVE_ANALYSIS
@@ -233,8 +228,7 @@ def _build_success_update(
 
 
 def _build_warning_update(
-    state: ChessAnalysisState,
-    warning: WorkflowWarning
+    state: ChessAnalysisState, warning: WorkflowWarning
 ) -> StateUpdate:
     """Construit la mise à jour après un échec de persistance."""
     current_step = WorkflowStep.SAVE_ANALYSIS
@@ -251,8 +245,7 @@ def _build_warning_update(
 
 
 def _build_configuration_warning_update(
-    state: ChessAnalysisState,
-    message: str
+    state: ChessAnalysisState, message: str
 ) -> StateUpdate:
     """Construit la mise à jour après une configuration invalide."""
     logger.error(message)
@@ -260,10 +253,8 @@ def _build_configuration_warning_update(
     return _build_warning_update(
         state,
         WorkflowWarning(
-            step=WorkflowStep.SAVE_ANALYSIS,
-            code=ERROR_CONFIGURATION,
-            message=message
-        )
+            step=WorkflowStep.SAVE_ANALYSIS, code=ERROR_CONFIGURATION, message=message
+        ),
     )
 
 
@@ -286,8 +277,7 @@ def _build_missing_request_id_update(state: ChessAnalysisState) -> StateUpdate:
 
 
 def _build_database_warning_update(
-    state: ChessAnalysisState,
-    error: DatabaseError
+    state: ChessAnalysisState, error: DatabaseError
 ) -> StateUpdate:
     """Construit la mise à jour après une erreur MongoDB connue."""
     logger.warning("Sauvegarde MongoDB impossible : %s", error)
@@ -295,10 +285,8 @@ def _build_database_warning_update(
     return _build_warning_update(
         state,
         WorkflowWarning(
-            step=WorkflowStep.SAVE_ANALYSIS,
-            code=error.code,
-            message=str(error)
-        )
+            step=WorkflowStep.SAVE_ANALYSIS, code=error.code, message=str(error)
+        ),
     )
 
 
@@ -309,72 +297,55 @@ def _build_unexpected_warning_update(state: ChessAnalysisState) -> StateUpdate:
         WorkflowWarning(
             step=WorkflowStep.SAVE_ANALYSIS,
             code=ERROR_UNEXPECTED,
-            message=UNEXPECTED_SAVE_MESSAGE
-        )
+            message=UNEXPECTED_SAVE_MESSAGE,
+        ),
     )
 
 
 # API publique
 
+
 async def save_analysis(
-    state: ChessAnalysisState,
-    config: RunnableConfig
+    state: ChessAnalysisState, config: RunnableConfig
 ) -> StateUpdate:
     """Sauvegarde l'analyse finale dans MongoDB."""
     current_step = WorkflowStep.SAVE_ANALYSIS
     request_id = _get_request_id(state)
 
     if request_id is None:
-        return _build_missing_request_id_update(
-            state
-        )
+        return _build_missing_request_id_update(state)
 
-    logger.info(
-        "Sauvegarde de l'analyse du workflow %s.",
-        request_id
-    )
+    logger.info("Sauvegarde de l'analyse du workflow %s.", request_id)
 
-    mongodb_service = _get_mongodb_service(
-        config
-    )
+    mongodb_service = _get_mongodb_service(config)
 
     if mongodb_service is None:
         emit_progress(
             step=current_step,
             service=ServiceType.MONGODB,
             status=WorkflowStepStatus.WARNING,
-            message=(
-                "MongoDBService indisponible. "
-                "L'analyse n'a pas été sauvegardée."
-            )
+            message=("MongoDBService indisponible. L'analyse n'a pas été sauvegardée."),
         )
 
-        return _build_missing_service_update(
-            state
-        )
+        return _build_missing_service_update(state)
 
     try:
-        analysis = _build_analysis_record(
-            state,
-            request_id
-        )
+        analysis = _build_analysis_record(state, request_id)
 
         emit_progress(
             step=current_step,
             service=ServiceType.MONGODB,
             status=WorkflowStepStatus.RUNNING,
-            message="Sauvegarde de l'analyse en cours."
+            message="Sauvegarde de l'analyse en cours.",
         )
 
-        result = await mongodb_service.save_analysis(
-            analysis
-        )
+        result = await mongodb_service.save_analysis(analysis)
 
         emit_progress(
             step=current_step,
             service=ServiceType.MONGODB,
             status=WorkflowStepStatus.COMPLETED,
-            message="Analyse sauvegardée."
+            message="Analyse sauvegardée.",
         )
 
     except DatabaseError as error:
@@ -382,43 +353,27 @@ async def save_analysis(
             step=current_step,
             service=ServiceType.MONGODB,
             status=WorkflowStepStatus.WARNING,
-            message="Sauvegarde MongoDB impossible."
+            message="Sauvegarde MongoDB impossible.",
         )
 
-        return _build_database_warning_update(
-            state,
-            error
-        )
+        return _build_database_warning_update(state, error)
 
     except Exception:
         emit_progress(
             step=current_step,
             service=ServiceType.MONGODB,
             status=WorkflowStepStatus.WARNING,
-            message=(
-                "Une erreur inattendue a empêché "
-                "la sauvegarde de l'analyse."
-            )
+            message=("Une erreur inattendue a empêché la sauvegarde de l'analyse."),
         )
 
         # La persistance reste secondaire : une panne imprévue
         # ne doit pas supprimer l'analyse déjà produite.
-        logger.exception(
-            "Erreur inattendue durant la sauvegarde "
-            "de l'analyse."
-        )
+        logger.exception("Erreur inattendue durant la sauvegarde de l'analyse.")
 
-        return _build_unexpected_warning_update(
-            state
-        )
+        return _build_unexpected_warning_update(state)
 
     logger.info(
-        "Analyse %s sauvegardée pour le workflow %s.",
-        result.analysis_id,
-        request_id
+        "Analyse %s sauvegardée pour le workflow %s.", result.analysis_id, request_id
     )
 
-    return _build_success_update(
-        state,
-        result
-    )
+    return _build_success_update(state, result)

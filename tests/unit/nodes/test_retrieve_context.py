@@ -97,6 +97,7 @@ SAN_MOVES = (
 
 # Construction
 
+
 def build_opening() -> OpeningDetails:
     """Construit une ouverture minimale."""
 
@@ -130,9 +131,7 @@ def build_result(
         metadata={
             METADATA_ARTICLE_SLUG_KEY: "ruy-lopez",
             METADATA_ARTICLE_TITLE_KEY: "Ruy Lopez",
-            METADATA_WIKICHESS_TITLE_KEY: (
-                "Chess Opening Theory/1. e4/1... e5"
-            ),
+            METADATA_WIKICHESS_TITLE_KEY: ("Chess Opening Theory/1. e4/1... e5"),
             METADATA_ECO_KEY: "C60",
             METADATA_LANGUAGE_KEY: "fr",
             METADATA_MOVES_KEY: [
@@ -143,16 +142,12 @@ def build_result(
             METADATA_MOVES_PATH_KEY: "e4 e5 Nf3",
             METADATA_POSITION_AFTER_KEY: STARTING_FEN,
             METADATA_SOURCE_KEY: "wikichess",
-            METADATA_SOURCE_URL_KEY: (
-                "https://example.test/ruy-lopez"
-            ),
+            METADATA_SOURCE_URL_KEY: ("https://example.test/ruy-lopez"),
             METADATA_TYPE_KEY: DocumentType.ARTICLE.value,
             METADATA_NEXT_MOVES_KEY: [
                 {
                     NEXT_MOVE_KEY: "Nc6",
-                    NEXT_MOVE_SOURCE_URL_KEY: (
-                        "https://example.test/nc6"
-                    ),
+                    NEXT_MOVE_SOURCE_URL_KEY: ("https://example.test/nc6"),
                 },
             ],
         },
@@ -160,6 +155,7 @@ def build_result(
 
 
 # Fixtures
+
 
 @pytest.fixture
 def state() -> ChessAnalysisState:
@@ -192,6 +188,7 @@ def result() -> VectorSearchResult:
 
 # Services
 
+
 def test_get_chess_service_returns_service(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
@@ -204,8 +201,7 @@ def test_get_chess_service_returns_service(
     )
 
     monkeypatch.setattr(
-        "app.agent.nodes.E_retrieve_context."
-        "get_configured_service",
+        "app.agent.nodes.E_retrieve_context.get_configured_service",
         configured,
     )
 
@@ -214,10 +210,7 @@ def test_get_chess_service_returns_service(
         {},
     )
 
-    assert (
-        _get_chess_service(config)
-        is service
-    )
+    assert _get_chess_service(config) is service
 
     configured.assert_called_once_with(
         config,
@@ -232,17 +225,11 @@ def test_get_chess_service_returns_none(
     """Vérifie l'absence de ChessService."""
 
     monkeypatch.setattr(
-        "app.agent.nodes.E_retrieve_context."
-        "get_configured_service",
+        "app.agent.nodes.E_retrieve_context.get_configured_service",
         MagicMock(return_value=None),
     )
 
-    assert (
-        _get_chess_service(
-            cast(RunnableConfig, {})
-        )
-        is None
-    )
+    assert _get_chess_service(cast(RunnableConfig, {})) is None
 
 
 def test_get_chess_service_rejects_invalid_type(
@@ -251,17 +238,11 @@ def test_get_chess_service_rejects_invalid_type(
     """Vérifie un type de service invalide."""
 
     monkeypatch.setattr(
-        "app.agent.nodes.E_retrieve_context."
-        "get_configured_service",
+        "app.agent.nodes.E_retrieve_context.get_configured_service",
         MagicMock(return_value=object()),
     )
 
-    assert (
-        _get_chess_service(
-            cast(RunnableConfig, {})
-        )
-        is None
-    )
+    assert _get_chess_service(cast(RunnableConfig, {})) is None
 
 
 def test_get_vector_search_service_returns_service(
@@ -278,8 +259,7 @@ def test_get_vector_search_service_returns_service(
     )
 
     monkeypatch.setattr(
-        "app.agent.nodes.E_retrieve_context."
-        "get_configured_service",
+        "app.agent.nodes.E_retrieve_context.get_configured_service",
         configured,
     )
 
@@ -288,10 +268,7 @@ def test_get_vector_search_service_returns_service(
         {},
     )
 
-    assert (
-        _get_vector_search_service(config)
-        is service
-    )
+    assert _get_vector_search_service(config) is service
 
     configured.assert_called_once_with(
         config,
@@ -306,20 +283,15 @@ def test_get_vector_search_service_returns_none(
     """Vérifie l'absence du service vectoriel."""
 
     monkeypatch.setattr(
-        "app.agent.nodes.E_retrieve_context."
-        "get_configured_service",
+        "app.agent.nodes.E_retrieve_context.get_configured_service",
         MagicMock(return_value=None),
     )
 
-    assert (
-        _get_vector_search_service(
-            cast(RunnableConfig, {})
-        )
-        is None
-    )
+    assert _get_vector_search_service(cast(RunnableConfig, {})) is None
 
 
 # Statuts
+
 
 @pytest.mark.parametrize(
     ("status", "expected"),
@@ -355,10 +327,7 @@ def test_get_success_status(
         }
     )
 
-    assert (
-        _get_success_status(current_state)
-        == expected
-    )
+    assert _get_success_status(current_state) == expected
 
 
 @pytest.mark.parametrize(
@@ -395,15 +364,11 @@ def test_get_partial_success_status(
         }
     )
 
-    assert (
-        _get_partial_success_status(
-            current_state
-        )
-        == expected
-    )
+    assert _get_partial_success_status(current_state) == expected
 
 
 # Normalisation
+
 
 @pytest.mark.parametrize(
     ("value", "expected"),
@@ -436,10 +401,7 @@ def test_normalize_text(
 ) -> None:
     """Vérifie le nettoyage des chaînes."""
 
-    assert (
-        _normalize_text(value)
-        == expected
-    )
+    assert _normalize_text(value) == expected
 
 
 def test_normalize_moves() -> None:
@@ -476,10 +438,7 @@ def test_normalize_moves_rejects_invalid_sequence(
 ) -> None:
     """Vérifie les valeurs non séquentielles."""
 
-    assert (
-        _normalize_moves(value)
-        == ()
-    )
+    assert _normalize_moves(value) == ()
 
 
 def test_get_state_moves(
@@ -493,22 +452,17 @@ def test_get_state_moves(
         }
     )
 
-    assert (
-        _get_state_moves(current_state)
-        == tuple(UCI_MOVES)
-    )
+    assert _get_state_moves(current_state) == tuple(UCI_MOVES)
 
 
 def test_format_moves_path() -> None:
     """Vérifie le format du chemin de coups."""
 
-    assert (
-        _format_moves_path(SAN_MOVES)
-        == "e4 e5 Nf3"
-    )
+    assert _format_moves_path(SAN_MOVES) == "e4 e5 Nf3"
 
 
 # Conversion UCI vers SAN
+
 
 def test_convert_moves_to_san(
     monkeypatch: pytest.MonkeyPatch,
@@ -538,9 +492,7 @@ def test_convert_moves_to_san(
 
     assert result == SAN_MOVES
 
-    converter.assert_called_once_with(
-        UCI_MOVES
-    )
+    converter.assert_called_once_with(UCI_MOVES)
 
 
 def test_convert_moves_to_san_rejects_empty_conversion(
@@ -568,17 +520,15 @@ def test_convert_moves_to_san_rejects_empty_conversion(
 
 # Ouverture
 
+
 def test_get_opening_identity_without_opening(
     state: ChessAnalysisState,
 ) -> None:
     """Vérifie l'absence d'ouverture."""
 
-    assert (
-        _get_opening_identity(state)
-        == (
-            None,
-            None,
-        )
+    assert _get_opening_identity(state) == (
+        None,
+        None,
     )
 
 
@@ -587,18 +537,14 @@ def test_get_opening_identity(
 ) -> None:
     """Vérifie l'identité de l'ouverture."""
 
-    assert (
-        _get_opening_identity(
-            opening_state
-        )
-        == (
-            "Ruy Lopez",
-            "C60",
-        )
+    assert _get_opening_identity(opening_state) == (
+        "Ruy Lopez",
+        "C60",
     )
 
 
 # Requête
+
 
 def test_build_search_query_with_opening_and_moves(
     opening_state: ChessAnalysisState,
@@ -610,19 +556,10 @@ def test_build_search_query_with_opening_and_moves(
         SAN_MOVES,
     )
 
-    assert (
-        "Type : présentation Wikichess"
-        in query
-    )
+    assert "Type : présentation Wikichess" in query
     assert "Coups : e4 e5 Nf3" in query
-    assert (
-        "Ouverture Lichess : Ruy Lopez"
-        in query
-    )
-    assert (
-        "Code ECO Lichess : C60"
-        in query
-    )
+    assert "Ouverture Lichess : Ruy Lopez" in query
+    assert "Code ECO Lichess : C60" in query
 
 
 def test_build_search_query_without_context(
@@ -641,6 +578,7 @@ def test_build_search_query_without_context(
 
 # Métadonnées
 
+
 def test_get_metadata_moves() -> None:
     """Vérifie les coups Wikichess."""
 
@@ -652,12 +590,9 @@ def test_get_metadata_moves() -> None:
         ],
     }
 
-    assert (
-        _get_metadata_moves(metadata)
-        == (
-            "e4",
-            "e5",
-        )
+    assert _get_metadata_moves(metadata) == (
+        "e4",
+        "e5",
     )
 
 
@@ -667,19 +602,14 @@ def test_build_next_move() -> None:
     result = _build_next_move(
         {
             NEXT_MOVE_KEY: "Nc6",
-            NEXT_MOVE_SOURCE_URL_KEY: (
-                "https://example.test/nc6"
-            ),
+            NEXT_MOVE_SOURCE_URL_KEY: ("https://example.test/nc6"),
         }
     )
 
     assert result is not None
     assert result.move == "Nc6"
 
-    assert (
-        result.source_url
-        == "https://example.test/nc6"
-    )
+    assert result.source_url == "https://example.test/nc6"
 
 
 @pytest.mark.parametrize(
@@ -692,9 +622,7 @@ def test_build_next_move() -> None:
             NEXT_MOVE_KEY: "Nc6",
         },
         {
-            NEXT_MOVE_SOURCE_URL_KEY: (
-                "https://example.test"
-            ),
+            NEXT_MOVE_SOURCE_URL_KEY: ("https://example.test"),
         },
     ],
 )
@@ -703,10 +631,7 @@ def test_build_next_move_rejects_invalid_value(
 ) -> None:
     """Vérifie les continuations invalides."""
 
-    assert (
-        _build_next_move(value)
-        is None
-    )
+    assert _build_next_move(value) is None
 
 
 def test_get_metadata_next_moves() -> None:
@@ -726,15 +651,14 @@ def test_get_metadata_next_moves() -> None:
         ],
     }
 
-    result = _get_metadata_next_moves(
-        metadata
-    )
+    result = _get_metadata_next_moves(metadata)
 
     assert len(result) == 1
     assert result[0].move == "Nc6"
 
 
 # Similarité
+
 
 @pytest.mark.parametrize(
     ("value", "expected"),
@@ -763,10 +687,7 @@ def test_normalize_similarity(
 ) -> None:
     """Vérifie l'encadrement de la similarité."""
 
-    assert (
-        _normalize_similarity(value)
-        == expected
-    )
+    assert _normalize_similarity(value) == expected
 
 
 def test_get_result_similarity(
@@ -774,23 +695,18 @@ def test_get_result_similarity(
 ) -> None:
     """Vérifie la lecture de la similarité."""
 
-    assert (
-        _get_result_similarity(result)
-        == 0.92
-    )
+    assert _get_result_similarity(result) == 0.92
 
 
 # Source
+
 
 def test_get_result_source(
     result: VectorSearchResult,
 ) -> None:
     """Vérifie la source documentaire."""
 
-    assert (
-        _get_result_source(result)
-        == "wikichess"
-    )
+    assert _get_result_source(result) == "wikichess"
 
 
 def test_get_result_source_uses_dataset() -> None:
@@ -806,10 +722,7 @@ def test_get_result_source_uses_dataset() -> None:
         }
     )
 
-    assert (
-        _get_result_source(result)
-        == "wikichess-dataset"
-    )
+    assert _get_result_source(result) == "wikichess-dataset"
 
 
 def test_get_result_source_uses_default() -> None:
@@ -823,13 +736,11 @@ def test_get_result_source_uses_default() -> None:
         }
     )
 
-    assert (
-        _get_result_source(result)
-        == DEFAULT_DOCUMENT_SOURCE
-    )
+    assert _get_result_source(result) == DEFAULT_DOCUMENT_SOURCE
 
 
 # Type documentaire
+
 
 def test_get_document_type_from_enum() -> None:
     """Vérifie un type déjà normalisé."""
@@ -838,10 +749,7 @@ def test_get_document_type_from_enum() -> None:
         METADATA_TYPE_KEY: DocumentType.ARTICLE,
     }
 
-    assert (
-        _get_document_type(metadata)
-        == DocumentType.ARTICLE
-    )
+    assert _get_document_type(metadata) == DocumentType.ARTICLE
 
 
 def test_get_document_type_from_string() -> None:
@@ -851,10 +759,7 @@ def test_get_document_type_from_string() -> None:
         METADATA_TYPE_KEY: "article",
     }
 
-    assert (
-        _get_document_type(metadata)
-        == DocumentType.ARTICLE
-    )
+    assert _get_document_type(metadata) == DocumentType.ARTICLE
 
 
 def test_get_document_type_falls_back_on_unknown() -> None:
@@ -872,36 +777,25 @@ def test_get_document_type_falls_back_on_unknown() -> None:
 
 # Extrait
 
+
 def test_build_excerpt_returns_none_for_empty_content() -> None:
     """Vérifie l'absence d'extrait."""
 
-    assert (
-        _build_excerpt("   ")
-        is None
-    )
+    assert _build_excerpt("   ") is None
 
 
 def test_build_excerpt_returns_content() -> None:
     """Vérifie un contenu court."""
 
-    assert (
-        _build_excerpt(
-            "Texte pédagogique."
-        )
-        == "Texte pédagogique."
-    )
+    assert _build_excerpt("Texte pédagogique.") == "Texte pédagogique."
 
 
 def test_build_excerpt_truncates_long_content() -> None:
     """Vérifie la troncature."""
 
-    content = "x" * (
-        EXCERPT_MAX_LENGTH + 20
-    )
+    content = "x" * (EXCERPT_MAX_LENGTH + 20)
 
-    result = _build_excerpt(
-        content
-    )
+    result = _build_excerpt(content)
 
     assert result is not None
     assert result.endswith("...")
@@ -909,6 +803,7 @@ def test_build_excerpt_truncates_long_content() -> None:
 
 
 # Sélection
+
 
 def test_select_results_keeps_best_result() -> None:
     """Vérifie le tri par similarité."""
@@ -924,19 +819,15 @@ def test_select_results_keeps_best_result() -> None:
         ),
     ]
 
-    selected = _select_results(
-        results
-    )
+    selected = _select_results(results)
 
-    assert (
-        len(selected)
-        == SELECTED_DOCUMENT_LIMIT
-    )
+    assert len(selected) == SELECTED_DOCUMENT_LIMIT
 
     assert selected[0].id == "high"
 
 
 # Contexte RAG
+
 
 def test_build_retrieval_context(
     result: VectorSearchResult,
@@ -956,46 +847,27 @@ def test_build_retrieval_context(
 
     retrieved = context.documents[0]
 
-    assert (
-        retrieved.document.id
-        == "ruy-lopez"
-    )
+    assert retrieved.document.id == "ruy-lopez"
 
-    assert (
-        retrieved.document.title
-        == "Ruy Lopez"
-    )
+    assert retrieved.document.title == "Ruy Lopez"
 
     assert retrieved.similarity == 0.92
 
-    assert (
-        retrieved.document.metadata.eco
-        == "C60"
+    assert retrieved.document.metadata.eco == "C60"
+
+    assert retrieved.document.metadata.moves == (
+        "e4",
+        "e5",
+        "Nf3",
     )
 
-    assert (
-        retrieved.document.metadata.moves
-        == (
-            "e4",
-            "e5",
-            "Nf3",
-        )
-    )
-
-    assert (
-        retrieved.document.metadata.next_moves[0].move
-        == "Nc6"
-    )
+    assert retrieved.document.metadata.next_moves[0].move == "Nc6"
 
 
 def test_build_empty_retrieval_context() -> None:
     """Vérifie un contexte vide."""
 
-    context = (
-        _build_empty_retrieval_context(
-            "query"
-        )
-    )
+    context = _build_empty_retrieval_context("query")
 
     assert context.query == "query"
     assert context.documents == []
@@ -1003,6 +875,7 @@ def test_build_empty_retrieval_context() -> None:
 
 
 # Résumé documentaire
+
 
 def test_build_documents_summary(
     result: VectorSearchResult,
@@ -1016,9 +889,7 @@ def test_build_documents_summary(
         ],
     )
 
-    summary = _build_documents_summary(
-        context
-    )
+    summary = _build_documents_summary(context)
 
     assert summary is not None
     assert "Titre : Ruy Lopez" in summary
@@ -1031,19 +902,13 @@ def test_build_documents_summary(
 def test_build_documents_summary_returns_none() -> None:
     """Vérifie l'absence de documents."""
 
-    context = (
-        _build_empty_retrieval_context(
-            "query"
-        )
-    )
+    context = _build_empty_retrieval_context("query")
 
-    assert (
-        _build_documents_summary(context)
-        is None
-    )
+    assert _build_documents_summary(context) is None
 
 
 # Recherche interne
+
 
 @pytest.mark.asyncio
 async def test_search_documents_returns_empty_without_context(
@@ -1107,9 +972,7 @@ async def test_search_documents_returns_empty_when_no_result(
 ) -> None:
     """Vérifie une recherche sans résultat."""
 
-    search = AsyncMock(
-        return_value=[]
-    )
+    search = AsyncMock(return_value=[])
 
     service = MagicMock(
         spec=VectorSearchService,
@@ -1126,6 +989,7 @@ async def test_search_documents_returns_empty_when_no_result(
 
 
 # Mises à jour
+
 
 def test_build_success_update(
     state: ChessAnalysisState,
@@ -1145,30 +1009,15 @@ def test_build_success_update(
         context,
     )
 
-    assert (
-        update["status"]
-        == AnalysisStatus.SUCCESS
-    )
+    assert update["status"] == AnalysisStatus.SUCCESS
 
-    assert (
-        update["current_step"]
-        == WorkflowStep.RETRIEVE_CONTEXT
-    )
+    assert update["current_step"] == WorkflowStep.RETRIEVE_CONTEXT
 
-    assert (
-        WorkflowStep.RETRIEVE_CONTEXT
-        in update["completed_steps"]
-    )
+    assert WorkflowStep.RETRIEVE_CONTEXT in update["completed_steps"]
 
-    assert (
-        update["retrieval_context"]
-        == context
-    )
+    assert update["retrieval_context"] == context
 
-    assert (
-        update["workflow_context"].documents_summary
-        is not None
-    )
+    assert update["workflow_context"].documents_summary is not None
 
 
 def test_build_warning_update(
@@ -1188,20 +1037,11 @@ def test_build_warning_update(
         query="query",
     )
 
-    assert (
-        update["status"]
-        == AnalysisStatus.PARTIAL_SUCCESS
-    )
+    assert update["status"] == AnalysisStatus.PARTIAL_SUCCESS
 
-    assert (
-        WorkflowStep.RETRIEVE_CONTEXT
-        in update["completed_steps"]
-    )
+    assert WorkflowStep.RETRIEVE_CONTEXT in update["completed_steps"]
 
-    assert (
-        update["retrieval_context"].total_results
-        == 0
-    )
+    assert update["retrieval_context"].total_results == 0
 
     assert update["warnings"] == [
         warning,
@@ -1209,6 +1049,7 @@ def test_build_warning_update(
 
 
 # Nœud
+
 
 @pytest.mark.asyncio
 async def test_retrieve_context_skips_search_without_eco_or_moves(
@@ -1224,20 +1065,11 @@ async def test_retrieve_context_skips_search_without_eco_or_moves(
         ),
     )
 
-    assert (
-        result["status"]
-        == AnalysisStatus.SUCCESS
-    )
+    assert result["status"] == AnalysisStatus.SUCCESS
 
-    assert (
-        result["retrieval_context"].total_results
-        == 0
-    )
+    assert result["retrieval_context"].total_results == 0
 
-    assert (
-        WorkflowStep.RETRIEVE_CONTEXT
-        in result["completed_steps"]
-    )
+    assert WorkflowStep.RETRIEVE_CONTEXT in result["completed_steps"]
 
 
 @pytest.mark.asyncio
@@ -1250,14 +1082,12 @@ async def test_retrieve_context_missing_vector_service(
     emit_progress = MagicMock()
 
     monkeypatch.setattr(
-        "app.agent.nodes.E_retrieve_context."
-        "_get_vector_search_service",
+        "app.agent.nodes.E_retrieve_context._get_vector_search_service",
         MagicMock(return_value=None),
     )
 
     monkeypatch.setattr(
-        "app.agent.nodes.E_retrieve_context."
-        "emit_progress",
+        "app.agent.nodes.E_retrieve_context.emit_progress",
         emit_progress,
     )
 
@@ -1269,15 +1099,9 @@ async def test_retrieve_context_missing_vector_service(
         ),
     )
 
-    assert (
-        result["status"]
-        == AnalysisStatus.FAILED
-    )
+    assert result["status"] == AnalysisStatus.FAILED
 
-    assert (
-        result["errors"][0].code
-        == ERROR_CONFIGURATION
-    )
+    assert result["errors"][0].code == ERROR_CONFIGURATION
 
     emit_progress.assert_called_once()
 
@@ -1300,24 +1124,19 @@ async def test_retrieve_context_missing_chess_service(
     )
 
     monkeypatch.setattr(
-        "app.agent.nodes.E_retrieve_context."
-        "_get_vector_search_service",
-        MagicMock(
-            return_value=vector_service
-        ),
+        "app.agent.nodes.E_retrieve_context._get_vector_search_service",
+        MagicMock(return_value=vector_service),
     )
 
     monkeypatch.setattr(
-        "app.agent.nodes.E_retrieve_context."
-        "_get_chess_service",
+        "app.agent.nodes.E_retrieve_context._get_chess_service",
         MagicMock(return_value=None),
     )
 
     emit_progress = MagicMock()
 
     monkeypatch.setattr(
-        "app.agent.nodes.E_retrieve_context."
-        "emit_progress",
+        "app.agent.nodes.E_retrieve_context.emit_progress",
         emit_progress,
     )
 
@@ -1329,15 +1148,9 @@ async def test_retrieve_context_missing_chess_service(
         ),
     )
 
-    assert (
-        result["status"]
-        == AnalysisStatus.FAILED
-    )
+    assert result["status"] == AnalysisStatus.FAILED
 
-    assert (
-        result["errors"][0].code
-        == ERROR_CONFIGURATION
-    )
+    assert result["errors"][0].code == ERROR_CONFIGURATION
 
     emit_progress.assert_called_once()
 
@@ -1362,36 +1175,24 @@ async def test_retrieve_context_conversion_error(
     chess_service = ChessService()
 
     monkeypatch.setattr(
-        "app.agent.nodes.E_retrieve_context."
-        "_get_vector_search_service",
-        MagicMock(
-            return_value=vector_service
-        ),
+        "app.agent.nodes.E_retrieve_context._get_vector_search_service",
+        MagicMock(return_value=vector_service),
     )
 
     monkeypatch.setattr(
-        "app.agent.nodes.E_retrieve_context."
-        "_get_chess_service",
-        MagicMock(
-            return_value=chess_service
-        ),
+        "app.agent.nodes.E_retrieve_context._get_chess_service",
+        MagicMock(return_value=chess_service),
     )
 
     monkeypatch.setattr(
-        "app.agent.nodes.E_retrieve_context."
-        "_convert_moves_to_san",
-        MagicMock(
-            side_effect=RuntimeError(
-                "conversion failure"
-            )
-        ),
+        "app.agent.nodes.E_retrieve_context._convert_moves_to_san",
+        MagicMock(side_effect=RuntimeError("conversion failure")),
     )
 
     emit_progress = MagicMock()
 
     monkeypatch.setattr(
-        "app.agent.nodes.E_retrieve_context."
-        "emit_progress",
+        "app.agent.nodes.E_retrieve_context.emit_progress",
         emit_progress,
     )
 
@@ -1403,15 +1204,9 @@ async def test_retrieve_context_conversion_error(
         ),
     )
 
-    assert (
-        result["status"]
-        == AnalysisStatus.FAILED
-    )
+    assert result["status"] == AnalysisStatus.FAILED
 
-    assert (
-        result["errors"][0].code
-        == ERROR_UNEXPECTED
-    )
+    assert result["errors"][0].code == ERROR_UNEXPECTED
 
     assert emit_progress.call_count == 2
 
@@ -1445,34 +1240,24 @@ async def test_retrieve_context_success(
     vector_service.search_wikichess = search
 
     monkeypatch.setattr(
-        "app.agent.nodes.E_retrieve_context."
-        "_get_vector_search_service",
-        MagicMock(
-            return_value=vector_service
-        ),
+        "app.agent.nodes.E_retrieve_context._get_vector_search_service",
+        MagicMock(return_value=vector_service),
     )
 
     monkeypatch.setattr(
-        "app.agent.nodes.E_retrieve_context."
-        "_get_chess_service",
-        MagicMock(
-            return_value=chess_service
-        ),
+        "app.agent.nodes.E_retrieve_context._get_chess_service",
+        MagicMock(return_value=chess_service),
     )
 
     monkeypatch.setattr(
-        "app.agent.nodes.E_retrieve_context."
-        "_convert_moves_to_san",
-        MagicMock(
-            return_value=SAN_MOVES
-        ),
+        "app.agent.nodes.E_retrieve_context._convert_moves_to_san",
+        MagicMock(return_value=SAN_MOVES),
     )
 
     emit_progress = MagicMock()
 
     monkeypatch.setattr(
-        "app.agent.nodes.E_retrieve_context."
-        "emit_progress",
+        "app.agent.nodes.E_retrieve_context.emit_progress",
         emit_progress,
     )
 
@@ -1484,20 +1269,11 @@ async def test_retrieve_context_success(
         ),
     )
 
-    assert (
-        update["status"]
-        == AnalysisStatus.SUCCESS
-    )
+    assert update["status"] == AnalysisStatus.SUCCESS
 
-    assert (
-        update["retrieval_context"].total_results
-        == 1
-    )
+    assert update["retrieval_context"].total_results == 1
 
-    assert (
-        WorkflowStep.RETRIEVE_CONTEXT
-        in update["completed_steps"]
-    )
+    assert WorkflowStep.RETRIEVE_CONTEXT in update["completed_steps"]
 
     assert emit_progress.call_count == 4
 
@@ -1520,24 +1296,19 @@ async def test_retrieve_context_handles_retrieval_error(
     )
 
     monkeypatch.setattr(
-        "app.agent.nodes.E_retrieve_context."
-        "_get_vector_search_service",
-        MagicMock(
-            return_value=vector_service
-        ),
+        "app.agent.nodes.E_retrieve_context._get_vector_search_service",
+        MagicMock(return_value=vector_service),
     )
 
     monkeypatch.setattr(
-        "app.agent.nodes.E_retrieve_context."
-        "_search_documents",
+        "app.agent.nodes.E_retrieve_context._search_documents",
         search_documents,
     )
 
     emit_progress = MagicMock()
 
     monkeypatch.setattr(
-        "app.agent.nodes.E_retrieve_context."
-        "emit_progress",
+        "app.agent.nodes.E_retrieve_context.emit_progress",
         emit_progress,
     )
 
@@ -1549,24 +1320,13 @@ async def test_retrieve_context_handles_retrieval_error(
         ),
     )
 
-    assert (
-        update["status"]
-        == AnalysisStatus.PARTIAL_SUCCESS
-    )
+    assert update["status"] == AnalysisStatus.PARTIAL_SUCCESS
 
-    assert (
-        update["retrieval_context"].total_results
-        == 0
-    )
+    assert update["retrieval_context"].total_results == 0
 
-    assert len(
-        update["warnings"]
-    ) == 1
+    assert len(update["warnings"]) == 1
 
-    assert (
-        WorkflowStep.RETRIEVE_CONTEXT
-        in update["completed_steps"]
-    )
+    assert WorkflowStep.RETRIEVE_CONTEXT in update["completed_steps"]
 
     assert emit_progress.call_count == 2
 
@@ -1583,28 +1343,19 @@ async def test_retrieve_context_handles_unexpected_search_error(
     )
 
     monkeypatch.setattr(
-        "app.agent.nodes.E_retrieve_context."
-        "_get_vector_search_service",
-        MagicMock(
-            return_value=vector_service
-        ),
+        "app.agent.nodes.E_retrieve_context._get_vector_search_service",
+        MagicMock(return_value=vector_service),
     )
 
     monkeypatch.setattr(
-        "app.agent.nodes.E_retrieve_context."
-        "_search_documents",
-        AsyncMock(
-            side_effect=RuntimeError(
-                "unexpected"
-            )
-        ),
+        "app.agent.nodes.E_retrieve_context._search_documents",
+        AsyncMock(side_effect=RuntimeError("unexpected")),
     )
 
     emit_progress = MagicMock()
 
     monkeypatch.setattr(
-        "app.agent.nodes.E_retrieve_context."
-        "emit_progress",
+        "app.agent.nodes.E_retrieve_context.emit_progress",
         emit_progress,
     )
 
@@ -1616,19 +1367,10 @@ async def test_retrieve_context_handles_unexpected_search_error(
         ),
     )
 
-    assert (
-        update["status"]
-        == AnalysisStatus.FAILED
-    )
+    assert update["status"] == AnalysisStatus.FAILED
 
-    assert (
-        update["errors"][0].code
-        == ERROR_UNEXPECTED
-    )
+    assert update["errors"][0].code == ERROR_UNEXPECTED
 
-    assert (
-        WorkflowStep.RETRIEVE_CONTEXT
-        not in update["completed_steps"]
-    )
+    assert WorkflowStep.RETRIEVE_CONTEXT not in update["completed_steps"]
 
     assert emit_progress.call_count == 2

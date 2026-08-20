@@ -100,9 +100,7 @@ def build_raw_result(
     if metadata is None:
         metadata = {
             METADATA_ECO_KEY: "C60",
-            METADATA_MOVES_PATH_KEY: (
-                "e4 e5 Nf3 Nc6 Bb5"
-            ),
+            METADATA_MOVES_PATH_KEY: ("e4 e5 Nf3 Nc6 Bb5"),
         }
 
     return {
@@ -125,10 +123,7 @@ def test_initial_statistics_are_zero() -> None:
     assert service.get_search_count() == 0
     assert service.get_result_count() == 0
 
-    assert (
-        service.get_last_search_duration_ms()
-        is None
-    )
+    assert service.get_last_search_duration_ms() is None
 
 
 # Requête
@@ -139,12 +134,7 @@ def test_normalize_query() -> None:
 
     service = build_service()
 
-    assert (
-        service._normalize_query(
-            "  Ruy   Lopez   opening "
-        )
-        == "Ruy Lopez opening"
-    )
+    assert service._normalize_query("  Ruy   Lopez   opening ") == "Ruy Lopez opening"
 
 
 @pytest.mark.parametrize(
@@ -162,12 +152,8 @@ def test_normalize_query_rejects_empty_query(
 
     service = build_service()
 
-    with pytest.raises(
-        RetrievalError
-    ):
-        service._normalize_query(
-            query
-        )
+    with pytest.raises(RetrievalError):
+        service._normalize_query(query)
 
 
 # Limite
@@ -178,10 +164,7 @@ def test_normalize_limit_uses_requested_limit() -> None:
 
     service = build_service()
 
-    assert (
-        service._normalize_limit(3)
-        == 3
-    )
+    assert service._normalize_limit(3) == 3
 
 
 def test_normalize_limit_uses_default() -> None:
@@ -189,12 +172,9 @@ def test_normalize_limit_uses_default() -> None:
 
     service = build_service()
 
-    assert (
-        service._normalize_limit(None)
-        == min(
-            settings.rag_search_top_k,
-            settings.milvus_search_limit,
-        )
+    assert service._normalize_limit(None) == min(
+        settings.rag_search_top_k,
+        settings.milvus_search_limit,
     )
 
 
@@ -203,14 +183,9 @@ def test_normalize_limit_caps_maximum() -> None:
 
     service = build_service()
 
-    result = service._normalize_limit(
-        settings.milvus_search_limit + 100
-    )
+    result = service._normalize_limit(settings.milvus_search_limit + 100)
 
-    assert (
-        result
-        == settings.milvus_search_limit
-    )
+    assert result == settings.milvus_search_limit
 
 
 @pytest.mark.parametrize(
@@ -227,12 +202,8 @@ def test_normalize_limit_rejects_non_positive(
 
     service = build_service()
 
-    with pytest.raises(
-        RetrievalError
-    ):
-        service._normalize_limit(
-            value
-        )
+    with pytest.raises(RetrievalError):
+        service._normalize_limit(value)
 
 
 def test_normalize_limit_rejects_boolean() -> None:
@@ -240,12 +211,8 @@ def test_normalize_limit_rejects_boolean() -> None:
 
     service = build_service()
 
-    with pytest.raises(
-        RetrievalError
-    ):
-        service._normalize_limit(
-            True
-        )
+    with pytest.raises(RetrievalError):
+        service._normalize_limit(True)
 
 
 def test_normalize_limit_rejects_non_integer() -> None:
@@ -253,9 +220,7 @@ def test_normalize_limit_rejects_non_integer() -> None:
 
     service = build_service()
 
-    with pytest.raises(
-        RetrievalError
-    ):
+    with pytest.raises(RetrievalError):
         service._normalize_limit(
             cast(
                 int,
@@ -292,9 +257,7 @@ def test_normalize_moves_rejects_string() -> None:
 
     service = build_service()
 
-    with pytest.raises(
-        RetrievalError
-    ):
+    with pytest.raises(RetrievalError):
         service._normalize_moves(
             cast(
                 list[str],
@@ -318,12 +281,8 @@ def test_normalize_moves_rejects_empty_values(
 
     service = build_service()
 
-    with pytest.raises(
-        RetrievalError
-    ):
-        service._normalize_moves(
-            moves
-        )
+    with pytest.raises(RetrievalError):
+        service._normalize_moves(moves)
 
 
 def test_normalize_moves_rejects_invalid_member() -> None:
@@ -331,9 +290,7 @@ def test_normalize_moves_rejects_invalid_member() -> None:
 
     service = build_service()
 
-    with pytest.raises(
-        RetrievalError
-    ):
+    with pytest.raises(RetrievalError):
         service._normalize_moves(
             cast(
                 list[str],
@@ -353,12 +310,7 @@ def test_normalize_eco() -> None:
 
     service = build_service()
 
-    assert (
-        service._normalize_eco(
-            " c60 "
-        )
-        == "C60"
-    )
+    assert service._normalize_eco(" c60 ") == "C60"
 
 
 def test_normalize_eco_rejects_empty() -> None:
@@ -366,12 +318,8 @@ def test_normalize_eco_rejects_empty() -> None:
 
     service = build_service()
 
-    with pytest.raises(
-        RetrievalError
-    ):
-        service._normalize_eco(
-            "   "
-        )
+    with pytest.raises(RetrievalError):
+        service._normalize_eco("   ")
 
 
 def test_normalize_eco_rejects_non_string() -> None:
@@ -379,9 +327,7 @@ def test_normalize_eco_rejects_non_string() -> None:
 
     service = build_service()
 
-    with pytest.raises(
-        RetrievalError
-    ):
+    with pytest.raises(RetrievalError):
         service._normalize_eco(
             cast(
                 str,
@@ -399,9 +345,7 @@ def test_normalize_filter_expression() -> None:
     service = build_service()
 
     assert (
-        service._normalize_filter_expression(
-            '  metadata["eco"] == "C60"  '
-        )
+        service._normalize_filter_expression('  metadata["eco"] == "C60"  ')
         == 'metadata["eco"] == "C60"'
     )
 
@@ -411,12 +355,8 @@ def test_normalize_filter_expression_rejects_empty() -> None:
 
     service = build_service()
 
-    with pytest.raises(
-        RetrievalError
-    ):
-        service._normalize_filter_expression(
-            "   "
-        )
+    with pytest.raises(RetrievalError):
+        service._normalize_filter_expression("   ")
 
 
 def test_normalize_filter_expression_rejects_non_string() -> None:
@@ -424,9 +364,7 @@ def test_normalize_filter_expression_rejects_non_string() -> None:
 
     service = build_service()
 
-    with pytest.raises(
-        RetrievalError
-    ):
+    with pytest.raises(RetrievalError):
         service._normalize_filter_expression(
             cast(
                 str,
@@ -443,13 +381,9 @@ def test_escape_filter_value() -> None:
 
     service = build_service()
 
-    result = service._escape_filter_value(
-        'a\\b"c'
-    )
+    result = service._escape_filter_value('a\\b"c')
 
-    assert result == (
-        'a\\\\b\\"c'
-    )
+    assert result == ('a\\\\b\\"c')
 
 
 def test_build_metadata_equals_filter() -> None:
@@ -457,17 +391,12 @@ def test_build_metadata_equals_filter() -> None:
 
     service = build_service()
 
-    result = (
-        service
-        ._build_metadata_equals_filter(
-            key="eco",
-            value="C60",
-        )
+    result = service._build_metadata_equals_filter(
+        key="eco",
+        value="C60",
     )
 
-    assert result == (
-        'metadata["eco"] == "C60"'
-    )
+    assert result == ('metadata["eco"] == "C60"')
 
 
 def test_build_metadata_equals_filter_escapes_values() -> None:
@@ -475,18 +404,12 @@ def test_build_metadata_equals_filter_escapes_values() -> None:
 
     service = build_service()
 
-    result = (
-        service
-        ._build_metadata_equals_filter(
-            key='a"b',
-            value='c"d',
-        )
+    result = service._build_metadata_equals_filter(
+        key='a"b',
+        value='c"d',
     )
 
-    assert (
-        result
-        == 'metadata["a\\"b"] == "c\\"d"'
-    )
+    assert result == 'metadata["a\\"b"] == "c\\"d"'
 
 
 # Chemins
@@ -514,12 +437,7 @@ def test_build_eco_filter() -> None:
 
     service = build_service()
 
-    assert (
-        service._build_eco_filter(
-            "C60"
-        )
-        == 'metadata["eco"] == "C60"'
-    )
+    assert service._build_eco_filter("C60") == 'metadata["eco"] == "C60"'
 
 
 def test_build_moves_filter() -> None:
@@ -527,14 +445,8 @@ def test_build_moves_filter() -> None:
 
     service = build_service()
 
-    assert (
-        service._build_moves_filter(
-            "e4 e5 Nf3"
-        )
-        == (
-            'metadata["moves_path"] '
-            '== "e4 e5 Nf3"'
-        )
+    assert service._build_moves_filter("e4 e5 Nf3") == (
+        'metadata["moves_path"] == "e4 e5 Nf3"'
     )
 
 
@@ -570,10 +482,7 @@ def test_get_text(
 
     service = build_service()
 
-    assert (
-        service._get_text(value)
-        == expected
-    )
+    assert service._get_text(value) == expected
 
 
 # Identifiant
@@ -728,9 +637,7 @@ def test_get_metadata() -> None:
             RESULT_METADATA_FIELD: {
                 "eco": "C60",
             },
-            RESULT_SOURCE_FIELD: (
-                "wikichess"
-            ),
+            RESULT_SOURCE_FIELD: ("wikichess"),
         }
     )
 
@@ -750,9 +657,7 @@ def test_get_metadata_preserves_existing_source() -> None:
             RESULT_METADATA_FIELD: {
                 "source": "dataset",
             },
-            RESULT_SOURCE_FIELD: (
-                "wikichess"
-            ),
+            RESULT_SOURCE_FIELD: ("wikichess"),
         }
     )
 
@@ -781,21 +686,14 @@ def test_build_result() -> None:
 
     service = build_service()
 
-    result = service._build_result(
-        build_raw_result()
-    )
+    result = service._build_result(build_raw_result())
 
     assert result is not None
     assert result.id == "doc-1"
-    assert result.content == (
-        "Présentation Wikichess."
-    )
+    assert result.content == ("Présentation Wikichess.")
     assert result.similarity == 0.95
 
-    assert (
-        result.metadata["eco"]
-        == "C60"
-    )
+    assert result.metadata["eco"] == "C60"
 
 
 @pytest.mark.parametrize(
@@ -822,12 +720,7 @@ def test_build_result_rejects_incomplete_result(
 
     service = build_service()
 
-    assert (
-        service._build_result(
-            raw_result
-        )
-        is None
-    )
+    assert service._build_result(raw_result) is None
 
 
 def test_build_results_filters_invalid_and_duplicates() -> None:
@@ -850,14 +743,9 @@ def test_build_results_filters_invalid_and_duplicates() -> None:
         ),
     ]
 
-    results = service._build_results(
-        raw_results
-    )
+    results = service._build_results(raw_results)
 
-    assert [
-        result.id
-        for result in results
-    ] == [
+    assert [result.id for result in results] == [
         "doc-1",
         "doc-2",
     ]
@@ -892,12 +780,7 @@ def test_get_result_eco_returns_none_without_eco() -> None:
         }
     )
 
-    assert (
-        service._get_result_eco(
-            result
-        )
-        is None
-    )
+    assert service._get_result_eco(result) is None
 
 
 def test_get_result_eco_rejects_non_string() -> None:
@@ -913,12 +796,7 @@ def test_get_result_eco_rejects_non_string() -> None:
         }
     )
 
-    assert (
-        service._get_result_eco(
-            result
-        )
-        is None
-    )
+    assert service._get_result_eco(result) is None
 
 
 def test_get_result_moves_path() -> None:
@@ -926,16 +804,9 @@ def test_get_result_moves_path() -> None:
 
     service = build_service()
 
-    result = build_result(
-        moves_path=" e4   e5  Nf3 "
-    )
+    result = build_result(moves_path=" e4   e5  Nf3 ")
 
-    assert (
-        service._get_result_moves_path(
-            result
-        )
-        == "e4 e5 Nf3"
-    )
+    assert service._get_result_moves_path(result) == "e4 e5 Nf3"
 
 
 def test_get_result_moves_path_returns_none() -> None:
@@ -949,12 +820,7 @@ def test_get_result_moves_path_returns_none() -> None:
         }
     )
 
-    assert (
-        service._get_result_moves_path(
-            result
-        )
-        is None
-    )
+    assert service._get_result_moves_path(result) is None
 
 
 # Vérification ECO
@@ -981,10 +847,7 @@ def test_keep_exact_eco() -> None:
         eco="C60",
     )
 
-    assert [
-        result.id
-        for result in verified
-    ] == [
+    assert [result.id for result in verified] == [
         "c60",
     ]
 
@@ -1008,18 +871,12 @@ def test_keep_exact_moves_path() -> None:
         ),
     ]
 
-    verified = (
-        service
-        ._keep_exact_moves_path(
-            results,
-            moves_path="e4 e5",
-        )
+    verified = service._keep_exact_moves_path(
+        results,
+        moves_path="e4 e5",
     )
 
-    assert [
-        result.id
-        for result in verified
-    ] == [
+    assert [result.id for result in verified] == [
         "match",
     ]
 
@@ -1040,10 +897,7 @@ def test_register_search() -> None:
     assert service.get_search_count() == 1
     assert service.get_result_count() == 3
 
-    assert (
-        service.get_last_search_duration_ms()
-        == 12.5
-    )
+    assert service.get_last_search_duration_ms() == 12.5
 
     service._register_search(
         result_count=2,
@@ -1068,13 +922,11 @@ async def test_execute_search_success() -> None:
         ),
     )
 
-    embedding_service.generate_embedding = (
-        AsyncMock(
-            return_value=[
-                0.1,
-                0.2,
-            ],
-        )
+    embedding_service.generate_embedding = AsyncMock(
+        return_value=[
+            0.1,
+            0.2,
+        ],
     )
 
     milvus_service = cast(
@@ -1104,9 +956,7 @@ async def test_execute_search_success() -> None:
     assert len(results) == 1
     assert results[0].id == "doc-1"
 
-    embedding_service.generate_embedding.assert_awaited_once_with(
-        "Ruy Lopez"
-    )
+    embedding_service.generate_embedding.assert_awaited_once_with("Ruy Lopez")
 
     milvus_service.search.assert_awaited_once_with(
         [
@@ -1120,10 +970,7 @@ async def test_execute_search_success() -> None:
     assert service.get_search_count() == 1
     assert service.get_result_count() == 1
 
-    assert (
-        service.get_last_search_duration_ms()
-        is not None
-    )
+    assert service.get_last_search_duration_ms() is not None
 
 
 @pytest.mark.asyncio
@@ -1137,12 +984,10 @@ async def test_execute_search_with_filter() -> None:
         ),
     )
 
-    embedding_service.generate_embedding = (
-        AsyncMock(
-            return_value=[
-                0.1,
-            ],
-        )
+    embedding_service.generate_embedding = AsyncMock(
+        return_value=[
+            0.1,
+        ],
     )
 
     milvus_service = cast(
@@ -1152,9 +997,7 @@ async def test_execute_search_with_filter() -> None:
         ),
     )
 
-    milvus_service.search = AsyncMock(
-        return_value=[]
-    )
+    milvus_service.search = AsyncMock(return_value=[])
 
     service = build_service(
         embedding_service=embedding_service,
@@ -1164,9 +1007,7 @@ async def test_execute_search_with_filter() -> None:
     await service._execute_search(
         query="test",
         limit=None,
-        filter_expression=(
-            ' metadata["eco"] == "C60" '
-        ),
+        filter_expression=(' metadata["eco"] == "C60" '),
         operation="filtered",
     )
 
@@ -1178,9 +1019,7 @@ async def test_execute_search_with_filter() -> None:
             settings.rag_search_top_k,
             settings.milvus_search_limit,
         ),
-        filter_expression=(
-            'metadata["eco"] == "C60"'
-        ),
+        filter_expression=('metadata["eco"] == "C60"'),
     )
 
 
@@ -1193,10 +1032,7 @@ async def test_execute_search_with_filter() -> None:
     ],
 )
 async def test_execute_search_translates_embedding_errors(
-    exception_class: type[
-        EmbeddingModelUnavailableError
-        | EmbeddingGenerationError
-    ],
+    exception_class: type[EmbeddingModelUnavailableError | EmbeddingGenerationError],
 ) -> None:
     """Vérifie la traduction des erreurs d'embedding."""
 
@@ -1215,29 +1051,22 @@ async def test_execute_search_translates_embedding_errors(
         message="Embedding indisponible.",
     )
 
-    embedding_service.generate_embedding = (
-        AsyncMock(
-            side_effect=error,
-        )
+    embedding_service.generate_embedding = AsyncMock(
+        side_effect=error,
     )
 
     service = build_service(
         embedding_service=embedding_service,
     )
 
-    with pytest.raises(
-        RetrievalError
-    ) as caught:
+    with pytest.raises(RetrievalError) as caught:
         await service._execute_search(
             query="test",
             limit=3,
             operation="test",
         )
 
-    assert (
-        "transformer la requête"
-        in str(caught.value)
-    )
+    assert "transformer la requête" in str(caught.value)
 
 
 @pytest.mark.asyncio
@@ -1250,11 +1079,7 @@ async def test_execute_search_translates_embedding_errors(
     ],
 )
 async def test_execute_search_translates_milvus_errors(
-    exception_class: type[
-        MilvusConnectionError
-        | MilvusSearchError
-        | MilvusError
-    ],
+    exception_class: type[MilvusConnectionError | MilvusSearchError | MilvusError],
 ) -> None:
     """Vérifie la traduction des erreurs Milvus."""
 
@@ -1265,12 +1090,10 @@ async def test_execute_search_translates_milvus_errors(
         ),
     )
 
-    embedding_service.generate_embedding = (
-        AsyncMock(
-            return_value=[
-                0.1,
-            ],
-        )
+    embedding_service.generate_embedding = AsyncMock(
+        return_value=[
+            0.1,
+        ],
     )
 
     milvus_service = cast(
@@ -1297,19 +1120,14 @@ async def test_execute_search_translates_milvus_errors(
         milvus_service=milvus_service,
     )
 
-    with pytest.raises(
-        RetrievalError
-    ) as caught:
+    with pytest.raises(RetrievalError) as caught:
         await service._execute_search(
             query="test",
             limit=3,
             operation="test",
         )
 
-    assert (
-        "base vectorielle"
-        in str(caught.value)
-    )
+    assert "base vectorielle" in str(caught.value)
 
 
 @pytest.mark.asyncio
@@ -1323,31 +1141,22 @@ async def test_execute_search_translates_unexpected_error() -> None:
         ),
     )
 
-    embedding_service.generate_embedding = (
-        AsyncMock(
-            side_effect=RuntimeError(
-                "unexpected"
-            ),
-        )
+    embedding_service.generate_embedding = AsyncMock(
+        side_effect=RuntimeError("unexpected"),
     )
 
     service = build_service(
         embedding_service=embedding_service,
     )
 
-    with pytest.raises(
-        RetrievalError
-    ) as caught:
+    with pytest.raises(RetrievalError) as caught:
         await service._execute_search(
             query="test",
             limit=3,
             operation="test",
         )
 
-    assert (
-        "recherche vectorielle a échoué"
-        in str(caught.value)
-    )
+    assert "recherche vectorielle a échoué" in str(caught.value)
 
 
 # Recherche sémantique
@@ -1374,9 +1183,7 @@ async def test_search() -> None:
         limit=4,
     )
 
-    response = await service.search(
-        request
-    )
+    response = await service.search(request)
 
     assert response.query == "Ruy Lopez"
     assert response.results == expected_results
@@ -1409,9 +1216,7 @@ async def test_search_with_filter() -> None:
 
     result = await service.search_with_filter(
         query="Ruy Lopez",
-        filter_expression=(
-            'metadata["eco"] == "C60"'
-        ),
+        filter_expression=('metadata["eco"] == "C60"'),
         limit=2,
     )
 
@@ -1420,9 +1225,7 @@ async def test_search_with_filter() -> None:
     execute_search.assert_awaited_once_with(
         query="Ruy Lopez",
         limit=2,
-        filter_expression=(
-            'metadata["eco"] == "C60"'
-        ),
+        filter_expression=('metadata["eco"] == "C60"'),
         operation="search_with_filter",
     )
 
@@ -1538,9 +1341,7 @@ async def test_search_wikichess_requires_context() -> None:
 
     service = build_service()
 
-    with pytest.raises(
-        RetrievalError
-    ):
+    with pytest.raises(RetrievalError):
         await service.search_wikichess(
             query="test",
         )
@@ -1578,19 +1379,14 @@ async def test_search_by_eco() -> None:
         limit=5,
     )
 
-    assert [
-        item.id
-        for item in result
-    ] == [
+    assert [item.id for item in result] == [
         "keep",
     ]
 
     execute_search.assert_awaited_once_with(
         query="Ruy Lopez",
         limit=5,
-        filter_expression=(
-            'metadata["eco"] == "C60"'
-        ),
+        filter_expression=('metadata["eco"] == "C60"'),
         operation="search_by_eco",
     )
 
@@ -1631,20 +1427,14 @@ async def test_search_by_moves() -> None:
         limit=4,
     )
 
-    assert [
-        item.id
-        for item in result
-    ] == [
+    assert [item.id for item in result] == [
         "keep",
     ]
 
     execute_search.assert_awaited_once_with(
         query="position",
         limit=4,
-        filter_expression=(
-            'metadata["moves_path"] '
-            '== "e4 e5 Nf3"'
-        ),
+        filter_expression=('metadata["moves_path"] == "e4 e5 Nf3"'),
         operation="search_by_moves",
     )
 
@@ -1736,9 +1526,7 @@ async def test_ping_true() -> None:
         ),
     )
 
-    embedding_service.ping = AsyncMock(
-        return_value=True
-    )
+    embedding_service.ping = AsyncMock(return_value=True)
 
     milvus_service = cast(
         MilvusService,
@@ -1747,9 +1535,7 @@ async def test_ping_true() -> None:
         ),
     )
 
-    milvus_service.ping = AsyncMock(
-        return_value=True
-    )
+    milvus_service.ping = AsyncMock(return_value=True)
 
     service = build_service(
         embedding_service=embedding_service,
@@ -1770,9 +1556,7 @@ async def test_ping_false_when_dependency_unavailable() -> None:
         ),
     )
 
-    embedding_service.ping = AsyncMock(
-        return_value=True
-    )
+    embedding_service.ping = AsyncMock(return_value=True)
 
     milvus_service = cast(
         MilvusService,
@@ -1781,9 +1565,7 @@ async def test_ping_false_when_dependency_unavailable() -> None:
         ),
     )
 
-    milvus_service.ping = AsyncMock(
-        return_value=False
-    )
+    milvus_service.ping = AsyncMock(return_value=False)
 
     service = build_service(
         embedding_service=embedding_service,
@@ -1804,11 +1586,7 @@ async def test_ping_false_on_exception() -> None:
         ),
     )
 
-    embedding_service.ping = AsyncMock(
-        side_effect=RuntimeError(
-            "failure"
-        )
-    )
+    embedding_service.ping = AsyncMock(side_effect=RuntimeError("failure"))
 
     service = build_service(
         embedding_service=embedding_service,
@@ -1831,9 +1609,7 @@ async def test_health() -> None:
         ),
     )
 
-    embedding_service.ping = AsyncMock(
-        return_value=True
-    )
+    embedding_service.ping = AsyncMock(return_value=True)
 
     cast(
         Any,
@@ -1847,9 +1623,7 @@ async def test_health() -> None:
         ),
     )
 
-    milvus_service.ping = AsyncMock(
-        return_value=True
-    )
+    milvus_service.ping = AsyncMock(return_value=True)
 
     cast(
         Any,
@@ -1872,43 +1646,22 @@ async def test_health() -> None:
     assert result["is_ready"] is True
     assert result["available"] is True
 
-    assert (
-        result["embedding_available"]
-        is True
-    )
+    assert result["embedding_available"] is True
 
-    assert (
-        result["milvus_available"]
-        is True
-    )
+    assert result["milvus_available"] is True
 
-    assert (
-        result["embedding_model"]
-        == settings.embedding_model
-    )
+    assert result["embedding_model"] == settings.embedding_model
 
-    assert (
-        result["collection"]
-        == settings.milvus_collection_name
-    )
+    assert result["collection"] == settings.milvus_collection_name
 
-    assert (
-        result["default_limit"]
-        == settings.rag_search_top_k
-    )
+    assert result["default_limit"] == settings.rag_search_top_k
 
-    assert (
-        result["maximum_limit"]
-        == settings.milvus_search_limit
-    )
+    assert result["maximum_limit"] == settings.milvus_search_limit
 
     assert result["search_count"] == 1
     assert result["result_count"] == 2
 
-    assert (
-        result["last_search_duration_ms"]
-        == 12.34
-    )
+    assert result["last_search_duration_ms"] == 12.34
 
 
 @pytest.mark.asyncio
@@ -1922,11 +1675,7 @@ async def test_health_handles_embedding_exception() -> None:
         ),
     )
 
-    embedding_service.ping = AsyncMock(
-        side_effect=RuntimeError(
-            "embedding failure"
-        )
-    )
+    embedding_service.ping = AsyncMock(side_effect=RuntimeError("embedding failure"))
 
     cast(
         Any,
@@ -1940,9 +1689,7 @@ async def test_health_handles_embedding_exception() -> None:
         ),
     )
 
-    milvus_service.ping = AsyncMock(
-        return_value=True
-    )
+    milvus_service.ping = AsyncMock(return_value=True)
 
     cast(
         Any,
@@ -1956,15 +1703,9 @@ async def test_health_handles_embedding_exception() -> None:
 
     result = await service.health()
 
-    assert (
-        result["embedding_available"]
-        is False
-    )
+    assert result["embedding_available"] is False
 
-    assert (
-        result["milvus_available"]
-        is True
-    )
+    assert result["milvus_available"] is True
 
     assert result["available"] is False
 
@@ -1980,9 +1721,7 @@ async def test_health_handles_milvus_exception() -> None:
         ),
     )
 
-    embedding_service.ping = AsyncMock(
-        return_value=True
-    )
+    embedding_service.ping = AsyncMock(return_value=True)
 
     cast(
         Any,
@@ -1996,11 +1735,7 @@ async def test_health_handles_milvus_exception() -> None:
         ),
     )
 
-    milvus_service.ping = AsyncMock(
-        side_effect=RuntimeError(
-            "milvus failure"
-        )
-    )
+    milvus_service.ping = AsyncMock(side_effect=RuntimeError("milvus failure"))
 
     cast(
         Any,
@@ -2014,14 +1749,8 @@ async def test_health_handles_milvus_exception() -> None:
 
     result = await service.health()
 
-    assert (
-        result["embedding_available"]
-        is True
-    )
+    assert result["embedding_available"] is True
 
-    assert (
-        result["milvus_available"]
-        is False
-    )
+    assert result["milvus_available"] is False
 
     assert result["available"] is False

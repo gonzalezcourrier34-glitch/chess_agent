@@ -140,9 +140,7 @@ async def test_ping_service_handles_exception() -> None:
     service = MagicMock()
 
     service.ping = AsyncMock(
-        side_effect=RuntimeError(
-            "ping failure"
-        ),
+        side_effect=RuntimeError("ping failure"),
     )
 
     result = await _ping_service(
@@ -164,59 +162,30 @@ def test_to_graph_dependencies() -> None:
 
     container = build_container()
 
-    dependencies = (
-        container.to_graph_dependencies()
-    )
+    dependencies = container.to_graph_dependencies()
 
     assert isinstance(
         dependencies,
         GraphDependencies,
     )
 
-    assert (
-        dependencies.chess_service
-        is container.chess
-    )
+    assert dependencies.chess_service is container.chess
 
-    assert (
-        dependencies.stockfish_service
-        is container.stockfish
-    )
+    assert dependencies.stockfish_service is container.stockfish
 
-    assert (
-        dependencies.lichess_service
-        is container.lichess
-    )
+    assert dependencies.lichess_service is container.lichess
 
-    assert (
-        dependencies.embedding_service
-        is container.embedding
-    )
+    assert dependencies.embedding_service is container.embedding
 
-    assert (
-        dependencies.milvus_service
-        is container.milvus
-    )
+    assert dependencies.milvus_service is container.milvus
 
-    assert (
-        dependencies.vector_search_service
-        is container.vector_search
-    )
+    assert dependencies.vector_search_service is container.vector_search
 
-    assert (
-        dependencies.llm_service
-        is container.llm
-    )
+    assert dependencies.llm_service is container.llm
 
-    assert (
-        dependencies.youtube_service
-        is container.youtube
-    )
+    assert dependencies.youtube_service is container.youtube
 
-    assert (
-        dependencies.mongodb_service
-        is container.mongodb
-    )
+    assert dependencies.mongodb_service is container.mongodb
 
 
 # Construction du workflow
@@ -252,20 +221,17 @@ def test_build_graph(
     )
 
     monkeypatch.setattr(
-        "app.core.container."
-        "build_agent_graph",
+        "app.core.container.build_agent_graph",
         build_agent_graph,
     )
 
     monkeypatch.setattr(
-        "app.core.container."
-        "AnalysisService",
+        "app.core.container.AnalysisService",
         analysis_class,
     )
 
     monkeypatch.setattr(
-        "app.core.container."
-        "HealthcheckService",
+        "app.core.container.HealthcheckService",
         healthcheck_class,
     )
 
@@ -279,14 +245,9 @@ def test_build_graph(
 
     analysis_class.assert_called_once()
 
-    analysis_call = (
-        analysis_class.call_args
-    )
+    analysis_call = analysis_class.call_args
 
-    assert (
-        analysis_call.kwargs["graph"]
-        is graph
-    )
+    assert analysis_call.kwargs["graph"] is graph
 
     assert isinstance(
         analysis_call.kwargs["dependencies"],
@@ -323,8 +284,7 @@ def test_build_graph_returns_when_already_ready(
     build_agent_graph = MagicMock()
 
     monkeypatch.setattr(
-        "app.core.container."
-        "build_agent_graph",
+        "app.core.container.build_agent_graph",
         build_agent_graph,
     )
 
@@ -355,24 +315,21 @@ def test_build_graph_replaces_partial_state(
     )
 
     monkeypatch.setattr(
-        "app.core.container."
-        "build_agent_graph",
+        "app.core.container.build_agent_graph",
         MagicMock(
             return_value=new_graph,
         ),
     )
 
     monkeypatch.setattr(
-        "app.core.container."
-        "AnalysisService",
+        "app.core.container.AnalysisService",
         MagicMock(
             return_value=analysis,
         ),
     )
 
     monkeypatch.setattr(
-        "app.core.container."
-        "HealthcheckService",
+        "app.core.container.HealthcheckService",
         MagicMock(
             return_value=healthcheck,
         ),
@@ -380,20 +337,11 @@ def test_build_graph_replaces_partial_state(
 
     container.build_graph()
 
-    assert (
-        container.agent_graph
-        is new_graph
-    )
+    assert container.agent_graph is new_graph
 
-    assert (
-        container.analysis
-        is analysis
-    )
+    assert container.analysis is analysis
 
-    assert (
-        container.healthcheck
-        is healthcheck
-    )
+    assert container.healthcheck is healthcheck
 
 
 def test_build_graph_is_atomic_when_graph_creation_fails(
@@ -404,12 +352,9 @@ def test_build_graph_is_atomic_when_graph_creation_fails(
     container = build_container()
 
     monkeypatch.setattr(
-        "app.core.container."
-        "build_agent_graph",
+        "app.core.container.build_agent_graph",
         MagicMock(
-            side_effect=RuntimeError(
-                "graph failure"
-            ),
+            side_effect=RuntimeError("graph failure"),
         ),
     )
 
@@ -434,20 +379,16 @@ def test_build_graph_is_atomic_when_analysis_creation_fails(
     graph = MagicMock()
 
     monkeypatch.setattr(
-        "app.core.container."
-        "build_agent_graph",
+        "app.core.container.build_agent_graph",
         MagicMock(
             return_value=graph,
         ),
     )
 
     monkeypatch.setattr(
-        "app.core.container."
-        "AnalysisService",
+        "app.core.container.AnalysisService",
         MagicMock(
-            side_effect=RuntimeError(
-                "analysis failure"
-            ),
+            side_effect=RuntimeError("analysis failure"),
         ),
     )
 
@@ -476,28 +417,23 @@ def test_build_graph_is_atomic_when_healthcheck_creation_fails(
     )
 
     monkeypatch.setattr(
-        "app.core.container."
-        "build_agent_graph",
+        "app.core.container.build_agent_graph",
         MagicMock(
             return_value=graph,
         ),
     )
 
     monkeypatch.setattr(
-        "app.core.container."
-        "AnalysisService",
+        "app.core.container.AnalysisService",
         MagicMock(
             return_value=analysis,
         ),
     )
 
     monkeypatch.setattr(
-        "app.core.container."
-        "HealthcheckService",
+        "app.core.container.HealthcheckService",
         MagicMock(
-            side_effect=RuntimeError(
-                "healthcheck failure"
-            ),
+            side_effect=RuntimeError("healthcheck failure"),
         ),
     )
 
@@ -556,10 +492,7 @@ def test_is_graph_ready_false() -> None:
 
     container = build_container()
 
-    assert (
-        container.is_graph_ready()
-        is False
-    )
+    assert container.is_graph_ready() is False
 
 
 def test_is_graph_ready_true() -> None:
@@ -569,10 +502,7 @@ def test_is_graph_ready_true() -> None:
 
     container.agent_graph = MagicMock()
 
-    assert (
-        container.is_graph_ready()
-        is True
-    )
+    assert container.is_graph_ready() is True
 
 
 def test_is_analysis_ready_false() -> None:
@@ -580,10 +510,7 @@ def test_is_analysis_ready_false() -> None:
 
     container = build_container()
 
-    assert (
-        container.is_analysis_ready()
-        is False
-    )
+    assert container.is_analysis_ready() is False
 
 
 def test_is_analysis_ready_true() -> None:
@@ -595,10 +522,7 @@ def test_is_analysis_ready_true() -> None:
         spec=AnalysisService,
     )
 
-    assert (
-        container.is_analysis_ready()
-        is True
-    )
+    assert container.is_analysis_ready() is True
 
 
 def test_is_healthcheck_ready_false() -> None:
@@ -606,10 +530,7 @@ def test_is_healthcheck_ready_false() -> None:
 
     container = build_container()
 
-    assert (
-        container.is_healthcheck_ready()
-        is False
-    )
+    assert container.is_healthcheck_ready() is False
 
 
 def test_is_healthcheck_ready_true() -> None:
@@ -621,10 +542,7 @@ def test_is_healthcheck_ready_true() -> None:
         spec=HealthcheckService,
     )
 
-    assert (
-        container.is_healthcheck_ready()
-        is True
-    )
+    assert container.is_healthcheck_ready() is True
 
 
 def test_is_ready_false() -> None:
@@ -797,9 +715,7 @@ async def test_health_handles_ping_exception() -> None:
         )
 
     container.mongodb.ping = AsyncMock(
-        side_effect=RuntimeError(
-            "mongodb failure"
-        ),
+        side_effect=RuntimeError("mongodb failure"),
     )
 
     result = await container.health()
@@ -940,9 +856,7 @@ def test_create_application_container(
         mongodb_class,
     )
 
-    container = (
-        create_application_container()
-    )
+    container = create_application_container()
 
     assert isinstance(
         container,

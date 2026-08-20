@@ -19,10 +19,8 @@ from dataclasses import dataclass
 
 # Téléchargement
 
-@dataclass(
-    frozen=True,
-    slots=True
-)
+
+@dataclass(frozen=True, slots=True)
 class OpeningTarget:
     """Ouverture à récupérer depuis Wikichess."""
 
@@ -35,10 +33,7 @@ class OpeningTarget:
     eco: str
 
 
-@dataclass(
-    frozen=True,
-    slots=True
-)
+@dataclass(frozen=True, slots=True)
 class WikichessNextMove:
     """Coup suivant disponible depuis une position Wikichess."""
 
@@ -47,10 +42,7 @@ class WikichessNextMove:
     source_url: str
 
 
-@dataclass(
-    frozen=True,
-    slots=True
-)
+@dataclass(frozen=True, slots=True)
 class DownloadFailure:
     """Échec rencontré pendant un téléchargement."""
 
@@ -63,10 +55,8 @@ class DownloadFailure:
 
 # Ingestion
 
-@dataclass(
-    frozen=True,
-    slots=True
-)
+
+@dataclass(frozen=True, slots=True)
 class WikichessArticle:
     """Article Wikichess chargé depuis le disque."""
 
@@ -92,18 +82,12 @@ class WikichessArticle:
 
     contributors: tuple[str, ...] = ()
 
-    next_moves: tuple[
-        WikichessNextMove,
-        ...
-    ] = ()
+    next_moves: tuple[WikichessNextMove, ...] = ()
 
     retrieved_at: str = ""
 
 
-@dataclass(
-    frozen=True,
-    slots=True
-)
+@dataclass(frozen=True, slots=True)
 class WikichessChunk:
     """Document textuel prêt à être vectorisé."""
 
@@ -135,20 +119,15 @@ class WikichessChunk:
 
     contributors: tuple[str, ...] = ()
 
-    next_moves: tuple[
-        WikichessNextMove,
-        ...
-    ] = ()
+    next_moves: tuple[WikichessNextMove, ...] = ()
 
     retrieved_at: str = ""
 
 
 # Rapports
 
-@dataclass(
-    frozen=True,
-    slots=True
-)
+
+@dataclass(frozen=True, slots=True)
 class IngestionReport:
     """Bilan de l'ingestion Wikichess."""
 

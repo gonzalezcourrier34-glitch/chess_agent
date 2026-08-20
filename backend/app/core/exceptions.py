@@ -97,9 +97,7 @@ class ErrorContext:
 
     request_id: str | None = None
 
-    metadata: dict[str, Any] = field(
-        default_factory=dict
-    )
+    metadata: dict[str, Any] = field(default_factory=dict)
 
 
 # Exception de base
@@ -124,7 +122,7 @@ class ChessAgentError(Exception):
     definition = ErrorDefinition(
         code="CHESS_AGENT_ERROR",
         message="Une erreur Chess Agent est survenue.",
-        status_code=500
+        status_code=500,
     )
 
     def __init__(
@@ -133,21 +131,15 @@ class ChessAgentError(Exception):
         message: str | None = None,
         details: dict[str, Any] | None = None,
         context: ErrorContext | None = None,
-        cause: Exception | None = None
+        cause: Exception | None = None,
     ) -> None:
         """Initialise une exception métier."""
 
-        self.message = (
-            message
-            or self.definition.message
-        )
+        self.message = message or self.definition.message
 
         self.details = details or {}
 
-        self.context = (
-            context
-            or ErrorContext()
-        )
+        self.context = context or ErrorContext()
 
         self.cause = cause
 
@@ -193,9 +185,7 @@ class ChessAgentError(Exception):
         """Construit le schéma Pydantic."""
 
         return ApiError(
-            code=self.code,
-            message=self.message,
-            status_code=self.status_code
+            code=self.code, message=self.message, status_code=self.status_code
         )
 
     def log(self) -> None:
@@ -215,25 +205,15 @@ class ChessAgentError(Exception):
             "service": self.context.service,
             "operation": self.context.operation,
             "request_id": self.context.request_id,
-            "metadata": self.context.metadata
+            "metadata": self.context.metadata,
         }
 
         if self.cause is not None:
-
-            logger.log(
-                self.log_level,
-                self.message,
-                extra=payload,
-                exc_info=self.cause
-            )
+            logger.log(self.log_level, self.message, extra=payload, exc_info=self.cause)
 
             return
 
-        logger.log(
-            self.log_level,
-            self.message,
-            extra=payload
-        )
+        logger.log(self.log_level, self.message, extra=payload)
 
     def __str__(self) -> str:
         """Retourne le message utilisateur."""
@@ -244,10 +224,9 @@ class ChessAgentError(Exception):
         """Retourne une représentation compacte de l'exception."""
 
         return (
-            f"{self.__class__.__name__}("
-            f"code={self.code!r}, "
-            f"message={self.message!r})"
+            f"{self.__class__.__name__}(code={self.code!r}, message={self.message!r})"
         )
+
 
 # Exceptions liées aux requêtes
 
@@ -265,7 +244,7 @@ class InvalidRequestError(ChessAgentError):
         code="INVALID_REQUEST",
         message="La requête est invalide.",
         status_code=400,
-        log_level=logging.WARNING
+        log_level=logging.WARNING,
     )
 
 
@@ -276,7 +255,7 @@ class AuthenticationError(ChessAgentError):
         code="AUTHENTICATION_ERROR",
         message="Authentification requise.",
         status_code=401,
-        log_level=logging.WARNING
+        log_level=logging.WARNING,
     )
 
 
@@ -287,7 +266,7 @@ class AuthorizationError(ChessAgentError):
         code="AUTHORIZATION_ERROR",
         message="Accès refusé.",
         status_code=403,
-        log_level=logging.WARNING
+        log_level=logging.WARNING,
     )
 
 
@@ -299,7 +278,7 @@ class RateLimitExceededError(ChessAgentError):
         message="La limite de requêtes est atteinte.",
         status_code=429,
         retryable=True,
-        log_level=logging.INFO
+        log_level=logging.INFO,
     )
 
 
@@ -327,7 +306,7 @@ class ResourceNotFoundError(ChessAgentError):
         code="RESOURCE_NOT_FOUND",
         message="La ressource demandée est introuvable.",
         status_code=404,
-        log_level=logging.INFO
+        log_level=logging.INFO,
     )
 
 
@@ -338,7 +317,7 @@ class ResourceConflictError(ChessAgentError):
         code="RESOURCE_CONFLICT",
         message="La ressource existe déjà.",
         status_code=409,
-        log_level=logging.WARNING
+        log_level=logging.WARNING,
     )
 
 
@@ -349,7 +328,7 @@ class ResourceLockedError(ChessAgentError):
         code="RESOURCE_LOCKED",
         message="La ressource est actuellement verrouillée.",
         status_code=423,
-        retryable=True
+        retryable=True,
     )
 
 
@@ -370,7 +349,7 @@ class ChessServiceError(ChessAgentError):
     definition = ErrorDefinition(
         code="CHESS_SERVICE_ERROR",
         message="Une erreur est survenue dans le moteur d'échecs.",
-        status_code=500
+        status_code=500,
     )
 
 
@@ -381,7 +360,7 @@ class InvalidFenError(ChessServiceError):
         code="INVALID_FEN",
         message="La position FEN est invalide.",
         status_code=400,
-        log_level=logging.WARNING
+        log_level=logging.WARNING,
     )
 
 
@@ -392,7 +371,7 @@ class InvalidMoveError(ChessServiceError):
         code="INVALID_MOVE",
         message="Le coup fourni est invalide.",
         status_code=400,
-        log_level=logging.WARNING
+        log_level=logging.WARNING,
     )
 
 
@@ -403,7 +382,7 @@ class IllegalMoveError(ChessServiceError):
         code="ILLEGAL_MOVE",
         message="Le coup n'est pas légal dans cette position.",
         status_code=400,
-        log_level=logging.WARNING
+        log_level=logging.WARNING,
     )
 
 
@@ -414,7 +393,7 @@ class InvalidNotationError(ChessServiceError):
         code="INVALID_NOTATION",
         message="La notation du coup est invalide.",
         status_code=400,
-        log_level=logging.WARNING
+        log_level=logging.WARNING,
     )
 
 
@@ -425,8 +404,9 @@ class InvalidBoardStateError(ChessServiceError):
         code="INVALID_BOARD_STATE",
         message="L'état du plateau est invalide.",
         status_code=400,
-        log_level=logging.WARNING
+        log_level=logging.WARNING,
     )
+
 
 # Analyse
 
@@ -450,8 +430,9 @@ class AnalysisError(ChessAgentError):
     definition = ErrorDefinition(
         code="ANALYSIS_ERROR",
         message="Une erreur est survenue durant l'analyse.",
-        status_code=500
+        status_code=500,
     )
+
 
 class AnalysisCancelledError(AnalysisError):
     """Analyse interrompue."""
@@ -460,7 +441,7 @@ class AnalysisCancelledError(AnalysisError):
         code="ANALYSIS_CANCELLED",
         message="L'analyse a été interrompue.",
         status_code=409,
-        log_level=logging.INFO
+        log_level=logging.INFO,
     )
 
 
@@ -471,7 +452,7 @@ class OpeningNotFoundError(AnalysisError):
         code="OPENING_NOT_FOUND",
         message="Aucune ouverture correspondante n'a été trouvée.",
         status_code=404,
-        log_level=logging.INFO
+        log_level=logging.INFO,
     )
 
 
@@ -500,7 +481,7 @@ class RetrievalError(ChessAgentError):
     definition = ErrorDefinition(
         code="RETRIEVAL_ERROR",
         message="La recherche documentaire a échoué.",
-        status_code=500
+        status_code=500,
     )
 
 
@@ -511,7 +492,7 @@ class RetrievalTimeoutError(RetrievalError):
         code="RETRIEVAL_TIMEOUT",
         message="La recherche documentaire a dépassé le délai autorisé.",
         status_code=504,
-        retryable=True
+        retryable=True,
     )
 
 
@@ -522,7 +503,7 @@ class RetrievalEmptyError(RetrievalError):
         code="RETRIEVAL_EMPTY",
         message="Aucun document pertinent n'a été trouvé.",
         status_code=404,
-        log_level=logging.INFO
+        log_level=logging.INFO,
     )
 
 
@@ -532,7 +513,7 @@ class EmbeddingError(RetrievalError):
     definition = ErrorDefinition(
         code="EMBEDDING_ERROR",
         message="Impossible de générer les embeddings.",
-        status_code=500
+        status_code=500,
     )
 
 
@@ -543,7 +524,7 @@ class EmbeddingModelUnavailableError(EmbeddingError):
         code="EMBEDDING_MODEL_UNAVAILABLE",
         message="Le modèle d'embedding est indisponible.",
         status_code=503,
-        retryable=True
+        retryable=True,
     )
 
 
@@ -553,7 +534,7 @@ class EmbeddingGenerationError(EmbeddingError):
     definition = ErrorDefinition(
         code="EMBEDDING_GENERATION_ERROR",
         message="La génération des embeddings a échoué.",
-        status_code=500
+        status_code=500,
     )
 
 
@@ -563,7 +544,7 @@ class EmbeddingDimensionError(EmbeddingError):
     definition = ErrorDefinition(
         code="EMBEDDING_DIMENSION_ERROR",
         message="La dimension des embeddings est invalide.",
-        status_code=500
+        status_code=500,
     )
 
 
@@ -573,9 +554,10 @@ class ContextConstructionError(RetrievalError):
     definition = ErrorDefinition(
         code="CONTEXT_CONSTRUCTION_ERROR",
         message="Impossible de construire le contexte documentaire.",
-        status_code=500
+        status_code=500,
     )
-    
+
+
 # Intelligence artificielle
 
 # Cette famille regroupe les erreurs produites par le moteur
@@ -598,7 +580,7 @@ class AgentExecutionError(ChessAgentError):
     definition = ErrorDefinition(
         code="AGENT_EXECUTION_ERROR",
         message="L'agent n'a pas pu terminer son exécution.",
-        status_code=500
+        status_code=500,
     )
 
 
@@ -608,30 +590,29 @@ class WorkflowStateError(AgentExecutionError):
     definition = ErrorDefinition(
         code="WORKFLOW_STATE_ERROR",
         message="L'état du workflow est incohérent.",
-        status_code=500
+        status_code=500,
     )
-    
-class WorkflowConfigurationError(
-    AgentExecutionError
-):
+
+
+class WorkflowConfigurationError(AgentExecutionError):
     """Configuration du workflow invalide."""
 
     definition = ErrorDefinition(
         code="WORKFLOW_CONFIGURATION_ERROR",
         message="La configuration du workflow est invalide.",
-        status_code=500
+        status_code=500,
     )
 
-class WorkflowRoutingError(
-    AgentExecutionError
-):
+
+class WorkflowRoutingError(AgentExecutionError):
     """Erreur de routage du workflow."""
 
     definition = ErrorDefinition(
         code="WORKFLOW_ROUTING_ERROR",
         message="Impossible de déterminer la prochaine étape du workflow.",
-        status_code=500
+        status_code=500,
     )
+
 
 class WorkflowExecutionError(AgentExecutionError):
     """Le workflow n'a pas pu terminer son exécution."""
@@ -639,17 +620,17 @@ class WorkflowExecutionError(AgentExecutionError):
     definition = ErrorDefinition(
         code="WORKFLOW_EXECUTION_ERROR",
         message="Le workflow n'a pas pu terminer son exécution.",
-        status_code=500
+        status_code=500,
     )
-    
-    
+
+
 class PromptConstructionError(AgentExecutionError):
     """Erreur lors de la construction du prompt."""
 
     definition = ErrorDefinition(
         code="PROMPT_CONSTRUCTION_ERROR",
         message="Impossible de construire le prompt.",
-        status_code=500
+        status_code=500,
     )
 
 
@@ -659,7 +640,7 @@ class LLMGenerationError(AgentExecutionError):
     definition = ErrorDefinition(
         code="LLM_GENERATION_ERROR",
         message="La génération de la réponse a échoué.",
-        status_code=500
+        status_code=500,
     )
 
 
@@ -669,10 +650,10 @@ class InvalidLLMResponseError(AgentExecutionError):
     definition = ErrorDefinition(
         code="INVALID_LLM_RESPONSE",
         message="Le modèle a retourné une réponse invalide.",
-        status_code=500
+        status_code=500,
     )
 
-        
+
 class AgentInterruptedError(AgentExecutionError):
     """Le workflow est interrompu."""
 
@@ -680,7 +661,7 @@ class AgentInterruptedError(AgentExecutionError):
         code="AGENT_INTERRUPTED",
         message="Le workflow a été interrompu.",
         status_code=409,
-        log_level=logging.INFO
+        log_level=logging.INFO,
     )
 
 
@@ -690,7 +671,7 @@ class AgentIterationLimitError(AgentExecutionError):
     definition = ErrorDefinition(
         code="AGENT_ITERATION_LIMIT",
         message="Le nombre maximal d'itérations est atteint.",
-        status_code=500
+        status_code=500,
     )
 
 
@@ -713,8 +694,9 @@ class ConfigurationError(ChessAgentError):
     definition = ErrorDefinition(
         code="CONFIGURATION_ERROR",
         message="La configuration de l'application est invalide.",
-        status_code=500
+        status_code=500,
     )
+
 
 # Infrastructure
 
@@ -741,7 +723,7 @@ class InfrastructureError(ChessAgentError):
     definition = ErrorDefinition(
         code="INFRASTRUCTURE_ERROR",
         message="Une erreur d'infrastructure est survenue.",
-        status_code=500
+        status_code=500,
     )
 
 
@@ -752,7 +734,7 @@ class ExternalServiceError(InfrastructureError):
         code="EXTERNAL_SERVICE_ERROR",
         message="Le service externe est indisponible.",
         status_code=503,
-        retryable=True
+        retryable=True,
     )
 
 
@@ -763,12 +745,11 @@ class ServiceUnavailableError(InfrastructureError):
         code="SERVICE_UNAVAILABLE",
         message="Le service est momentanément indisponible.",
         status_code=503,
-        retryable=True
+        retryable=True,
     )
 
-class ApplicationNotReadyError(
-    InfrastructureError
-):
+
+class ApplicationNotReadyError(InfrastructureError):
     """L'application n'est pas prête à recevoir du trafic."""
 
     definition = ErrorDefinition(
@@ -776,28 +757,17 @@ class ApplicationNotReadyError(
         message="L'application n'est pas prête à recevoir du trafic.",
         status_code=503,
         retryable=True,
-        log_level=logging.WARNING
+        log_level=logging.WARNING,
     )
 
-    def __init__(
-        self,
-        *,
-        unavailable_services: list[str]
-    ) -> None:
+    def __init__(self, *, unavailable_services: list[str]) -> None:
         """Initialise l'erreur de readiness."""
 
-        self.unavailable_services = (
-            unavailable_services
-        )
+        self.unavailable_services = unavailable_services
 
-        super().__init__(
-            details={
-                "unavailable_services": (
-                    unavailable_services
-                )
-            }
-        )
-        
+        super().__init__(details={"unavailable_services": (unavailable_services)})
+
+
 class ServiceTimeoutError(InfrastructureError):
     """Temps d'attente dépassé."""
 
@@ -805,55 +775,52 @@ class ServiceTimeoutError(InfrastructureError):
         code="SERVICE_TIMEOUT",
         message="Le délai d'attente du service est dépassé.",
         status_code=504,
-        retryable=True
+        retryable=True,
     )
 
-class ResourceInitializationError(
-    InfrastructureError
-):
+
+class ResourceInitializationError(InfrastructureError):
     """La ressource n'a pas pu être initialisée."""
 
     definition = ErrorDefinition(
         code="RESOURCE_INITIALIZATION_ERROR",
         message="La ressource n'a pas pu être initialisée.",
         status_code=503,
-        retryable=True
+        retryable=True,
     )
 
-class ResourceHealthError(
-    InfrastructureError
-):
+
+class ResourceHealthError(InfrastructureError):
     """La ressource n'est pas disponible."""
 
     definition = ErrorDefinition(
         code="RESOURCE_HEALTH_ERROR",
         message="La ressource n'est pas disponible.",
         status_code=503,
-        retryable=True
+        retryable=True,
     )
 
-class ResourceShutdownError(
-    InfrastructureError
-):
+
+class ResourceShutdownError(InfrastructureError):
     """Impossible d'arrêter correctement la ressource."""
 
     definition = ErrorDefinition(
         code="RESOURCE_SHUTDOWN_ERROR",
         message="Impossible d'arrêter la ressource.",
-        status_code=500
+        status_code=500,
     )
 
-class ResourceRollbackError(
-    InfrastructureError
-):
+
+class ResourceRollbackError(InfrastructureError):
     """Le rollback de la ressource a échoué."""
 
     definition = ErrorDefinition(
         code="RESOURCE_ROLLBACK_ERROR",
         message="Le rollback de la ressource a échoué.",
-        status_code=500
+        status_code=500,
     )
-    
+
+
 # Base de données
 
 # Cette famille couvre toutes les erreurs liées aux systèmes de
@@ -870,7 +837,7 @@ class DatabaseError(InfrastructureError):
     definition = ErrorDefinition(
         code="DATABASE_ERROR",
         message="Une erreur de base de données est survenue.",
-        status_code=500
+        status_code=500,
     )
 
 
@@ -881,7 +848,7 @@ class DatabaseConnectionError(DatabaseError):
         code="DATABASE_CONNECTION_ERROR",
         message="Impossible de se connecter à la base de données.",
         status_code=503,
-        retryable=True
+        retryable=True,
     )
 
 
@@ -891,7 +858,7 @@ class DatabaseOperationError(DatabaseError):
     definition = ErrorDefinition(
         code="DATABASE_QUERY_ERROR",
         message="La requête vers la base de données a échoué.",
-        status_code=500
+        status_code=500,
     )
 
 
@@ -901,7 +868,7 @@ class MongoDBError(DatabaseError):
     definition = ErrorDefinition(
         code="MONGODB_ERROR",
         message="Une erreur MongoDB est survenue.",
-        status_code=500
+        status_code=500,
     )
 
 
@@ -913,13 +880,12 @@ class MongoDBError(DatabaseError):
 # Les erreurs ci-dessous permettent de distinguer une indisponibilité
 # du serveur, un problème d'indexation ou une erreur de recherche.
 
+
 class MilvusError(InfrastructureError):
     """Erreur générale liée à Milvus."""
 
     definition = ErrorDefinition(
-        code="MILVUS_ERROR",
-        message="Une erreur Milvus est survenue.",
-        status_code=500
+        code="MILVUS_ERROR", message="Une erreur Milvus est survenue.", status_code=500
     )
 
 
@@ -930,7 +896,7 @@ class MilvusConnectionError(MilvusError):
         code="MILVUS_CONNECTION_ERROR",
         message="Impossible de se connecter à Milvus.",
         status_code=503,
-        retryable=True
+        retryable=True,
     )
 
 
@@ -941,7 +907,7 @@ class MilvusValidationError(MilvusError):
         code="MILVUS_VALIDATION_ERROR",
         message="Les données destinées à Milvus sont invalides.",
         status_code=400,
-        log_level=logging.WARNING
+        log_level=logging.WARNING,
     )
 
 
@@ -950,11 +916,8 @@ class MilvusIndexError(MilvusError):
 
     definition = ErrorDefinition(
         code="MILVUS_INDEX_ERROR",
-        message=(
-            "Impossible de préparer ou d'utiliser "
-            "l'index vectoriel."
-        ),
-        status_code=500
+        message=("Impossible de préparer ou d'utiliser l'index vectoriel."),
+        status_code=500,
     )
 
 
@@ -964,7 +927,7 @@ class MilvusOperationError(MilvusError):
     definition = ErrorDefinition(
         code="MILVUS_OPERATION_ERROR",
         message="Une opération Milvus a échoué.",
-        status_code=500
+        status_code=500,
     )
 
 
@@ -974,7 +937,7 @@ class MilvusInsertionError(MilvusOperationError):
     definition = ErrorDefinition(
         code="MILVUS_INSERTION_ERROR",
         message="L'insertion dans Milvus a échoué.",
-        status_code=500
+        status_code=500,
     )
 
 
@@ -984,7 +947,7 @@ class MilvusSearchError(MilvusOperationError):
     definition = ErrorDefinition(
         code="MILVUS_SEARCH_ERROR",
         message="La recherche vectorielle a échoué.",
-        status_code=500
+        status_code=500,
     )
 
 
@@ -994,14 +957,16 @@ class MilvusDeletionError(MilvusOperationError):
     definition = ErrorDefinition(
         code="MILVUS_DELETION_ERROR",
         message="La suppression dans Milvus a échoué.",
-        status_code=500
+        status_code=500,
     )
+
 
 # Services IA
 
 # Les services suivants sont volontairement séparés afin de permettre
 # aux handlers et aux métriques de distinguer précisément la source
 # d'une défaillance.
+
 
 # Lichess
 class LichessError(InfrastructureError):
@@ -1011,8 +976,9 @@ class LichessError(InfrastructureError):
         code="LICHESS_ERROR",
         message="Impossible de communiquer avec Lichess.",
         status_code=503,
-        retryable=True
+        retryable=True,
     )
+
 
 class LichessUnavailableError(LichessError):
     """Le service Lichess est momentanément indisponible."""
@@ -1021,7 +987,7 @@ class LichessUnavailableError(LichessError):
         code="LICHESS_UNAVAILABLE",
         message="Le service Lichess est momentanément indisponible.",
         status_code=503,
-        retryable=True
+        retryable=True,
     )
 
 
@@ -1032,7 +998,7 @@ class LichessTimeoutError(LichessError):
         code="LICHESS_TIMEOUT",
         message="Le délai d'attente de Lichess est dépassé.",
         status_code=504,
-        retryable=True
+        retryable=True,
     )
 
 
@@ -1042,10 +1008,12 @@ class LichessResponseError(LichessError):
     definition = ErrorDefinition(
         code="LICHESS_RESPONSE_ERROR",
         message="La réponse retournée par Lichess est invalide.",
-        status_code=502
+        status_code=502,
     )
 
+
 # Youtube
+
 
 class YoutubeError(InfrastructureError):
     """Erreur YouTube."""
@@ -1054,8 +1022,9 @@ class YoutubeError(InfrastructureError):
         code="YOUTUBE_ERROR",
         message="Impossible de récupérer les vidéos.",
         status_code=503,
-        retryable=True
+        retryable=True,
     )
+
 
 class YoutubeConfigurationError(YoutubeError):
     """Configuration YouTube absente ou invalide."""
@@ -1063,7 +1032,7 @@ class YoutubeConfigurationError(YoutubeError):
     definition = ErrorDefinition(
         code="YOUTUBE_CONFIGURATION_ERROR",
         message="La configuration YouTube est invalide.",
-        status_code=503
+        status_code=503,
     )
 
 
@@ -1075,7 +1044,7 @@ class YoutubeQuotaError(YoutubeError):
         message="Le quota de l'API YouTube est dépassé.",
         status_code=429,
         retryable=True,
-        log_level=logging.WARNING
+        log_level=logging.WARNING,
     )
 
 
@@ -1086,7 +1055,7 @@ class YoutubeTimeoutError(YoutubeError):
         code="YOUTUBE_TIMEOUT_ERROR",
         message="Le délai d'attente de YouTube est dépassé.",
         status_code=504,
-        retryable=True
+        retryable=True,
     )
 
 
@@ -1097,7 +1066,7 @@ class YoutubeUnavailableError(YoutubeError):
         code="YOUTUBE_UNAVAILABLE_ERROR",
         message="Le service YouTube est indisponible.",
         status_code=503,
-        retryable=True
+        retryable=True,
     )
 
 
@@ -1107,11 +1076,12 @@ class YoutubeResponseError(YoutubeError):
     definition = ErrorDefinition(
         code="YOUTUBE_RESPONSE_ERROR",
         message="La réponse retournée par YouTube est invalide.",
-        status_code=502
+        status_code=502,
     )
 
 
 # Ollama
+
 
 class OllamaError(InfrastructureError):
     """Erreur générale liée au serveur Ollama."""
@@ -1120,7 +1090,7 @@ class OllamaError(InfrastructureError):
         code="OLLAMA_ERROR",
         message="Une erreur Ollama est survenue.",
         status_code=503,
-        retryable=True
+        retryable=True,
     )
 
 
@@ -1131,7 +1101,7 @@ class OllamaConnectionError(OllamaError):
         code="OLLAMA_CONNECTION_ERROR",
         message="Impossible de contacter le serveur Ollama.",
         status_code=503,
-        retryable=True
+        retryable=True,
     )
 
 
@@ -1142,7 +1112,7 @@ class OllamaTimeoutError(OllamaError):
         code="OLLAMA_TIMEOUT",
         message="Le délai d'attente d'Ollama est dépassé.",
         status_code=504,
-        retryable=True
+        retryable=True,
     )
 
 
@@ -1153,7 +1123,7 @@ class OllamaModelUnavailableError(OllamaError):
         code="OLLAMA_MODEL_UNAVAILABLE",
         message="Le modèle Ollama configuré est indisponible.",
         status_code=503,
-        retryable=True
+        retryable=True,
     )
 
 
@@ -1163,10 +1133,12 @@ class OllamaResponseError(OllamaError):
     definition = ErrorDefinition(
         code="OLLAMA_RESPONSE_ERROR",
         message="La réponse retournée par Ollama est invalide.",
-        status_code=502
+        status_code=502,
     )
-    
+
+
 # Stockfish
+
 
 class StockfishError(InfrastructureError):
     """Erreur générale liée à Stockfish."""
@@ -1175,7 +1147,7 @@ class StockfishError(InfrastructureError):
         code="STOCKFISH_ERROR",
         message="Une erreur Stockfish est survenue.",
         status_code=503,
-        retryable=True
+        retryable=True,
     )
 
 
@@ -1185,7 +1157,7 @@ class StockfishConfigurationError(StockfishError):
     definition = ErrorDefinition(
         code="STOCKFISH_CONFIGURATION_ERROR",
         message="La configuration de Stockfish est invalide.",
-        status_code=500
+        status_code=500,
     )
 
 
@@ -1196,7 +1168,7 @@ class StockfishUnavailableError(StockfishError):
         code="STOCKFISH_UNAVAILABLE",
         message="Le moteur Stockfish est indisponible.",
         status_code=503,
-        retryable=True
+        retryable=True,
     )
 
 
@@ -1207,7 +1179,7 @@ class StockfishTimeoutError(StockfishError):
         code="STOCKFISH_TIMEOUT",
         message="L'analyse Stockfish a dépassé le délai autorisé.",
         status_code=504,
-        retryable=True
+        retryable=True,
     )
 
 
@@ -1217,7 +1189,7 @@ class StockfishAnalysisError(StockfishError):
     definition = ErrorDefinition(
         code="STOCKFISH_ANALYSIS_ERROR",
         message="L'analyse Stockfish a échoué.",
-        status_code=500
+        status_code=500,
     )
 
 
@@ -1227,5 +1199,5 @@ class StockfishResponseError(StockfishError):
     definition = ErrorDefinition(
         code="STOCKFISH_RESPONSE_ERROR",
         message="La réponse produite par Stockfish est invalide.",
-        status_code=502
+        status_code=502,
     )

@@ -40,14 +40,11 @@ STOCKFISH_SERVICE_KEY = "stockfish_service"
 
 # Services
 
-def _get_stockfish_service(
-    config: RunnableConfig
-) -> StockfishService | None:
+
+def _get_stockfish_service(config: RunnableConfig) -> StockfishService | None:
     """Retourne le service Stockfish configuré avec un type vérifié."""
     service = get_configured_service(
-        config,
-        STOCKFISH_SERVICE_KEY,
-        expected_type=StockfishService
+        config, STOCKFISH_SERVICE_KEY, expected_type=StockfishService
     )
 
     if service is None:
@@ -57,7 +54,7 @@ def _get_stockfish_service(
         logger.error(
             "Service %s invalide : %s reçu au lieu de StockfishService.",
             STOCKFISH_SERVICE_KEY,
-            type(service).__name__
+            type(service).__name__,
         )
         return None
 
@@ -65,6 +62,7 @@ def _get_stockfish_service(
 
 
 # Statuts
+
 
 def _get_success_status(state: ChessAnalysisState) -> AnalysisStatus:
     """Retourne le statut applicable après une analyse réussie."""
@@ -80,10 +78,8 @@ def _get_success_status(state: ChessAnalysisState) -> AnalysisStatus:
 
 # Résumés
 
-def _format_score(
-    score: float,
-    evaluation_type: EvaluationType
-) -> str:
+
+def _format_score(score: float, evaluation_type: EvaluationType) -> str:
     """Formate un score Stockfish sans ajouter d'interprétation."""
     if evaluation_type is EvaluationType.MATE:
         return f"mat en {int(score)}"
@@ -98,16 +94,12 @@ def _build_engine_summary(evaluation: PositionEvaluation) -> str:
     engine_evaluation = engine.evaluation
     principal_variation = engine.principal_variation
     formatted_engine_score = _format_score(
-        engine_evaluation.score,
-        engine_evaluation.evaluation_type
+        engine_evaluation.score, engine_evaluation.evaluation_type
     )
 
     sections = [
-        (
-            "Évaluation retournée : "
-            f"{formatted_engine_score}."
-        ),
-        f"Profondeur d'analyse : {engine_evaluation.depth}."
+        (f"Évaluation retournée : {formatted_engine_score}."),
+        f"Profondeur d'analyse : {engine_evaluation.depth}.",
     ]
 
     if best_move is not None:
@@ -116,7 +108,7 @@ def _build_engine_summary(evaluation: PositionEvaluation) -> str:
             (
                 "Meilleur coup retourné par Stockfish : "
                 f"{best_move.san} ({best_move.uci})."
-            )
+            ),
         )
 
     if engine_evaluation.nodes is not None:
@@ -142,9 +134,7 @@ def _build_engine_summary(evaluation: PositionEvaluation) -> str:
     return " ".join(sections)
 
 
-def _build_principal_variation_summary(
-    evaluation: PositionEvaluation
-) -> str | None:
+def _build_principal_variation_summary(evaluation: PositionEvaluation) -> str | None:
     """Décrit factuellement la variante principale calculée."""
     principal_variation = evaluation.engine.principal_variation
 
@@ -154,8 +144,7 @@ def _build_principal_variation_summary(
     moves = " ".join(principal_variation.moves)
     variation_evaluation = principal_variation.evaluation
     formatted_score = _format_score(
-        variation_evaluation.score,
-        variation_evaluation.evaluation_type
+        variation_evaluation.score, variation_evaluation.evaluation_type
     )
 
     return (
@@ -165,9 +154,7 @@ def _build_principal_variation_summary(
     )
 
 
-def _enrich_evaluation(
-    evaluation: PositionEvaluation
-) -> PositionEvaluation:
+def _enrich_evaluation(evaluation: PositionEvaluation) -> PositionEvaluation:
     """Ajoute les descriptions factuelles à l'évaluation."""
     principal_variation = evaluation.engine.principal_variation.model_copy(
         update={
@@ -186,10 +173,8 @@ def _enrich_evaluation(
 
 # Mises à jour
 
-def _build_error_update(
-    state: ChessAnalysisState,
-    error: WorkflowError
-) -> StateUpdate:
+
+def _build_error_update(state: ChessAnalysisState, error: WorkflowError) -> StateUpdate:
     """Construit la mise à jour retournée après un échec."""
     return {
         "status": AnalysisStatus.FAILED,
@@ -197,19 +182,16 @@ def _build_error_update(
         # Une étape échouée n'est jamais ajoutée aux étapes terminées.
         "completed_steps": list(state.completed_steps),
         "errors": [*state.errors, error],
-        "warnings": list(state.warnings)
+        "warnings": list(state.warnings),
     }
 
 
 def _build_success_update(
-    state: ChessAnalysisState,
-    evaluation: PositionEvaluation
+    state: ChessAnalysisState, evaluation: PositionEvaluation
 ) -> StateUpdate:
     """Construit la mise à jour après une analyse réussie."""
     current_step = WorkflowStep.ENGINE_ANALYSIS
-    engine_context = evaluation.summary or (
-        "Aucune synthèse moteur n'est disponible."
-    )
+    engine_context = evaluation.summary or ("Aucune synthèse moteur n'est disponible.")
     workflow_context = state.workflow_context.model_copy(
         update={"engine_context": engine_context}
     )
@@ -221,16 +203,13 @@ def _build_success_update(
         "evaluation": evaluation,
         "workflow_context": workflow_context,
         "errors": list(state.errors),
-        "warnings": list(state.warnings)
+        "warnings": list(state.warnings),
     }
 
 
 def _build_missing_service_update(state: ChessAnalysisState) -> StateUpdate:
     """Construit la mise à jour lorsque StockfishService est indisponible."""
-    message = (
-        "StockfishService est absent ou invalide dans la configuration "
-        "LangGraph."
-    )
+    message = "StockfishService est absent ou invalide dans la configuration LangGraph."
 
     logger.error(message)
 
@@ -240,14 +219,13 @@ def _build_missing_service_update(state: ChessAnalysisState) -> StateUpdate:
             step=WorkflowStep.ENGINE_ANALYSIS,
             code=ERROR_CONFIGURATION,
             message=message,
-            recoverable=False
-        )
+            recoverable=False,
+        ),
     )
 
 
 def _build_stockfish_error_update(
-    state: ChessAnalysisState,
-    error: StockfishError
+    state: ChessAnalysisState, error: StockfishError
 ) -> StateUpdate:
     """Construit la mise à jour après une erreur Stockfish connue."""
     return _build_error_update(
@@ -256,8 +234,8 @@ def _build_stockfish_error_update(
             step=WorkflowStep.ENGINE_ANALYSIS,
             code=error.code,
             message=str(error),
-            recoverable=error.retryable
-        )
+            recoverable=error.retryable,
+        ),
     )
 
 
@@ -268,23 +246,21 @@ def _build_unexpected_error_update(state: ChessAnalysisState) -> StateUpdate:
         WorkflowError(
             step=WorkflowStep.ENGINE_ANALYSIS,
             code=ERROR_UNEXPECTED,
-            message=(
-                "Une erreur inattendue a empêché l'analyse de la position."
-            ),
-            recoverable=False
-        )
+            message=("Une erreur inattendue a empêché l'analyse de la position."),
+            recoverable=False,
+        ),
     )
 
 
 # API publique
 
+
 async def engine_analysis(
-    state: ChessAnalysisState,
-    config: RunnableConfig
+    state: ChessAnalysisState, config: RunnableConfig
 ) -> StateUpdate:
     """Analyse une position avec Stockfish."""
     logger.debug("Démarrage de l'analyse Stockfish.")
-    
+
     stockfish_service = _get_stockfish_service(config)
 
     if stockfish_service is None:
@@ -292,12 +268,10 @@ async def engine_analysis(
             step=WorkflowStep.ENGINE_ANALYSIS,
             service=ServiceType.STOCKFISH,
             status=WorkflowStepStatus.FAILED,
-            message="StockfishService indisponible."
+            message="StockfishService indisponible.",
         )
 
-        return _build_missing_service_update(
-            state
-        )
+        return _build_missing_service_update(state)
 
     try:
         request = FenRequest(fen=state.fen)
@@ -306,60 +280,47 @@ async def engine_analysis(
             step=WorkflowStep.ENGINE_ANALYSIS,
             service=ServiceType.STOCKFISH,
             status=WorkflowStepStatus.RUNNING,
-            message="Analyse Stockfish en cours."
+            message="Analyse Stockfish en cours.",
         )
-            
+
         evaluation = await stockfish_service.analyze_position(request)
 
         emit_progress(
             step=WorkflowStep.ENGINE_ANALYSIS,
             service=ServiceType.STOCKFISH,
             status=WorkflowStepStatus.COMPLETED,
-            message="Analyse Stockfish terminée."
+            message="Analyse Stockfish terminée.",
         )
-        
+
         enriched_evaluation = _enrich_evaluation(evaluation)
 
         logger.info(
             "Analyse Stockfish terminée à la profondeur %s.",
-            enriched_evaluation.engine.evaluation.depth
+            enriched_evaluation.engine.evaluation.depth,
         )
-    
+
     except StockfishError as error:
         emit_progress(
             step=WorkflowStep.ENGINE_ANALYSIS,
             service=ServiceType.STOCKFISH,
             status=WorkflowStepStatus.FAILED,
-            message="Analyse Stockfish impossible."
+            message="Analyse Stockfish impossible.",
         )
 
-        logger.warning(
-            "Analyse Stockfish impossible : %s",
-            error
-        )
+        logger.warning("Analyse Stockfish impossible : %s", error)
 
-        return _build_stockfish_error_update(
-            state,
-            error
-        )
+        return _build_stockfish_error_update(state, error)
 
     except Exception:
         emit_progress(
             step=WorkflowStep.ENGINE_ANALYSIS,
             service=ServiceType.STOCKFISH,
             status=WorkflowStepStatus.FAILED,
-            message=(
-                "Une erreur inattendue a interrompu "
-                "l'analyse Stockfish."
-            )
+            message=("Une erreur inattendue a interrompu l'analyse Stockfish."),
         )
 
-        logger.exception(
-            "Erreur inattendue durant l'analyse Stockfish."
-        )
+        logger.exception("Erreur inattendue durant l'analyse Stockfish.")
 
-        return _build_unexpected_error_update(
-            state
-        )
+        return _build_unexpected_error_update(state)
 
     return _build_success_update(state, enriched_evaluation)

@@ -28,9 +28,7 @@ from app.schemas.common.enums import (
 class AnalysisProgressEvent(BaseModel):
     """Événement de progression d'une analyse."""
 
-    model_config = ConfigDict(
-        extra="forbid"
-    )
+    model_config = ConfigDict(extra="forbid")
 
     event: Literal["progress"] = "progress"
 
@@ -42,9 +40,7 @@ class AnalysisProgressEvent(BaseModel):
 
     status: WorkflowStepStatus
 
-    completed_steps: list[WorkflowStep] = Field(
-        default_factory=list
-    )
+    completed_steps: list[WorkflowStep] = Field(default_factory=list)
 
     message: str | None = None
 
@@ -52,9 +48,7 @@ class AnalysisProgressEvent(BaseModel):
 class AnalysisCompletedEvent(BaseModel):
     """Événement final d'une analyse."""
 
-    model_config = ConfigDict(
-        extra="forbid"
-    )
+    model_config = ConfigDict(extra="forbid")
 
     event: Literal["completed"] = "completed"
 

@@ -34,7 +34,7 @@ ValidationRoute = Literal[
     "retrieve_videos",
     "generate_response",
     "save_analysis",
-    "end"
+    "end",
 ]
 
 TheoryDetectionRoute = Literal[
@@ -43,7 +43,7 @@ TheoryDetectionRoute = Literal[
     "retrieve_videos",
     "generate_response",
     "save_analysis",
-    "end"
+    "end",
 ]
 
 EngineRoute = Literal[
@@ -52,39 +52,22 @@ EngineRoute = Literal[
     "retrieve_videos",
     "generate_response",
     "save_analysis",
-    "end"
+    "end",
 ]
 
-UnknownPositionRoute = Literal[
-    "generate_response",
-    "save_analysis",
-    "end"
-]
+UnknownPositionRoute = Literal["generate_response", "save_analysis", "end"]
 
-ContextRoute = Literal[
-    "retrieve_videos",
-    "generate_response",
-    "save_analysis",
-    "end"
-]
+ContextRoute = Literal["retrieve_videos", "generate_response", "save_analysis", "end"]
 
-VideosRoute = Literal[
-    "generate_response",
-    "save_analysis",
-    "end"
-]
+VideosRoute = Literal["generate_response", "save_analysis", "end"]
 
-ResponseRoute = Literal[
-    "save_analysis",
-    "end"
-]
+ResponseRoute = Literal["save_analysis", "end"]
 
 
 # Vérification
 
-def _workflow_has_failed(
-    state: ChessAnalysisState
-) -> bool:
+
+def _workflow_has_failed(state: ChessAnalysisState) -> bool:
     """Indique si le workflow est interrompu."""
 
     return state.status is AnalysisStatus.FAILED
@@ -92,13 +75,10 @@ def _workflow_has_failed(
 
 # Étapes finales
 
+
 def _route_to_output(
-    state: ChessAnalysisState
-) -> Literal[
-    "generate_response",
-    "save_analysis",
-    "end"
-]:
+    state: ChessAnalysisState,
+) -> Literal["generate_response", "save_analysis", "end"]:
     """Choisit la prochaine étape de sortie."""
 
     options = state.options
@@ -114,14 +94,11 @@ def _route_to_output(
 
 # Enrichissements
 
+
 def _route_known_opening(
-    state: ChessAnalysisState
+    state: ChessAnalysisState,
 ) -> Literal[
-    "retrieve_context",
-    "retrieve_videos",
-    "generate_response",
-    "save_analysis",
-    "end"
+    "retrieve_context", "retrieve_videos", "generate_response", "save_analysis", "end"
 ]:
     """Choisit le prochain enrichissement d'une ouverture connue."""
 
@@ -133,39 +110,27 @@ def _route_known_opening(
     if options.include_videos:
         return "retrieve_videos"
 
-    return _route_to_output(
-        state
-    )
+    return _route_to_output(state)
 
 
 def _route_after_context_retrieval(
-    state: ChessAnalysisState
-) -> Literal[
-    "retrieve_videos",
-    "generate_response",
-    "save_analysis",
-    "end"
-]:
+    state: ChessAnalysisState,
+) -> Literal["retrieve_videos", "generate_response", "save_analysis", "end"]:
     """Choisit la suite après la recherche documentaire."""
 
     if state.options.include_videos:
         return "retrieve_videos"
 
-    return _route_to_output(
-        state
-    )
+    return _route_to_output(state)
 
 
 # Validation
 
-def route_after_validation(
-    state: ChessAnalysisState
-) -> ValidationRoute:
+
+def route_after_validation(state: ChessAnalysisState) -> ValidationRoute:
     """Choisit l'étape suivant la validation."""
 
-    if _workflow_has_failed(
-        state
-    ):
+    if _workflow_has_failed(state):
         return "end"
 
     options = state.options
@@ -176,124 +141,92 @@ def route_after_validation(
     if options.include_stockfish:
         return "engine_analysis"
 
-    return _route_to_output(
-        state
-    )
+    return _route_to_output(state)
 
 
 # Détection
 
-def route_after_theory_detection(
-    state: ChessAnalysisState
-) -> TheoryDetectionRoute:
+
+def route_after_theory_detection(state: ChessAnalysisState) -> TheoryDetectionRoute:
     """Choisit l'étape suivant la détection d'ouverture."""
 
-    if _workflow_has_failed(
-        state
-    ):
+    if _workflow_has_failed(state):
         return "end"
 
     if state.options.include_stockfish:
         return "engine_analysis"
 
     if state.opening is not None:
-        return _route_known_opening(
-            state
-        )
+        return _route_known_opening(state)
 
-    return _route_to_output(
-        state
-    )
+    return _route_to_output(state)
 
 
 # Analyse moteur
 
-def route_after_engine_analysis(
-    state: ChessAnalysisState
-) -> EngineRoute:
+
+def route_after_engine_analysis(state: ChessAnalysisState) -> EngineRoute:
     """Choisit la branche suivant l'analyse moteur."""
 
-    if _workflow_has_failed(
-        state
-    ):
+    if _workflow_has_failed(state):
         return "end"
 
     options = state.options
 
     if not options.include_opening:
-        return _route_to_output(
-            state
-        )
+        return _route_to_output(state)
 
     if state.opening is None:
         return "unknown_position_analysis"
 
-    return _route_known_opening(
-        state
-    )
+    return _route_known_opening(state)
 
 
 # Position inconnue
 
+
 def route_after_unknown_position_analysis(
-    state: ChessAnalysisState
+    state: ChessAnalysisState,
 ) -> UnknownPositionRoute:
     """Choisit l'étape suivant l'analyse d'une position inconnue."""
 
-    if _workflow_has_failed(
-        state
-    ):
+    if _workflow_has_failed(state):
         return "end"
 
-    return _route_to_output(
-        state
-    )
+    return _route_to_output(state)
 
 
 # Contexte
 
-def route_after_context(
-    state: ChessAnalysisState
-) -> ContextRoute:
+
+def route_after_context(state: ChessAnalysisState) -> ContextRoute:
     """Choisit l'étape suivant la recherche documentaire."""
 
-    if _workflow_has_failed(
-        state
-    ):
+    if _workflow_has_failed(state):
         return "end"
 
-    return _route_after_context_retrieval(
-        state
-    )
+    return _route_after_context_retrieval(state)
 
 
 # Vidéos
 
-def route_after_videos(
-    state: ChessAnalysisState
-) -> VideosRoute:
+
+def route_after_videos(state: ChessAnalysisState) -> VideosRoute:
     """Choisit l'étape suivant la recherche de vidéos."""
 
-    if _workflow_has_failed(
-        state
-    ):
+    if _workflow_has_failed(state):
         return "end"
 
-    return _route_to_output(
-        state
-    )
+    return _route_to_output(state)
 
 
 # Réponse
 
-def route_after_response(
-    state: ChessAnalysisState
-) -> ResponseRoute:
+
+def route_after_response(state: ChessAnalysisState) -> ResponseRoute:
     """Choisit l'étape suivant la génération de la réponse."""
 
-    if _workflow_has_failed(
-        state
-    ):
+    if _workflow_has_failed(state):
         return "end"
 
     if state.options.save_analysis:

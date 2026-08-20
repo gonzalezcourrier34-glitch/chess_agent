@@ -50,6 +50,7 @@ VALID_CHAT_PAYLOAD: JsonObject = {
 
 # Exceptions de test
 
+
 def build_ollama_timeout_error() -> OllamaTimeoutError:
     """Construit une erreur de timeout valide."""
 
@@ -74,8 +75,7 @@ def build_ollama_connection_error() -> OllamaConnectionError:
     )
 
 
-def build_ollama_model_unavailable_error(
-) -> OllamaModelUnavailableError:
+def build_ollama_model_unavailable_error() -> OllamaModelUnavailableError:
     """Construit une erreur de modèle indisponible valide."""
 
     return OllamaModelUnavailableError(
@@ -88,6 +88,7 @@ def build_ollama_model_unavailable_error(
 
 
 # Fixtures
+
 
 @pytest.fixture
 def service() -> LLMService:
@@ -140,6 +141,7 @@ def mock_client() -> MagicMock:
 
 # État initial
 
+
 def test_service_is_not_ready_after_creation(
     service: LLMService,
 ) -> None:
@@ -152,6 +154,7 @@ def test_service_is_not_ready_after_creation(
 
 
 # Configuration
+
 
 def test_validate_provider_accepts_ollama(
     configured_service: LLMService,
@@ -271,6 +274,7 @@ def test_get_model_name_rejects_empty_value(
 
 # Normalisation
 
+
 def test_normalize_required_text_strips_spaces(
     service: LLMService,
 ) -> None:
@@ -313,6 +317,7 @@ def test_normalize_required_text_rejects_empty_string(
 
 # Nettoyage du raisonnement interne
 
+
 @pytest.mark.parametrize(
     ("raw", "expected"),
     [
@@ -345,12 +350,11 @@ def test_remove_thinking_blocks(
 ) -> None:
     """Vérifie le nettoyage des balises think."""
 
-    assert service._remove_thinking_blocks(
-        raw
-    ) == expected
+    assert service._remove_thinking_blocks(raw) == expected
 
 
 # Client
+
 
 def test_get_client_rejects_uninitialized_service(
     service: LLMService,
@@ -402,6 +406,7 @@ async def test_ensure_client_starts_service_if_needed(
 
 # Cycle de vie
 
+
 @pytest.mark.asyncio
 async def test_start_initializes_client(
     configured_service: LLMService,
@@ -433,13 +438,9 @@ async def test_start_initializes_client(
     assert configured_service.is_ready() is True
     assert configured_service._client is mock_client
 
-    create_client.assert_called_once_with(
-        BASE_URL
-    )
+    create_client.assert_called_once_with(BASE_URL)
 
-    ensure_model_available.assert_awaited_once_with(
-        mock_client
-    )
+    ensure_model_available.assert_awaited_once_with(mock_client)
 
 
 @pytest.mark.asyncio
@@ -500,9 +501,7 @@ async def test_start_closes_client_when_model_check_fails(
         close_client,
     )
 
-    with pytest.raises(
-        OllamaModelUnavailableError
-    ):
+    with pytest.raises(OllamaModelUnavailableError):
         await configured_service.start()
 
     close_client.assert_awaited_once()
@@ -536,9 +535,7 @@ async def test_close_releases_client(
 
     close_client.assert_awaited_once_with(
         mock_client,
-        error_message=(
-            "Erreur lors de la fermeture du client Ollama."
-        ),
+        error_message=("Erreur lors de la fermeture du client Ollama."),
     )
 
 
@@ -618,11 +615,7 @@ async def test_close_client_ignores_closing_error(
 ) -> None:
     """Vérifie qu'une erreur de fermeture n'est pas propagée."""
 
-    mock_client.aclose = AsyncMock(
-        side_effect=RuntimeError(
-            "close failure"
-        )
-    )
+    mock_client.aclose = AsyncMock(side_effect=RuntimeError("close failure"))
 
     await service._close_client(
         cast(
@@ -634,6 +627,7 @@ async def test_close_client_ignores_closing_error(
 
 
 # Catalogue Ollama
+
 
 def test_extract_model_names_returns_expected_models(
     service: LLMService,
@@ -655,9 +649,7 @@ def test_extract_model_names_returns_expected_models(
         ],
     }
 
-    result = service._extract_model_names(
-        payload
-    )
+    result = service._extract_model_names(payload)
 
     assert result == {
         "model-a",
@@ -675,9 +667,7 @@ def test_extract_model_names_rejects_invalid_models_field(
     }
 
     with pytest.raises(OllamaResponseError):
-        service._extract_model_names(
-            payload
-        )
+        service._extract_model_names(payload)
 
 
 @pytest.mark.asyncio
@@ -761,9 +751,7 @@ async def test_ensure_model_available_rejects_missing_model(
         ),
     )
 
-    with pytest.raises(
-        OllamaModelUnavailableError
-    ):
+    with pytest.raises(OllamaModelUnavailableError):
         await configured_service._ensure_model_available(
             cast(
                 httpx.AsyncClient,
@@ -773,6 +761,7 @@ async def test_ensure_model_available_rejects_missing_model(
 
 
 # Requête catalogue
+
 
 @pytest.mark.asyncio
 async def test_request_available_models_returns_response(
@@ -881,9 +870,7 @@ async def test_request_available_models_translates_network_error(
         )
     )
 
-    with pytest.raises(
-        OllamaConnectionError
-    ):
+    with pytest.raises(OllamaConnectionError):
         await service._request_available_models(
             cast(
                 httpx.AsyncClient,
@@ -894,14 +881,13 @@ async def test_request_available_models_translates_network_error(
 
 # Payload de génération
 
+
 def test_build_chat_payload_returns_expected_structure(
     configured_service: LLMService,
 ) -> None:
     """Vérifie le payload transmis à Ollama."""
 
-    payload = configured_service._build_chat_payload(
-        prompt="Analyse la position."
-    )
+    payload = configured_service._build_chat_payload(prompt="Analyse la position.")
 
     assert payload["model"] == MODEL_NAME
 
@@ -914,18 +900,13 @@ def test_build_chat_payload_returns_expected_structure(
 
     assert payload["stream"] is False
 
-    assert (
-        payload["options"]["temperature"]
-        == 0.2
-    )
+    assert payload["options"]["temperature"] == 0.2
 
-    assert (
-        payload["options"]["num_predict"]
-        == 512
-    )
+    assert payload["options"]["num_predict"] == 512
 
 
 # Requête de génération
+
 
 @pytest.mark.asyncio
 async def test_send_chat_request_returns_response(
@@ -947,21 +928,17 @@ async def test_send_chat_request_returns_response(
         return_value=response,
     )
 
-    payload: OllamaChatPayload = (
-        configured_service._build_chat_payload(
-            prompt="Analyse."
-        )
+    payload: OllamaChatPayload = configured_service._build_chat_payload(
+        prompt="Analyse."
     )
 
-    result = (
-        await configured_service._send_chat_request(
-            client=cast(
-                httpx.AsyncClient,
-                mock_client,
-            ),
-            payload=payload,
-            model_name=MODEL_NAME,
-        )
+    result = await configured_service._send_chat_request(
+        client=cast(
+            httpx.AsyncClient,
+            mock_client,
+        ),
+        payload=payload,
+        model_name=MODEL_NAME,
     )
 
     assert result is response
@@ -986,11 +963,7 @@ async def test_send_chat_request_translates_timeout(
         )
     )
 
-    payload = (
-        configured_service._build_chat_payload(
-            prompt="Analyse."
-        )
-    )
+    payload = configured_service._build_chat_payload(prompt="Analyse.")
 
     with pytest.raises(OllamaTimeoutError):
         await configured_service._send_chat_request(
@@ -1022,15 +995,9 @@ async def test_send_chat_request_translates_connect_error(
         )
     )
 
-    payload = (
-        configured_service._build_chat_payload(
-            prompt="Analyse."
-        )
-    )
+    payload = configured_service._build_chat_payload(prompt="Analyse.")
 
-    with pytest.raises(
-        OllamaConnectionError
-    ):
+    with pytest.raises(OllamaConnectionError):
         await configured_service._send_chat_request(
             client=cast(
                 httpx.AsyncClient,
@@ -1062,11 +1029,7 @@ async def test_send_chat_request_translates_http_status_error(
         return_value=response,
     )
 
-    payload = (
-        configured_service._build_chat_payload(
-            prompt="Analyse."
-        )
-    )
+    payload = configured_service._build_chat_payload(prompt="Analyse.")
 
     with pytest.raises(OllamaResponseError):
         await configured_service._send_chat_request(
@@ -1098,15 +1061,9 @@ async def test_send_chat_request_translates_generic_http_error(
         )
     )
 
-    payload = (
-        configured_service._build_chat_payload(
-            prompt="Analyse."
-        )
-    )
+    payload = configured_service._build_chat_payload(prompt="Analyse.")
 
-    with pytest.raises(
-        OllamaConnectionError
-    ):
+    with pytest.raises(OllamaConnectionError):
         await configured_service._send_chat_request(
             client=cast(
                 httpx.AsyncClient,
@@ -1124,17 +1081,9 @@ async def test_send_chat_request_translates_unexpected_error(
 ) -> None:
     """Vérifie une erreur inattendue."""
 
-    mock_client.post = AsyncMock(
-        side_effect=RuntimeError(
-            "unexpected"
-        )
-    )
+    mock_client.post = AsyncMock(side_effect=RuntimeError("unexpected"))
 
-    payload = (
-        configured_service._build_chat_payload(
-            prompt="Analyse."
-        )
-    )
+    payload = configured_service._build_chat_payload(prompt="Analyse.")
 
     with pytest.raises(LLMGenerationError):
         await configured_service._send_chat_request(
@@ -1148,6 +1097,7 @@ async def test_send_chat_request_translates_unexpected_error(
 
 
 # Validation JSON
+
 
 def test_extract_json_mapping_returns_valid_mapping(
     service: LLMService,
@@ -1165,9 +1115,7 @@ def test_extract_json_mapping_returns_valid_mapping(
         },
     )
 
-    result = service._extract_json_mapping(
-        response
-    )
+    result = service._extract_json_mapping(response)
 
     assert result == {
         "models": [],
@@ -1189,9 +1137,7 @@ def test_extract_json_mapping_rejects_empty_response(
     )
 
     with pytest.raises(OllamaResponseError):
-        service._extract_json_mapping(
-            response
-        )
+        service._extract_json_mapping(response)
 
 
 def test_extract_json_mapping_rejects_invalid_json(
@@ -1209,25 +1155,20 @@ def test_extract_json_mapping_rejects_invalid_json(
     )
 
     with pytest.raises(OllamaResponseError):
-        service._extract_json_mapping(
-            response
-        )
+        service._extract_json_mapping(response)
 
 
 # Extraction du texte
+
 
 def test_extract_response_text_returns_clean_text(
     service: LLMService,
 ) -> None:
     """Vérifie l'extraction du texte généré."""
 
-    result = service._extract_response_text(
-        VALID_CHAT_PAYLOAD
-    )
+    result = service._extract_response_text(VALID_CHAT_PAYLOAD)
 
-    assert result == (
-        "La position est équilibrée."
-    )
+    assert result == ("La position est équilibrée.")
 
 
 def test_extract_response_text_removes_thinking_block(
@@ -1237,16 +1178,11 @@ def test_extract_response_text_removes_thinking_block(
 
     payload: JsonObject = {
         "message": {
-            "content": (
-                "<think>raisonnement interne</think>"
-                "Réponse finale"
-            ),
+            "content": ("<think>raisonnement interne</think>Réponse finale"),
         },
     }
 
-    result = service._extract_response_text(
-        payload
-    )
+    result = service._extract_response_text(payload)
 
     assert result == "Réponse finale"
 
@@ -1258,12 +1194,8 @@ def test_extract_response_text_rejects_missing_message(
 
     payload: JsonObject = {}
 
-    with pytest.raises(
-        InvalidLLMResponseError
-    ):
-        service._extract_response_text(
-            payload
-        )
+    with pytest.raises(InvalidLLMResponseError):
+        service._extract_response_text(payload)
 
 
 def test_extract_response_text_rejects_non_string_content(
@@ -1277,12 +1209,8 @@ def test_extract_response_text_rejects_non_string_content(
         },
     }
 
-    with pytest.raises(
-        InvalidLLMResponseError
-    ):
-        service._extract_response_text(
-            payload
-        )
+    with pytest.raises(InvalidLLMResponseError):
+        service._extract_response_text(payload)
 
 
 def test_extract_response_text_rejects_empty_content(
@@ -1292,21 +1220,16 @@ def test_extract_response_text_rejects_empty_content(
 
     payload: JsonObject = {
         "message": {
-            "content": (
-                "<think>interne</think>"
-            ),
+            "content": ("<think>interne</think>"),
         },
     }
 
-    with pytest.raises(
-        InvalidLLMResponseError
-    ):
-        service._extract_response_text(
-            payload
-        )
+    with pytest.raises(InvalidLLMResponseError):
+        service._extract_response_text(payload)
 
 
 # Génération
+
 
 @pytest.mark.asyncio
 async def test_generate_returns_generated_text(
@@ -1338,28 +1261,15 @@ async def test_generate_returns_generated_text(
         ),
     )
 
-    result = await configured_service.generate(
-        prompt="Analyse cette position."
-    )
+    result = await configured_service.generate(prompt="Analyse cette position.")
 
-    assert result == (
-        "La position est équilibrée."
-    )
+    assert result == ("La position est équilibrée.")
 
-    assert (
-        configured_service.get_generated_count()
-        == 1
-    )
+    assert configured_service.get_generated_count() == 1
 
-    assert (
-        configured_service.get_failed_count()
-        == 0
-    )
+    assert configured_service.get_failed_count() == 0
 
-    assert (
-        configured_service.get_average_duration_ms()
-        >= 0.0
-    )
+    assert configured_service.get_average_duration_ms() >= 0.0
 
 
 @pytest.mark.asyncio
@@ -1379,26 +1289,16 @@ async def test_generate_increments_failed_counter(
         configured_service,
         "_send_chat_request",
         AsyncMock(
-            side_effect=(
-                build_ollama_timeout_error()
-            ),
+            side_effect=(build_ollama_timeout_error()),
         ),
     )
 
     with pytest.raises(OllamaTimeoutError):
-        await configured_service.generate(
-            prompt="Analyse cette position."
-        )
+        await configured_service.generate(prompt="Analyse cette position.")
 
-    assert (
-        configured_service.get_generated_count()
-        == 0
-    )
+    assert configured_service.get_generated_count() == 0
 
-    assert (
-        configured_service.get_failed_count()
-        == 1
-    )
+    assert configured_service.get_failed_count() == 1
 
 
 @pytest.mark.asyncio
@@ -1407,25 +1307,19 @@ async def test_generate_rejects_empty_prompt(
 ) -> None:
     """Vérifie le rejet d'un prompt vide."""
 
-    with pytest.raises(
-        LLMGenerationError
-    ):
-        await configured_service.generate(
-            prompt="   "
-        )
+    with pytest.raises(LLMGenerationError):
+        await configured_service.generate(prompt="   ")
 
 
 # Métriques
+
 
 def test_get_average_duration_returns_zero_without_generation(
     service: LLMService,
 ) -> None:
     """Vérifie la moyenne avant génération."""
 
-    assert (
-        service.get_average_duration_ms()
-        == 0.0
-    )
+    assert service.get_average_duration_ms() == 0.0
 
 
 def test_get_average_duration_returns_average(
@@ -1436,13 +1330,11 @@ def test_get_average_duration_returns_average(
     service._generated_responses = 2
     service._total_generation_duration_ms = 30.0
 
-    assert (
-        service.get_average_duration_ms()
-        == 15.0
-    )
+    assert service.get_average_duration_ms() == 15.0
 
 
 # Santé
+
 
 @pytest.mark.asyncio
 async def test_ping_returns_true_when_model_is_available(
@@ -1467,10 +1359,7 @@ async def test_ping_returns_true_when_model_is_available(
         ),
     )
 
-    assert (
-        await configured_service.ping()
-        is True
-    )
+    assert await configured_service.ping() is True
 
 
 @pytest.mark.asyncio
@@ -1496,10 +1385,7 @@ async def test_ping_returns_false_when_model_is_missing(
         ),
     )
 
-    assert (
-        await configured_service.ping()
-        is False
-    )
+    assert await configured_service.ping() is False
 
 
 @pytest.mark.asyncio
@@ -1519,16 +1405,11 @@ async def test_ping_returns_false_on_ollama_error(
         configured_service,
         "_get_available_models",
         AsyncMock(
-            side_effect=(
-                build_ollama_connection_error()
-            ),
+            side_effect=(build_ollama_connection_error()),
         ),
     )
 
-    assert (
-        await configured_service.ping()
-        is False
-    )
+    assert await configured_service.ping() is False
 
 
 @pytest.mark.asyncio
@@ -1548,16 +1429,11 @@ async def test_ping_returns_false_on_unexpected_error(
         configured_service,
         "_get_available_models",
         AsyncMock(
-            side_effect=RuntimeError(
-                "unexpected"
-            ),
+            side_effect=RuntimeError("unexpected"),
         ),
     )
 
-    assert (
-        await configured_service.ping()
-        is False
-    )
+    assert await configured_service.ping() is False
 
 
 @pytest.mark.asyncio
@@ -1598,7 +1474,4 @@ async def test_health_returns_service_status(
     assert status["generated_responses"] == 4
     assert status["failed_generations"] == 2
 
-    assert (
-        status["average_generation_duration_ms"]
-        == 10.0
-    )
+    assert status["average_generation_duration_ms"] == 10.0
