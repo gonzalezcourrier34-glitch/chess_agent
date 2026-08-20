@@ -1,0 +1,134 @@
+# =============================================================================
+# Documentation - GitHub Pages
+# =============================================================================
+#
+# Ce workflow construit la documentation MkDocs puis la publie
+# automatiquement sur GitHub Pages.
+#
+# Le fichier mkdocs.yml reste la configuration centrale de la documentation.
+# Ce workflow s'occupe uniquement de construire et publier le site.
+# =============================================================================
+
+name: Documentation
+
+
+# =============================================================================
+# Déclenchement
+# =============================================================================
+
+on:
+
+  # La documentation est reconstruite lorsqu'une modification
+  # est poussée sur main et concerne :
+  # - le dossier docs ;
+  # - la configuration MkDocs ;
+  # - ce workflow.
+  push:
+    branches:
+      - main
+
+    paths:
+      - "docs/**"
+      - "mkdocs.yml"
+      - ".github/workflows/docs.yml"
+
+  # Permet également un lancement manuel depuis GitHub Actions.
+  workflow_dispatch:
+
+
+# =============================================================================
+# Permissions nécessaires à GitHub Pages
+# =============================================================================
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+
+# =============================================================================
+# Gestion des déploiements simultanés
+# =============================================================================
+#
+# Si plusieurs mises à jour de documentation sont envoyées rapidement,
+# seul le déploiement le plus récent est conservé.
+
+concurrency:
+  group: github-pages
+  cancel-in-progress: true
+
+
+jobs:
+
+  # ===========================================================================
+  # Construction de la documentation
+  # ===========================================================================
+
+  build:
+    name: Build documentation
+    runs-on: ubuntu-latest
+
+    steps:
+
+      # Récupère le dépôt.
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      # Installe uv, utilisé par le projet pour gérer Python
+      # et les dépendances.
+      - name: Install uv
+        uses: astral-sh/setup-uv@v7
+        with:
+          enable-cache: true
+
+      # Installe Python 3.12.
+      - name: Install Python
+        run: uv python install 3.12
+
+      # Installe les dépendances définies dans uv.lock.
+      #
+      # MkDocs, Material et pymdown-extensions doivent donc
+      # être présents dans les dépendances du projet.
+      - name: Install dependencies
+        run: uv sync --frozen
+
+      # Construit le site statique dans le dossier "site".
+      #
+      # --strict fait échouer le workflow si MkDocs détecte
+      # certaines incohérences dans la documentation.
+      - name: Build MkDocs site
+        run: uv run mkdocs build --strict
+
+      # Configure l'environnement GitHub Pages.
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+
+      # Envoie le site généré comme artifact GitHub Pages.
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v4
+        with:
+          path: site
+
+
+  # ===========================================================================
+  # Publication sur GitHub Pages
+  # ===========================================================================
+
+  deploy:
+    name: Deploy documentation
+    runs-on: ubuntu-latest
+
+    needs:
+      - build
+
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    steps:
+
+      # Publie l'artifact généré par le job précédent
+      # sur GitHub Pages.
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
