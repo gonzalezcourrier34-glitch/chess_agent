@@ -6,8 +6,6 @@ from unittest.mock import AsyncMock, MagicMock
 
 import httpx
 import pytest
-from pydantic import SecretStr
-
 from app.adapters.youtube_service import (
     MAX_SEARCH_RESULTS,
     MIN_SEARCH_RESULTS,
@@ -30,7 +28,7 @@ from app.core.exceptions import (
     YoutubeUnavailableError,
 )
 from app.schemas.media.video import VideoSearchRequest
-
+from pydantic import SecretStr
 
 # Configuration
 
