@@ -42,8 +42,11 @@ jobs:
       - name: Install dependencies
         run: uv sync --frozen
 
-      - name: Ruff
+      - name: Ruff check
         run: uv run ruff check backend tests
+
+      - name: Ruff format
+        run: uv run ruff format --check backend tests
 
       - name: Pyright
         run: uv run pyright
