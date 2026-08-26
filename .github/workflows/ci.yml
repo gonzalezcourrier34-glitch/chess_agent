@@ -1,66 +1,188 @@
+# =============================================================================
+# CI - Continuous Integration
+# =============================================================================
+#
+# Ce workflow vérifie automatiquement que Chess Agent reste fonctionnel
+# après une modification du code.
+#
+# Il réalise quatre grandes étapes :
+#
+#   1. Vérification de la qualité du code Python
+#      - Ruff
+#      - Ruff Format
+#      - Pyright
+#
+#   2. Exécution des tests unitaires
+#      - Pytest
+#      - mesure de couverture
+#
+#   3. Construction des images Docker
+#
+#   4. Test du déploiement complet
+#      - MongoDB
+#      - etcd
+#      - MinIO
+#      - Milvus
+#      - Ollama
+#      - Backend FastAPI
+#      - Frontend Angular
+#
+# Si une de ces étapes échoue, la CI est considérée comme échouée.
+#
+# La CI ne publie PAS les images Docker.
+# Cette responsabilité appartient au workflow CD.
+# =============================================================================
+
 name: CI
 
+
+# =============================================================================
+# Déclenchement du workflow
+# =============================================================================
+
 on:
+
+  # La CI est exécutée lorsqu'un commit est envoyé directement
+  # sur main ou develop.
   push:
     branches:
       - main
       - develop
 
+  # La CI est également exécutée lors d'une Pull Request vers
+  # main ou develop.
+  #
+  # Cela permet de vérifier le code AVANT son intégration.
   pull_request:
     branches:
       - main
       - develop
 
+  # Permet également de lancer manuellement la CI depuis
+  # l'interface GitHub Actions.
   workflow_dispatch:
+
+
+# =============================================================================
+# Permissions GitHub
+# =============================================================================
+#
+# La CI doit uniquement lire le dépôt.
+#
+# Elle n'a pas besoin de publier de package ou de modifier le dépôt.
+# Les permissions restent donc volontairement minimales.
 
 permissions:
   contents: read
 
 
+# =============================================================================
+# Jobs
+# =============================================================================
+
 jobs:
 
-  # ---------------------------------------------------------------------------
-  # Qualité backend
-  # ---------------------------------------------------------------------------
+  # ===========================================================================
+  # 1. Qualité du backend
+  # ===========================================================================
+  #
+  # Ce job vérifie la qualité statique du code.
+  #
+  # Il ne lance pas l'application.
+  #
+  # Trois outils sont utilisés :
+  #
+  # Ruff :
+  #   vérifie les règles de qualité Python.
+  #
+  # Ruff Format :
+  #   vérifie que le formatage du code respecte le format attendu.
+  #
+  # Pyright :
+  #   vérifie la cohérence des types Python.
 
   backend-quality:
     name: Backend quality
     runs-on: ubuntu-latest
 
     steps:
+
+      # Récupère le contenu du dépôt GitHub dans le runner.
+      #
+      # Chaque job GitHub Actions démarre dans un environnement neuf.
+      # Il faut donc refaire le checkout dans chaque job.
       - name: Checkout repository
         uses: actions/checkout@v5
 
+      # Installe uv.
+      #
+      # uv est utilisé dans le projet pour gérer Python,
+      # l'environnement virtuel et les dépendances.
+      #
+      # Le cache accélère les exécutions suivantes.
       - name: Install uv
         uses: astral-sh/setup-uv@v7
         with:
           enable-cache: true
 
+      # Installe Python 3.12.
+      #
+      # La CI utilise explicitement une version connue de Python
+      # afin d'obtenir un environnement reproductible.
       - name: Install Python
         run: uv python install 3.12
 
+      # Installe exactement les dépendances définies dans uv.lock.
+      #
+      # --frozen empêche uv de modifier le fichier de verrouillage.
+      # Une différence entre pyproject.toml et uv.lock provoquera donc
+      # volontairement un échec.
       - name: Install dependencies
         run: uv sync --frozen
 
+      # Analyse statique du code avec Ruff.
+      #
+      # Ruff détecte notamment :
+      # - imports incorrects ;
+      # - code inutilisé ;
+      # - certaines mauvaises pratiques ;
+      # - violations des règles configurées dans pyproject.toml.
       - name: Ruff check
         run: uv run ruff check backend tests
 
+      # Vérifie le formatage.
+      #
+      # --check signifie que Ruff ne modifie rien.
+      # La CI vérifie seulement que le développeur a correctement
+      # formaté son code avant le commit.
       - name: Ruff format
         run: uv run ruff format --check backend tests
 
+      # Vérifie les annotations et la cohérence des types.
+      #
+      # Pyright peut par exemple détecter :
+      # - un mauvais type passé à une fonction ;
+      # - un attribut inexistant ;
+      # - une valeur de retour incompatible.
       - name: Pyright
         run: uv run pyright
 
 
-  # ---------------------------------------------------------------------------
-  # Tests unitaires + couverture
-  # ---------------------------------------------------------------------------
+  # ===========================================================================
+  # 2. Tests unitaires et couverture
+  # ===========================================================================
+  #
+  # Ce job vérifie le comportement du code Python indépendamment
+  # du déploiement Docker complet.
+  #
+  # Il s'exécute en parallèle de backend-quality.
 
   backend-tests:
     name: Backend tests
     runs-on: ubuntu-latest
 
     steps:
+
       - name: Checkout repository
         uses: actions/checkout@v5
 
@@ -75,6 +197,20 @@ jobs:
       - name: Install dependencies
         run: uv sync --frozen
 
+      # Lance uniquement les tests unitaires.
+      #
+      # --cov=app
+      #   mesure la couverture du package app.
+      #
+      # --cov-report=term-missing
+      #   affiche dans les logs les lignes non couvertes.
+      #
+      # --cov-report=xml
+      #   produit coverage.xml.
+      #
+      # --cov-fail-under=86
+      #   fait échouer la CI si la couverture totale descend
+      #   sous 86 %.
       - name: Run unit tests with coverage
         run: >
           uv run pytest
@@ -84,16 +220,27 @@ jobs:
           --cov-report=xml
           --cov-fail-under=86
 
+      # Conserve coverage.xml comme artifact GitHub Actions.
+      #
+      # L'artifact peut ensuite être téléchargé depuis le run
+      # pour consulter ou exploiter le rapport de couverture.
       - name: Upload coverage report
-        uses: actions/upload-artifact@v5
+        uses: actions/upload-artifact@v6
         with:
           name: backend-coverage
           path: coverage.xml
 
 
-  # ---------------------------------------------------------------------------
-  # Build Docker
-  # ---------------------------------------------------------------------------
+  # ===========================================================================
+  # 3. Construction Docker
+  # ===========================================================================
+  #
+  # Ce job vérifie que les images Docker du projet peuvent être construites.
+  #
+  # Il ne démarre pas encore l'application.
+  #
+  # "needs" impose que les contrôles de qualité et les tests unitaires
+  # soient réussis avant de construire les images.
 
   docker-build:
     name: Docker build
@@ -104,22 +251,58 @@ jobs:
       - backend-tests
 
     steps:
+
       - name: Checkout repository
         uses: actions/checkout@v5
+
+      # -----------------------------------------------------------------------
+      # Création du .env temporaire
+      # -----------------------------------------------------------------------
+      #
+      # Le véritable fichier .env n'est PAS stocké dans Git.
+      #
+      # On part de .env.example pour fabriquer un environnement spécifique
+      # au runner GitHub Actions.
+      #
+      # Ce fichier disparaîtra avec le runner à la fin du job.
 
       - name: Create CI environment file
         shell: bash
         run: |
           cp .env.example .env
 
+          # L'application sait ainsi qu'elle fonctionne dans un
+          # environnement de test.
           sed -i 's/^APP_ENV=.*/APP_ENV=test/' .env
+
+          # Le debug est désactivé dans l'environnement automatisé.
           sed -i 's/^APP_DEBUG=.*/APP_DEBUG=false/' .env
+
+          # GitHub Actions ne dispose pas du GPU utilisé éventuellement
+          # sur la machine locale.
+          #
+          # Les embeddings sont donc explicitement exécutés sur CPU.
           sed -i 's/^EMBEDDING_DEVICE=.*/EMBEDDING_DEVICE=cpu/' .env
 
+          # La clé YouTube n'est ajoutée que si le secret existe
+          # dans les paramètres GitHub du dépôt.
+          #
+          # Le secret n'est donc jamais écrit dans le dépôt Git.
           if [ -n "${{ secrets.YOUTUBE_API_KEY }}" ]; then
             sed -i "s|^YOUTUBE_API_KEY=.*|YOUTUBE_API_KEY=${{ secrets.YOUTUBE_API_KEY }}|" .env
           fi
 
+      # Construit les services en combinant :
+      #
+      # docker-compose.yml
+      #   configuration normale du projet.
+      #
+      # docker-compose.ci.yml
+      #   surcharge spécifique à GitHub Actions, notamment pour
+      #   supprimer les besoins GPU.
+      #
+      # L'ordre des fichiers est important :
+      # docker-compose.ci.yml surcharge docker-compose.yml.
       - name: Build Docker Compose services
         run: >
           docker compose
@@ -128,9 +311,17 @@ jobs:
           build
 
 
-  # ---------------------------------------------------------------------------
-  # Tests de déploiement
-  # ---------------------------------------------------------------------------
+  # ===========================================================================
+  # 4. Tests de déploiement
+  # ===========================================================================
+  #
+  # Ici, contrairement aux tests unitaires, on démarre réellement
+  # l'architecture Docker de Chess Agent.
+  #
+  # L'objectif est de vérifier que les différents composants peuvent
+  # fonctionner ensemble.
+  #
+  # Ce job ne démarre que si docker-build a réussi.
 
   deployment-tests:
     name: Deployment tests
@@ -140,9 +331,13 @@ jobs:
       - docker-build
 
     steps:
+
       - name: Checkout repository
         uses: actions/checkout@v5
 
+      # Les tests de déploiement sont lancés depuis le runner.
+      # Python et les dépendances de test doivent donc également
+      # être installés dans ce job.
       - name: Install uv
         uses: astral-sh/setup-uv@v7
         with:
@@ -154,6 +349,11 @@ jobs:
       - name: Install dependencies
         run: uv sync --frozen
 
+
+      # -----------------------------------------------------------------------
+      # Environnement CI
+      # -----------------------------------------------------------------------
+
       - name: Create CI environment file
         shell: bash
         run: |
@@ -167,9 +367,29 @@ jobs:
             sed -i "s|^YOUTUBE_API_KEY=.*|YOUTUBE_API_KEY=${{ secrets.YOUTUBE_API_KEY }}|" .env
           fi
 
+
       # -----------------------------------------------------------------------
       # Infrastructure
       # -----------------------------------------------------------------------
+      #
+      # On ne démarre volontairement PAS encore le backend.
+      #
+      # Le backend dépend notamment de :
+      #
+      # MongoDB
+      #   persistance de l'historique.
+      #
+      # etcd + MinIO
+      #   dépendances nécessaires au fonctionnement de Milvus.
+      #
+      # Milvus
+      #   base vectorielle utilisée par le RAG.
+      #
+      # Ollama
+      #   serveur hébergeant le modèle de langage.
+      #
+      # Ollama doit être préparé avant le backend car le backend
+      # vérifie au démarrage que son modèle est réellement installé.
 
       - name: Start infrastructure
         run: >
@@ -183,6 +403,10 @@ jobs:
           milvus
           ollama
 
+      # Affiche l'état des conteneurs.
+      #
+      # Cette étape est particulièrement utile pour comprendre
+      # rapidement quelle dépendance n'a pas démarré correctement.
       - name: Show infrastructure status
         run: >
           docker compose
@@ -190,10 +414,17 @@ jobs:
           -f docker-compose.ci.yml
           ps
 
+
       # -----------------------------------------------------------------------
       # Ollama
       # -----------------------------------------------------------------------
 
+      # Le fait que le conteneur Ollama soit démarré ne signifie pas
+      # nécessairement que son API est déjà prête.
+      #
+      # On interroge donc "ollama list" jusqu'à ce qu'Ollama réponde.
+      #
+      # 30 tentatives x 2 secondes donnent environ 60 secondes maximum.
       - name: Wait for Ollama
         shell: bash
         run: |
@@ -222,6 +453,15 @@ jobs:
 
           exit 1
 
+      # Un runner GitHub Actions est éphémère.
+      #
+      # Le volume Ollama démarre donc vide lors d'un nouveau run.
+      #
+      # L'image Docker "ollama/ollama" fournit le serveur Ollama,
+      # mais elle ne contient pas automatiquement
+      # qwen2.5:7b-instruct.
+      #
+      # Le modèle doit donc être téléchargé AVANT le backend.
       - name: Pull Ollama model
         run: >
           docker compose
@@ -230,6 +470,9 @@ jobs:
           exec -T ollama
           ollama pull qwen2.5:7b-instruct
 
+      # Vérification pédagogique et diagnostic :
+      # cette commande permet de voir explicitement dans les logs
+      # GitHub Actions que le modèle est installé.
       - name: Show Ollama models
         run: >
           docker compose
@@ -238,9 +481,20 @@ jobs:
           exec -T ollama
           ollama list
 
+
       # -----------------------------------------------------------------------
-      # Backend
+      # Backend FastAPI
       # -----------------------------------------------------------------------
+      #
+      # À ce stade :
+      #
+      # MongoDB        -> démarré
+      # Milvus        -> démarré
+      # Ollama        -> démarré
+      # modèle LLM    -> installé
+      #
+      # Le backend peut maintenant effectuer correctement
+      # son processus d'initialisation.
 
       - name: Start backend
         run: >
@@ -250,6 +504,20 @@ jobs:
           up -d
           backend
 
+      # Le démarrage d'un conteneur ne signifie pas que FastAPI
+      # est immédiatement disponible.
+      #
+      # Le backend doit notamment initialiser plusieurs services.
+      #
+      # On interroge donc l'endpoint léger de liveness :
+      #
+      # /api/v1/health/live
+      #
+      # Important :
+      # on n'utilise volontairement pas /healthcheck ici afin de ne
+      # pas solliciter inutilement les services externes.
+      #
+      # 60 tentatives x 5 secondes = 5 minutes maximum.
       - name: Wait for backend
         shell: bash
         run: |
@@ -292,9 +560,15 @@ jobs:
 
           exit 1
 
+
       # -----------------------------------------------------------------------
-      # Frontend
+      # Frontend Angular
       # -----------------------------------------------------------------------
+      #
+      # Le frontend est démarré après le backend.
+      #
+      # Cela respecte la dépendance définie dans Docker Compose :
+      # le frontend dépend du backend opérationnel.
 
       - name: Start frontend
         run: >
@@ -304,6 +578,11 @@ jobs:
           up -d
           frontend
 
+      # Même principe que pour FastAPI :
+      # un conteneur "started" n'est pas nécessairement immédiatement
+      # accessible.
+      #
+      # On attend donc que le serveur frontend réponde réellement.
       - name: Wait for frontend
         shell: bash
         run: |
@@ -339,9 +618,16 @@ jobs:
 
           exit 1
 
+
       # -----------------------------------------------------------------------
       # Tests de déploiement
       # -----------------------------------------------------------------------
+      #
+      # À ce stade, toute l'application est censée fonctionner.
+      #
+      # Les tests de déploiement vérifient donc l'application
+      # dans des conditions beaucoup plus proches d'un vrai déploiement
+      # que les tests unitaires.
 
       - name: Run deployment tests
         run: >
@@ -349,10 +635,18 @@ jobs:
           tests/deployment
           -v
 
-      # -----------------------------------------------------------------------
-      # Diagnostic en cas d'échec
-      # -----------------------------------------------------------------------
 
+      # -----------------------------------------------------------------------
+      # Diagnostic automatique en cas d'échec
+      # -----------------------------------------------------------------------
+      #
+      # Les étapes suivantes ne sont exécutées que si une étape
+      # précédente a échoué.
+      #
+      # Elles évitent d'avoir à reproduire immédiatement le problème
+      # en local pour comprendre quel service a échoué.
+
+      # État général des conteneurs.
       - name: Show Docker status on failure
         if: failure()
         run: >
@@ -361,6 +655,7 @@ jobs:
           -f docker-compose.ci.yml
           ps
 
+      # Logs FastAPI.
       - name: Show backend logs on failure
         if: failure()
         run: >
@@ -369,6 +664,7 @@ jobs:
           -f docker-compose.ci.yml
           logs --no-color backend
 
+      # Logs du serveur LLM.
       - name: Show Ollama logs on failure
         if: failure()
         run: >
@@ -377,6 +673,7 @@ jobs:
           -f docker-compose.ci.yml
           logs --no-color ollama
 
+      # Logs Angular.
       - name: Show frontend logs on failure
         if: failure()
         run: >
@@ -385,6 +682,10 @@ jobs:
           -f docker-compose.ci.yml
           logs --no-color frontend
 
+      # Enfin, affiche tous les logs.
+      #
+      # C'est plus verbeux mais utile pour diagnostiquer les interactions
+      # entre MongoDB, Milvus, Ollama, le backend et le frontend.
       - name: Show all Docker logs on failure
         if: failure()
         run: >
@@ -393,9 +694,20 @@ jobs:
           -f docker-compose.ci.yml
           logs --no-color
 
+
       # -----------------------------------------------------------------------
       # Nettoyage
       # -----------------------------------------------------------------------
+      #
+      # always() est important :
+      #
+      # cette étape doit être exécutée que les tests aient réussi
+      # ou échoué.
+      #
+      # - down arrête et supprime les conteneurs ;
+      # - -v supprime également les volumes créés pendant le test.
+      #
+      # Le runner CI revient donc dans un état propre.
 
       - name: Stop application
         if: always()

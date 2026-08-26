@@ -108,6 +108,8 @@ docker-data/
 *.dockerignore.tmp
 docker-compose.override.yml
 
+# MkDocs build
+site/
 
 # IDE
 
