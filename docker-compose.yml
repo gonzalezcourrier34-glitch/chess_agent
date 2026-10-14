@@ -224,7 +224,13 @@ services:
   # ============================================================
 
   minio:
-    image: minio/minio
+    # L'image officielle minio/minio a été retirée de Docker Hub en
+    # septembre 2026 (MinIO ne distribue plus que le code source), et
+    # quay.io/minio/minio n'est plus accessible non plus.
+    # pgsty/minio est un fork communautaire construit à l'identique
+    # (même binaire minio, même entrypoint, curl et mc inclus).
+    # La version est figée pour que la CI reste reproductible.
+    image: pgsty/minio:RELEASE.2026-08-04T00-00-00Z
 
     container_name: chess-agent-minio
 
@@ -246,12 +252,11 @@ services:
       - minio_data:/data
 
     healthcheck:
+      # curl en priorité ; mc (fourni par l'image) en secours.
       test:
         [
-          "CMD",
-          "curl",
-          "-f",
-          "http://localhost:9000/minio/health/live"
+          "CMD-SHELL",
+          "curl -f http://localhost:9000/minio/health/live || mc ready local"
         ]
       interval: 10s
       timeout: 5s
